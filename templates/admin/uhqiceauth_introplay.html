@@ -1,0 +1,33 @@
+<{if $error}>	
+
+<font color=red><{$smarty.const._AM_UHQICEAUTH_INTROS_PLAY_ERROR}></font>: <{$error}>
+
+<{elseif $data}>
+
+<style>
+	*	 	{ font-family:Trebuchet Ms, Arial; font-size:12px; }
+	select, 
+	input	{ border:1px solid silver; }
+</style>
+
+<script language="javascript" src="/modules/uhq_iceauth/includes/VLCcontrols/ExternalLibLoader.js"></script>
+<script language="javascript" src="/modules/uhq_iceauth/includes/VLCcontrols/VLCobject.js"></script>
+<script type="text/javascript" src="/modules/uhq_iceauth/includes/VLCcontrols/VLCcontrols.js"></script>
+
+<center>Listening to: <i><{$data.filename}></i></center>
+<div id="player">
+	<font color=red><{$smarty.const._AM_UHQICEAUTH_INTROS_PLAY_ERROR}></font>: <{$smarty.const._AM_UHQICEAUTH_INTROS_PLAY_VLCREQ}>
+</div>
+
+<script type="text/javascript">
+	var myvlc = null;
+	var myvlc_ctrl = null;
+	
+	myvlc = new VLCObject("mymovie", "365", "0");
+	myvlc.addParam("MRL","<{$data.playurl}>");
+	myvlc.write("player");
+	
+	myvlc_ctrl = new VLCcontrols(myvlc);
+</script>
+
+<{/if}>
