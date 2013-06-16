@@ -1,5 +1,3 @@
-<h3><{$smarty.const._AM_UHQICEAUTH_INTROS_PLU}></h3>
-
 <{if $error}>
 	<p><font color=red><{$smarty.const._AM_UHQICEAUTH_SQLERR}></font>: <{$error}></p>
 <{elseif $data}>
@@ -18,7 +16,7 @@
 		}
 		//-->
 		</script>
-		
+
 		<p>
 			<{$data.incount}>
 			<{if $data.incount > 1}>
@@ -27,7 +25,7 @@
 				<{$smarty.const._AM_UHQICEAUTH_INTROS_ONE}>
 			<{/if}>
 		</p>
-		
+
 		<table>
 		 <tr><th><{$smarty.const._AM_UHQICEAUTH_LIST_HASH}></th>
 			<th><{$smarty.const._AM_UHQICEAUTH_LIST_LFILE}></th>
@@ -47,8 +45,8 @@
 				</td>
 				<td><{$list.description}></td>
 				<td>
-					<a href='intros.php?op=edit&intronum=<{$list.intronum}>'><{$smarty.const._AM_UHQICEAUTH_LIST_ACT_EDIT}></a> - 
-					<a href='intros.php?op=delete&intronum=<{$list.intronum}>'><{$smarty.const._AM_UHQICEAUTH_LIST_ACT_DEL}></a> - 
+					<a href='intros.php?op=edit&intronum=<{$list.intronum}>'><{$smarty.const._AM_UHQICEAUTH_LIST_ACT_EDIT}></a> -
+					<a href='intros.php?op=delete&intronum=<{$list.intronum}>'><{$smarty.const._AM_UHQICEAUTH_LIST_ACT_DEL}></a> -
 					<a href='intros.php?op=play&intronum=<{$list.intronum}>' onClick='return uhq_popup(this,380,100)'><{$smarty.const._AM_UHQICEAUTH_LIST_ACT_PLAY}>
 
 				</td>

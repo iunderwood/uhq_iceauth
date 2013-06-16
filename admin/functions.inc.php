@@ -2,7 +2,7 @@
 
 /*
 UHQ-IceAuth :: XOOPS Module for IceCast Authentication
-Copyright (C) 2008-2011 :: Ian A. Underwood :: xoops@underwood-hq.org
+Copyright (C) 2008-2013 :: Ian A. Underwood :: xoops@underwood-hq.org
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,11 +21,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // Function to return summary counts.  Null for DB error, otherwise returns an integer.
 
+defined("XOOPS_ROOT_PATH") or die("XOOPS root path not defined");
+
 function uhqiceauth_summarycount ($sumtype, $mountdata=null) {
 	global $xoopsDB;
-	
+
 	// Base Query
-	
+
 	switch($sumtype) {
 		case "AM":	// Active Mount Points
 			$query = "SELECT COUNT(*) FROM ".$xoopsDB->prefix('uhqiceauth_activemounts');
@@ -57,19 +59,19 @@ function uhqiceauth_summarycount ($sumtype, $mountdata=null) {
 		default:
 			break;
 	}
-	
+
 	// Append mount point query if all required data is supplied.  Does not apply to all summary count types.
-	
+
 	if ( $mountdata['server'] && $mountdata['port'] && $mountdata['mount'] ) {
 		$query .= " WHERE server = '".$mountdata['server']."'";
 		$query .= " AND port = '".$mountdata['port']."'";
 		$query .= " AND mount = '".$mountdata['mount']."'";
 	}
-	
+
 	// Perform Query & return count.
-	
+
 	$result = $xoopsDB->queryF($query);
-	
+
 	if ($result) {
 		list($count) = $xoopsDB->fetchRow($result);
 		return $count;
@@ -80,32 +82,32 @@ function uhqiceauth_summarycount ($sumtype, $mountdata=null) {
 
 // Take time in seconds, return friendly time in string.
 function uhqiceauth_time ($duration) {
-	
+
 	// Hours
 	$hours = intval ($duration/3600);
 	// Minutes
 	$minutes = intval ( ($duration - ($hours * 3600) ) / 60);
 	// Seconds
 	$seconds = intval ($duration) % 60;
-	
+
 	// Prepare Output String
-	$time = '';	
-	
+	$time = '';
+
 	if ($hours < 10) {
 		$time .= "0";
 	}
 	$time .= $hours.":";
-	
+
 	if ($minutes < 10) {
 		$time .= "0";
 	}
 	$time .= $minutes.":";
-	
+
 	if ($seconds < 10) {
 		$time .= "0";
 	}
 	$time .= $seconds;
-	
+
 	return $time;
 }
 
@@ -117,10 +119,10 @@ $uhqiceauth_intro_mimes = array('audio/ogg','video/ogg','audio/mpeg','video/mpeg
 
 function uhqiceauth_geocheck() {
 	global $xoops_gethandler;
-	
+
 	$module_handler = &xoops_gethandler('module');
 	$geolocate = &$module_handler->getByDirname('uhq_geolocate');
-	
+
 	if (is_object($geolocate)) {
 		$isok = $geolocate->getVar('isactive');
 	} else {
@@ -128,4 +130,70 @@ function uhqiceauth_geocheck() {
 	}
 	return $isok;
 }
-?>
+
+// Check and force the module to be anonymous.
+
+function uhqiceauth_anoncheck() {
+	global $xoopsDB;
+
+	$modhandler		=& xoops_gethandler('module');
+	$module			=& $modhandler->getByDirname('uhq_iceauth');
+
+	$query = "SELECT COUNT(*) FROM ".$xoopsDB->prefix('group_permission');
+	$query .= " WHERE gperm_itemid = '".$module->getVar('mid')."'";
+	$query .= " AND gperm_name = 'module_read'";
+	$query .= " AND gperm_groupid = '".XOOPS_GROUP_ANONYMOUS."'";
+
+	$result = $xoopsDB->queryF($query);
+	if ($result == false) {
+		$status = _AM_UHQICEAUTH_SQLERR.$query."<br/>".$xoopsDB->error();
+	} else {
+		list($anonok) = $xoopsDB->fetchRow($result);
+	}
+
+	if ($anonok) {
+		$status = _AM_UHQICEAUTH_ANON_OK;
+	} else {
+		$sql = "INSERT IGNORE INTO " . $xoopsDB->prefix('group_permission') . " VALUES (null, '" . XOOPS_GROUP_ANONYMOUS . "', '" . $module->getVar('mid') . "', 1, 'module_read')";
+		if ( $xoopsDB->queryF($sql) ) {
+			$status = _AM_UHQICEAUTH_ANON_RESTORED;
+		} else {
+	  		$status = _AM_UHQICEAUTH_ANON_FAILED;
+		}
+	}
+	return $status;
+}
+
+// Check MIME types for all supported formats
+
+function uhqiceauth_mimecheck() {
+	global $uhqiceauth_intro_mimes;
+
+	$fn = XOOPS_ROOT_PATH . "/class/mimetypes.inc.php";
+	$fh = fopen($fn,"r");
+	if (!$fh) {
+		$data['error'] = _AM_UHQICEAUTH_ERR_OPENMIME;
+		return false;
+	}
+	$mimefile = fread ($fh, filesize($fn));
+	fclose($fh);
+
+	if (!$mimefile) {
+		$data['error'] = _AM_UHQICEAUTH_ERR_READMIME;
+		return false;
+	}
+	$i=0;
+
+	foreach($uhqiceauth_intro_mimes as &$type) {
+		$data['list'][$i]['type'] = $type;
+		if (strpos($mimefile,$type) ) {
+			$data['list'][$i]['status'] = _AM_UHQICEAUTH_CODEC_FOUND;
+		} else {
+			$data['list'][$i]['status'] = _AM_UHQICEAUTH_CODEC_NFOUND;
+		}
+		$i++;
+	}
+	unset($type);
+
+	return $data;
+}

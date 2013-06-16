@@ -1,0 +1,4 @@
+Install/Uninstall
+=================
+
+No special measures are required for installation or uninstallation of this module.

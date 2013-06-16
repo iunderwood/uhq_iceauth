@@ -67,11 +67,11 @@ define("_MI_UHQICEAUTH_BLOCK_STREAMPASS_DESC","Block which displays the user's r
 
 // Admin Menus
 
-define("_MI_UHQICEAUTH_ADMENU_0", "Index");
+define("_MI_UHQICEAUTH_ADMENU_SUMMARY", "Summary");
 define("_MI_UHQICEAUTH_ADMENU_MOUNTS", "Mount Points");
-define("_MI_UHQICEAUTH_ADMENU_INTRO", "Intros");
-define("_MI_UHQICEAUTH_ADMENU_AUTHREC", "Authentication");
-define("_MI_UHQICEAUTH_ADMENU_ACCTREC", "Accounting");
+define("_MI_UHQICEAUTH_ADMENU_INTRO", "Intro Files");
+define("_MI_UHQICEAUTH_ADMENU_AUTHREC", "Auth Records");
+define("_MI_UHQICEAUTH_ADMENU_ACCTREC", "Accounting Records");
 define("_MI_UHQICEAUTH_ADMENU_MOUNTREC", "Mount Records");
 define("_MI_UHQICEAUTH_ADMENU_STREAMPASS","Stream Logins");
 define("_MI_UHQICEAUTH_ADMENU_UA", "UA Bans");

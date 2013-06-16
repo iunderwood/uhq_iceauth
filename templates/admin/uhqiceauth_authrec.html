@@ -1,11 +1,9 @@
-<h3><{$smarty.const._AM_UHQICEAUTH_AUTH_PLU}></h3>
-
 <{if $error}>
 	<font color=red><{$smarty.const._AM_UHQICEAUTH_SQLERR}></font>: <{$error}>
 <{elseif $data}>
 	<p>
 		<{if $data.aucount == 0}><{$smarty.const._AM_UHQICEAUTH_AUTH_NONE}>
-		<{elseif $data.aucount == 1}><{$data.aucount}><{$smarty.const._AM_UHQICEAUTH_AUTH_ONE}> 
+		<{elseif $data.aucount == 1}><{$data.aucount}><{$smarty.const._AM_UHQICEAUTH_AUTH_ONE}>
 		<{elseif $data.aucount > 1}><{$data.aucount}><{$smarty.const._AM_UHQICEAUTH_AUTH_PLU}>
 		<{else}><{$smarty.const._AM_UHQICEAUTH_SQLERR}>
 		<{/if}>
@@ -25,7 +23,7 @@
 		<{else}>
 			<{$smarty.const._AM_UHQICEAUTH_STATS_NOREC}>
 		<{/if}>
-	
+
 		<{if $recordlist.type == "L"}>
 			<{$smarty.const._AM_UHQICEAUTH_STATS_LCREC}>
 		<{elseif $recordlist.type == "S"}>
@@ -57,7 +55,7 @@
 						<{else}>
 							<{$smarty.const._AM_UHQICEAUTH_AUTH_ANON}>
 						<{/if}>
-						
+
 						<{if $recordlist.type == "S"}>
 							<{if $list.authstat == "P"}>
 								<{$smarty.const._AM_UHQICEAUTH_AUTH_SCPASS}>

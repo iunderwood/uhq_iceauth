@@ -1,8 +1,7 @@
 <{if $error}>
 	<font color=red><{$smarty.const._AM_UHQICEAUTH_SQLERR}></font>: <{$error}>
 <{elseif $data}>
-	<h3><{$smarty.const._AM_UHQICEAUTH_SVR_PLU}></h3>
-	
+
 	<p>
 		<{if $data.servercount == 0}><{$smarty.const._AM_UHQICEAUTH_SVR_NONE}>
 		<{elseif $data.servercount == 1}><{$data.servercount}><{$smarty.const._AM_UHQICEAUTH_SVR_ONE}>
@@ -10,7 +9,7 @@
 		<{else}><{$smarty.const._AM_UHQICEAUTH_SQLERR}>
 		<{/if}>
 	</p>
-	
+
 <{/if}>
 
 <{if $data.servercount > 0}>
@@ -33,19 +32,19 @@
 	<td><{$list.server}></td>
 	<td><{$list.port}></td>
 	<td><{$list.mount}></td>
-	
+
 	<td>
 	<{if $list.intro}>
 	  <{foreach item=ilist from=$list.intro}>
 	    <{$ilist.sequence}> - <{$ilist.filename}> - <a href=
-	      "servers.php?op=delintro&intronum=<{$ilist.intronum}>&server=<{$list.server}>&port=<{$list.port}>&mount=<{$list.mount}>">
+	      "mountpoints.php?op=delintro&intronum=<{$ilist.intronum}>&server=<{$list.server}>&port=<{$list.port}>&mount=<{$list.mount}>">
 	      <{$smarty.const._AM_UHQICEAUTH_LIST_REMOVE}></a>
 	  <{/foreach}>
 	<{else}>
 	  <{$smarty.const._AM_UHQICEAUTH_NOINTROS}>
 	<{/if}>
 	</td>
-	
+
 	<td>
 	<{if $list.timelimit > 0 }>
 	  <{$list.timelimit}> sec
@@ -53,13 +52,13 @@
 	  <{$smarty.const._AM_UHQICEAUTH_NOLIMIT}>
 	<{/if}>
 	</td>
-	
+
 	<td>
 	  <{if $list.lst_auth_typ == "A"}><{$smarty.const._AM_UHQICEAUTH_FORM_AUTHA}>
 	  <{elseif $list.lst_auth_typ == "D"}><{$smarty.const._AM_UHQICEAUTH_FORM_AUTHD}>
 	  <{else}><{$smarty.const._AM_UHQICEAUTH_UNDEF}><{$list.lst_auth_typ}><{/if}>
 	</td>
-	
+
 	<td>
 	  <{if $list.src_auth_typ == "S"}><{$list.src_auth_un}> / <{$list.src_auth_pw}>
 	  <{elseif $list.src_auth_typ == "A"}><{$smarty.const._AM_UHQICEAUTH_FORM_AUTHA}>
@@ -71,27 +70,26 @@
       <br/>S:<font color=green><{$list.src_hits_pass}></font>/<font color=red><{$list.src_hits_fail}></font></td>
 
     <td>
-	  <a href='servers.php?op=edit&server=<{$list.server}>&port=<{$list.port}>&mount=<{$list.mount}>'
+	  <a href='mountpoints.php?op=edit&server=<{$list.server}>&port=<{$list.port}>&mount=<{$list.mount}>'
 	  title='<{$smarty.const._AM_UHQICEAUTH_LIST_MEDIT}>'>
 	  <img src='/modules/uhq_iceauth/images/list_edit.png' width=24 height=24 alt='<{$smarty.const._AM_UHQICEAUTH_LIST_MEDIT}>'></a>&nbsp;
 
-      <a href='servers.php?op=delete&server=<{$list.server}>&port=<{$list.port}>&mount=<{$list.mount}>'
+      <a href='mountpoints.php?op=delete&server=<{$list.server}>&port=<{$list.port}>&mount=<{$list.mount}>'
       title='<{$smarty.const._AM_UHQICEAUTH_LIST_MDEL}>'>
 	  <img src='/modules/uhq_iceauth/images/list_delete.png' width=24 height=24 alt='<{$smarty.const._AM_UHQICEAUTH_LIST_MDEL}>'></a>&nbsp;
-		
-      <a href='servers.php?op=reset&server=<{$list.server}>&port=<{$list.port}>&mount=<{$list.mount}>'
+
+      <a href='mountpoints.php?op=reset&server=<{$list.server}>&port=<{$list.port}>&mount=<{$list.mount}>'
 	  title='<{$smarty.const._AM_UHQICEAUTH_LIST_MRESET}>'>
       <img src='/modules/uhq_iceauth/images/list_reset.png' width=24 height=24 alt='<{$smarty.const._AM_UHQICEAUTH_LIST_MRESET}>'></a>&nbsp;
-		
-      <a href='servers.php?op=addintro&server=<{$list.server}>&port=<{$list.port}>&mount=<{$list.mount}>'
+
+      <a href='mountpoints.php?op=addintro&server=<{$list.server}>&port=<{$list.port}>&mount=<{$list.mount}>'
       title='<{$smarty.const._AM_UHQICEAUTH_LIST_MINTRO}>'>
       <img src='/modules/uhq_iceauth/images/list_add.png' width=24 height=24 alt='<{$smarty.const._AM_UHQICEAUTH_LIST_MINTRO}>'></a>
 	</td>
 
   </tr>
-<{/foreach}>	
+<{/foreach}>
 </table>
 <{/if}>
 
-<p><a href='servers.php?op=insert'><{$smarty.const._AM_UHQICEAUTH_ADDSERVER}></a></p>
-
+<p><a href='mountpoints.php?op=insert'><{$smarty.const._AM_UHQICEAUTH_ADDSERVER}></a></p>

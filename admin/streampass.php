@@ -2,7 +2,7 @@
 
 /*
 UHQ-IceAuth :: XOOPS Module for IceCast Authentication
-Copyright (C) 2008-2011 :: Ian A. Underwood :: xoops@underwood-hq.org
+Copyright (C) 2008-2013 :: Ian A. Underwood :: xoops@underwood-hq.org
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,24 +19,19 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-include "../../../mainfile.php";
-require_once XOOPS_ROOT_PATH . "/include/cp_header.php";
+include_once dirname(__FILE__) . '/admin_header.php';
+
+if (!isset($xoopsTpl)) {
+	$xoopsTpl = new XoopsTpl();
+}
+$xoopsTpl->caching=0;
+
+
 require_once XOOPS_ROOT_PATH . "/modules/uhq_iceauth/includes/sanity.php";
 require_once XOOPS_ROOT_PATH . "/modules/uhq_iceauth/includes/functions.php";
 
 // Admin Requirements
 require_once XOOPS_ROOT_PATH . "/modules/uhq_iceauth/admin/functions.inc.php";
-
-// Load frameworks
-include_once XOOPS_ROOT_PATH."/Frameworks/art/functions.php";
-include_once XOOPS_ROOT_PATH."/Frameworks/art/functions.admin.php";
-
-// Load template engine.
-require_once XOOPS_ROOT_PATH . '/class/template.php';
-if (!isset($xoopsTpl)) {
-	$xoopsTpl = new XoopsTpl();
-}
-$xoopsTpl->xoops_setCaching(0);
 
 // Assign default operator
 
@@ -86,20 +81,19 @@ switch ($op) {
 	default:
 		// Header
 		xoops_cp_header();
-		loadModuleAdminMenu(6);
-		
+		$mainAdmin = new ModuleAdmin();
+		echo $mainAdmin->addNavigation('streampass.php');
+
 		// Stream Login Infos
 		$data['spcount'] = uhqiceauth_summarycount("SP");
 		if ( $data['spcount'] > 0 ) {
 			$data['spdata'] = uhqiceauth_raw_streampass();
 		}
-		
+
 		// Assign & Render Template
 		$xoopsTpl->assign('data',$data);
 		$xoopsTpl->display("db:admin/uhqiceauth_streampass.html");
-		
-		// Footer
-		xoops_cp_footer();
-}
 
-?>
+		// Footer
+		include_once dirname(__FILE__) . '/admin_footer.php';
+}

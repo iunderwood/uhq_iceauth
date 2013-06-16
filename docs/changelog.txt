@@ -1,0 +1,225 @@
+====[ v0.93 -- 2013-06-xx ]====
+
+Code Changes
+* Converted to XOOPS 2.5.5 Admin GUI.
+
+Fixes
+* Fixed a SQL query which prevented disconnect accounting from matching up a connection log entry in newer release of MySQL.
+
+Notes
+* Development environment upgraded to XOOPS 2.5.6.
+* Code is now stored on GitHub!
+
+====[ v0.92 -- Not Released ]====
+
+Fixes
+* Module: Modified an accounting query which would fail when clocks change where daylight/standard time is used.
+
+Notes
+* A bugfix release that was never actually released.
+
+====[ v0.91 -- 2011-03-01 ]=====
+
+Fixes
+* Module: Fixed a couple of assumptions in the mountpoint edit form.
+* Module: Fixed diagnostic header output in auth.php, which may not work correctly when multiple headers are sent.
+
+Notes
+* This is a minor bugfix release only.
+
+====[ v0.90 -- 2011-01-06 ]====
+
+Adds:
+* Blocks: Stream Login, block displays UN/PW which can be used to authenticate to a stream.  User resettable.
+* Module: Basic tabs to support UA & IP Bans.  Forms and functions are not yet written fully.
+
+Fixes:
+* Module: Fixed how UN/PW authentication is checked to actually use the streampass DB in all scenarios.
+* Module: Deleting a monut point would fail because a depreciated function was removed in v0.8.
+* Module: Removed brackets in the SQL definitions.  I really need to test new installs a lot better.
+* Template: Auth records will now show the correct constant if there is a failure.
+
+Changes:
+* Module: XOOPS Frameworks are now required.
+* Module: Log reason for authentication failure in authtrail.  Reason code is numeric and is assigned as follows:
+	101: Listener UN/PW Mismatch
+	102: Listener Group Mismatch
+	201: Source UN/PW Mismatch
+	202: Source Group Mismatch
+	203: Source Undefined/Unused
+	301: Banned User Agent
+	302: Banned IP Address
+* Module: Username in the authtrail is left null unless there is an actual username set.
+* Module: Collapsing a bit of redundant code.
+* Module: All admin tabs now template driven, finally.
+* Module: Templates formatted to look good in the XOOPS 2.5 default admin GUI.  Earlier versions may look generously spaced apart.
+* Module: Changed most instances of mountpoint to mount point, as it should be.
+
+Notes:
+* I apologize for the haste in releasing an incomplete v0.9, but the bug fixes are fairly significant.  Admittedly, my QA errors focus mostly on incremental upgrades and not so much for fresh installs.
+
+====[ v0.80 -- 2010-12-20 ]====
+
+Fixes:
+* Intros won't go to pot if they're used on a mount with a time limit.
+
+Changes:
+* Module: If an intro is being used, be sure to set a content-type header when sending the intro downstream.
+* Module: Tabs for Auth Records and Accounting Records have been renamed to Authentication and Accounting, respectively.
+* Module: Includes are using more explicit file definitions, relying less on assumptions.
+* Module: Admin section uses Frameworks for the header, if available.
+* DB: uhqiceauth_authtrail, added support for geolocation by country code, region, and city.
+* DB: uhqiceauth_authtrail, extended user agent length to 128 bits.
+* DB: uhqiceauth_uabans, extended user agent length to 128 bits.
+* DB: uhqiceauth_accounting, table has been removed as it hasn't been used in several revisions.
+
+Adds:
+* Module: Initial support for geolocation by IP.  Requires UHQ-GeoLocate in order to leverage this feature.
+
+Notes:
+* Development environment now XOOPS 2.5.0!
+* Updated the module logo!
+
+====[ v0.70 -- 2010-03-21 ]====
+
+Fixes:
+* Module: Time limits not being sent for undefined mountpoints when "Undefined Mount Handling" was set to "Always Allow", and a "Default Time Limit" set to something other than 0.
+* Admin: Dynamic path changes to show icons under XOOPS 2.4 EXM/Oxygen.
+
+Changes:
+* DB: uhqiceauth_authtrail, added userrdns VARCHAR(64) to support Reverse DNS tracking.
+* DB: uhqiceauth_authtrail, added authinfo INT to support standard authentication comments, failure reasons etc.
+* Accounting database no longer used.  The information was largely redundant to the authtrail anyway.
+* Module: Improvements to DB failure reporting on some sections.
+* Module: Admin/Mountpoints tab is now 100% template driven!
+* Module: Admin/Authentication tab is now 100% template driven!
+* Module: Admin/Authentication Details strings are now in the language files.
+
+Adds:
+* DB: uhqiceauth_uabans, single field which will contain explicitly banned user agents.
+* Module: Ability to log reverse DNS along with user IP.  Off by default.
+* Module: Ability to disable admin update logging.  These are typically how sources update info for non-Ogg streams.  On by default.
+* Moudle: Placeholder & database setup for useragent bans.
+
+Notes:
+* First release to be completed on a Mac.  :)
+* Development environment upgraded to XOOPS 2.4.4.
+* First release to use a separate list of development notes and a test plan.  This should help catch more bugs and whatnot before the 1.0 release which I would like to verify on multiple XOOPS-based platforms.
+* Not as full of a release as I prefer to make, but it's been some time.  That, and XOOPS 2.4 is out, which changes up some of the admin stuff.
+
+====[ v0.60 -- 2009-11-08 ]====
+
+Fixes:
+* Admin: Fixed the button bar in the admin headers ... finally.
+* Module: Time limits were not being sent for anonymous auth streams.
+* Module: Invalid usernames could be logged to anonymous auth streams.
+
+Changes:
+* Admin/Mountpoints: Added intro add/delete to the mountpoint lists.
+* DB: uhqiceauth_accounting, changed useragent to VARCHAR(96).
+* DB: uhqiceauth_authtrail, changed useragent to VARCHAR(96).
+* Module: In function uhqiceauth_header, only put HTML output, if $hdr_echo is not 0.  Required to support intro push.
+* readme.txt: Added section on intros.
+
+Adds:
+* Admin: Intros, new tab for intro file management.
+* DB: uhqiceauth_intros, supporting a list of introductions.
+* DB: unqiceauth_intromap, supports linking an introduction to a stream, with a sequence # to support multiple intros.
+* DB: uhqiceauth_streampass, supports checking an alternate password for unencrypted stream logins.
+* External Library: VLCcontrols by revolunet, used for preview playback (with some minor modifications).
+* Module: Support "withintro" as introduced in Icecast 2.3.2-KH16.
+
+====[ v0.50 -- 2009-07-11 ]====
+
+Fixes:
+* Admin: Typo in text check blocks.
+* Admin/Mount Records: Added a line break if there are no mountpoint records or active mountpoints.
+
+Changes:
+* Module: Update module name to "UHQ_IceAuth".
+* Module: Changed parameter "hasMain" to 1.  Updated scripts to change menu order/weight to "0" to hide it.  This should keep any changes to the anonymous group from breaking IceCast's ability to reach the module.  Appropriate detection and correction is still in place on the main module page since anonymous access to the module is required for its function.
+
+Adds:
+* Block: Add a block to display the current active mountpoints as they are known.
+
+====[ v0.40 -- 2008-10-21 ]====
+
+Fixes:
+* Floating text wasn't showing up on server list icons.
+* Time function was returning incorrect values where seconds < 10.
+
+Changes:
+* DB: uhqiceauth_accounting - Added starttime, useragent, userip.
+* Module: Modify listener_remove to handle additional fields in database.
+* Module: Added generic "Insufficient Parameters" error message for multi-parameter requirements.
+* Admin: Servers tab now called Mountpoints
+* Admin: List icons now from the Crystal Project.
+
+Adds:
+* DB: uhqiceauth_mountlog - Logging of mount activities.
+* DB: uhqiceauth_activemounts - List of active mountpoints.
+* Module: Option "Not Used" for source authentication.
+* Module: Handle mount logging for "mount_add" and "mount_remove".
+* Admin: Menu item for mount records.
+* Admin: Optional log delete on mountpoint removal.
+* Admin: Basic stats for mount records, and active mount list.
+* Admin: Remove mountpoint from active list ... good for stale mounts where a mount_remove is not received.
+* Admin: Basic Accounting Stats (Today, last 24h, last 7d: Connections, TTSL, average time)
+
+====[ v0.30 -- 2008-09-05 ]====
+
+Fixes:
+* Group permissions were not saved on initial server insert since the array was not properly imploded.
+
+Changes:
+* DB: uhqiceauth_servers - Added fields for source auth counters.
+* Module: Added isset() where appropriate.  There should be almost no php errors in the module now.
+* Admin: Index provides summary of servers and number of auth/accounting records.
+* Admin: Added icons from the Crystal Project for users of the EXM interface.
+* Admin: Server list ordered by server, port, and mountpoint.
+
+Adds:
+* DB: uhqiceauth_authtrail - Authentication & Accounting
+* DB: uhqiceauth_accounting - Accouting for items not in the authtrail.  Details in README.txt.
+* Module: Pass/Fail hit counters for sources.
+* Module: Log Source Authentication to DB.
+* Module: Santization routine to run sanity against all known $_REQUEST variables used in SQL statements.
+* Module: Added "listener_remove" action and accounting logging.
+* Module: Added authentication logging for "listener_add" and "stream_auth".
+* Module: Added icons for EXM interface for XOOPS 2.3 and ImpressCMS.
+* Admin: Move server configuration to servers.php.
+* Admin: Menu item for auth records.
+* Admin: Basic authentication record with last 10 entries per type.  Detail page per record is available.
+* Admin: Menu item for accounting records.
+* Admin: Basic accounting records.
+* Admin: Headers that don't require the frameworks library ... from Zoullou.
+* Admin: Check module for anonymous access, and reset if necessary.  In admin/index.php.
+
+====[ v0.21 -- 2008-08-29 ]====
+
+Changes:
+* DB: uhqiceauth_servers - Added fields for per-mount time limit, pass and fail counters.
+* Module: Added time-limit fields to server info and edit form.
+* Module: Return generic SQL error message to IceCast server if it fails on a bad query.
+* Admin: Actions now use icons, borrowed w/o shame from the SmartFactory.
+* Admin: Text elements in languages/english/admin.php.
+* Updated logo to XOOPS 2.3 standards.
+
+Adds:
+* Module: Pass/Fail hit counters, w/ reset function.
+* Module: Support "stream_auth" handling for IceCast servers in the KH branch.
+
+====[ v0.20 -- Not Released ]====
+
+Adds:
+* DB uhqiceauth_servers - a list of servers that offer explicit authentication.
+  This database defines servers which are explicitly allowed to authenticate against this module.  Servers not in the database will use the module default.
+* Administrative Interface
+  The only table for edit is the server table, but this will expand more as time and features dictate.
+
+Notes:
+* Not released.  I forgot a few key fields in the database, and needed to increment the version to take care of those.
+
+====[ v0.10 --  2008-08-22 ]====
+
+Initial Release

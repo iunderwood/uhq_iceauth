@@ -2,7 +2,7 @@
 
 /*
 UHQ-IceAuth :: XOOPS Module for IceCast Authentication
-Copyright (C) 2008-2011 :: Ian A. Underwood :: xoops@underwood-hq.org
+Copyright (C) 2008-2013 :: Ian A. Underwood :: xoops@underwood-hq.org
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,16 +21,50 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // Modular Definitions
 
-$modversion['name'] = _MI_UHQICEAUTH_NAME;
-$modversion['version'] = 0.91;
-$modversion['description'] = _MI_UHQICEAUTH_DESC;
-$modversion['author'] = "Ian A. Underwood";
-$modversion['credits'] = "Underwood Headquarters";
-$modversion['help'] = "uhq_iceauth.html";
-$modversion['license'] = "CC-GNU GPL";
+$modversion['name'] 		= _MI_UHQICEAUTH_NAME;
+$modversion['version']		= 0.93;
+$modversion['description']	= _MI_UHQICEAUTH_DESC;
+$modversion['author']		= "Ian A. Underwood";
+$modversion['credits']		= "Underwood Headquarters";
+$modversion['help']         = 'page=help';
+$modversion['license']      = 'GNU GPL 2.0 or later';
+$modversion['license_url']  = "www.gnu.org/licenses/gpl-2.0.html";
 $modversion['official'] = 0;
-$modversion['image'] = "images/uhq_iceauth_slogo.png";
-$modversion['dirname'] = "uhq_iceauth";
+$modversion['image']		= "images/uhq_iceauth_slogo.png";
+$modversion['dirname']		= "uhq_iceauth";
+
+// Better Help Section
+
+$i=0;
+$modversion['helpsection'][$i]['name'] = "Introduction";
+$modversion['helpsection'][$i]['link'] = "page=help";
+$i++;
+$modversion['helpsection'][$i]['name'] = "Mount Points";
+$modversion['helpsection'][$i]['link'] = "page=mountpoints";
+
+
+// Administrative Defines
+
+$modversion['dirmoduleadmin'] = '/Frameworks/moduleclasses/moduleadmin';
+$modversion['icons16']        = '../../Frameworks/moduleclasses/icons/16';
+$modversion['icons32']        = 'images/';
+
+// About Section
+
+$modversion['release_date']			= '2013/06/31';
+$modversion['module_website_url']	= "xoops.underwood-hq.org";
+$modversion['module_website_name']	= "XOOPS@UHQ";
+$modversion['module_status']		= "RC";
+
+// Minimums
+
+$modversion['min_php']      = '5.2';
+$modversion['min_xoops']    = "2.5.6";
+$modversion['min_admin']    = '1.1';
+$modversion['min_db']       = array(
+    'mysql'  => '5.0.7',
+    'mysqli' => '5.0.7'
+);
 
 // Install Options
 
@@ -52,6 +86,7 @@ $modversion['tables'][] = "uhqiceauth_ipbans";
 // Configuration Items
 
 $modversion['hasConfig'] = 1;
+$modversion['system_menu'] = 1;
 
 $modversion['config'][] = array (
 	'name'				=> 'hdr_auth',
@@ -175,19 +210,19 @@ $modversion['templates'][12]['description']	= _MI_UHQICEAUTH_TEMPLATE_MOUNTPOINT
 
 // Blocks
 
-$modversion['blocks'][1]['file']		= "uhqiceauth_blocks.php";
-$modversion['blocks'][1]['name']		= _MI_UHQICEAUTH_BLOCK_ACTIVEMOUNTS_NAME;
-$modversion['blocks'][1]['description']	= _MI_UHQICEAUTH_BLOCK_ACTIVEMOUNTS_DESC;
-$modversion['blocks'][1]['show_func']	= "b_uhqiceauth_activemounts_show";
-$modversion['blocks'][1]['edit_func']	= "b_uhqiceauth_activemounts_edit";
-$modversion['blocks'][1]['template']	= "uhqiceauth_activemounts.html";
-$modversion['blocks'][1]['options']		= "";
+$i=0;
+$modversion['blocks'][$i]['file']			= "uhqiceauth_blocks.php";
+$modversion['blocks'][$i]['name']			= _MI_UHQICEAUTH_BLOCK_ACTIVEMOUNTS_NAME;
+$modversion['blocks'][$i]['description']	= _MI_UHQICEAUTH_BLOCK_ACTIVEMOUNTS_DESC;
+$modversion['blocks'][$i]['show_func']		= "b_uhqiceauth_activemounts_show";
+$modversion['blocks'][$i]['edit_func']		= "b_uhqiceauth_activemounts_edit";
+$modversion['blocks'][$i]['template']		= "uhqiceauth_activemounts.html";
+$modversion['blocks'][$i]['options']		= "";
 
-$modversion['blocks'][2]['file']		= "uhqiceauth_blocks.php";
-$modversion['blocks'][2]['name']		= _MI_UHQICEAUTH_BLOCK_STREAMPASS_NAME;
-$modversion['blocks'][2]['description']	= _MI_UHQICEAUTH_BLOCK_STREAMPASS_DESC;
-$modversion['blocks'][2]['show_func']	= "b_uhqiceauth_streampass_show";
-$modversion['blocks'][2]['template']	= "uhqiceauth_streampass.html";
-$modversion['blocks'][2]['options']		= "";
-
-?>
+$i++;
+$modversion['blocks'][$i]['file']			= "uhqiceauth_blocks.php";
+$modversion['blocks'][$i]['name']			= _MI_UHQICEAUTH_BLOCK_STREAMPASS_NAME;
+$modversion['blocks'][$i]['description']	= _MI_UHQICEAUTH_BLOCK_STREAMPASS_DESC;
+$modversion['blocks'][$i]['show_func']		= "b_uhqiceauth_streampass_show";
+$modversion['blocks'][$i]['template']		= "uhqiceauth_streampass.html";
+$modversion['blocks'][$i]['options']		= "";

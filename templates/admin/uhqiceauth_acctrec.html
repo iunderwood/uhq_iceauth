@@ -1,5 +1,3 @@
-<h3><{$smarty.const._AM_UHQICEAUTH_ACCT_SUM}></h3>
-
 <{if $data.duacount > 0}>
 	<p>
 		<{$data.duacount}>
@@ -9,7 +7,7 @@
 			<{$smarty.const._AM_UHQICEAUTH_AGENTS_ONE}>
 		<{/if}>
 	</p>
-	
+
 	<br/>
 	<{if $data.listbyconn}>
 		<h4>
@@ -32,7 +30,7 @@
 			<{/foreach}>
 		</table>
 	<{/if}>
-	
+
 	<br/>
 	<{if $data.listbytime}>
 		<h4>
@@ -55,7 +53,7 @@
 			<{/foreach}>
 		</table>
 	<{/if}>
-	
+
 <{else}>
 	<p><{$smarty.const._AM_UHQICEAUTH_AGENTS_NONE}></p>
 <{/if}>

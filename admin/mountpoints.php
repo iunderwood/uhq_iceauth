@@ -2,7 +2,7 @@
 
 /*
 UHQ-IceAuth :: XOOPS Module for IceCast Authentication
-Copyright (C) 2008-2011 :: Ian A. Underwood :: xoops@underwood-hq.org
+Copyright (C) 2008-2013 :: Ian A. Underwood :: xoops@underwood-hq.org
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,29 +19,22 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-// We need to include a LOT of stuff.
-require_once "../../../mainfile.php";
+include_once dirname(__FILE__) . '/admin_header.php';
 
-require_once XOOPS_ROOT_PATH . "/include/cp_header.php";
 require_once XOOPS_ROOT_PATH . "/modules/uhq_iceauth/includes/sanity.php";
 require_once XOOPS_ROOT_PATH . "/modules/uhq_iceauth/admin/functions.inc.php";
 require_once XOOPS_ROOT_PATH . "/class/xoopsformloader.php";
 
-// Load frameworks
-include_once XOOPS_ROOT_PATH . "/Frameworks/art/functions.php";
-include_once XOOPS_ROOT_PATH . "/Frameworks/art/functions.admin.php";
 
-// Load template engine if set up a template.
-require_once XOOPS_ROOT_PATH . '/class/template.php';
 if (!isset($xoopsTpl)) {
 	$xoopsTpl = new XoopsTpl();
 }
-$xoopsTpl->xoops_setCaching(0);
+$xoopsTpl->caching=0;
 
 // The next few functions hold our form informations.
 
 function uhqiceauth_srvform($title, $formdata, $op) {
-		
+
 	// Insert some detaults if the data is null
 	if ($formdata == null) {
 		$formdata['timelimit'] = 0;			// No time limits by default
@@ -51,19 +44,19 @@ function uhqiceauth_srvform($title, $formdata, $op) {
 		$formdata['src_auth_grp'] = "1";	// Source must be webmaster if unspecified.
 		$formdata['src_auth_un'] = "source";	// Default source username
 	}
-	
-	$form = new XoopsThemeForm($title,'srvform','servers.php', 'POST');
-	
+
+	$form = new XoopsThemeForm($title,'srvform','mountpoints.php', 'POST');
+
 	$form->addElement(new XoopsFormText(_AM_UHQICEAUTH_FORM_IPFQDN, "server",40,50,$formdata['server']) );
 	$form->addElement(new XoopsFormText(_AM_UHQICEAUTH_FORM_PORT, "port",5,5,$formdata['port']) );
 	$form->addElement(new XoopsFormText(_AM_UHQICEAUTH_FORM_MOUNT, "mount",20,20,$formdata['mount']) );
 	$form->addElement(new XoopsFormText(_AM_UHQICEAUTH_FORM_TIMEL,"timelimit",5,5,$formdata['timelimit']) );
-		
+
 	$form_l = new XoopsFormSelect(_AM_UHQICEAUTH_FORM_LAUTH, "lst_auth_typ", $formdata['lst_auth_typ'],1);
 	$form_l->addOption('D',_AM_UHQICEAUTH_FORM_AUTHD);
 	$form_l->addOption('A',_AM_UHQICEAUTH_FORM_AUTHA);
 	$form->addElement($form_l);
-	
+
 	$form->addElement(new XoopsFormSelectGroup(_AM_UHQICEAUTH_FORM_LGRP,"lst_auth_grp",true,$formdata['lst_auth_grp'],3,true) );
 
 	$form_s = new XoopsFormSelect(_AM_UHQICEAUTH_FORM_SAUTH, "src_auth_typ",$formdata['src_auth_typ'],1);
@@ -73,10 +66,10 @@ function uhqiceauth_srvform($title, $formdata, $op) {
 	$form->addElement($form_s);
 
 	$form->addElement(new XoopsFormSelectGroup(_AM_UHQICEAUTH_FORM_SGRP,"src_auth_grp",false,$formdata['src_auth_grp'],3,true) );
-	
+
 	$form->addElement(new XoopsFormText(_AM_UHQICEAUTH_FORM_SRCUN, "src_auth_un",20,20,$formdata['src_auth_un']) );
 	$form->addElement(new XoopsFormText(_AM_UHQICEAUTH_FORM_SRCPW, "src_auth_pw",20,20,$formdata['src_auth_pw']) );
-	
+
 	if ($op == "edit") {
 		// Set query to get current info, in case we change the IP/Port/Mountpoint
 		$form->addElement(new XoopsFormHidden("o_server", $formdata['server']) );
@@ -86,26 +79,26 @@ function uhqiceauth_srvform($title, $formdata, $op) {
 	} else {
 		$form->addElement(new XoopsFormHidden("op", "insert") );
 	}
-	
+
 	$form->addElement(new XoopsFormHidden("verify", "1") );
 
 	$form->addElement(new XoopsFormButton("",'post',$title,'submit') );
 
 	$form->display();
-	
-	echo "<br/><br/><a href='servers.php'>"._AM_UHQICEAUTH_RETSERVERS."</a>";
+
+	echo "<br/><br/><a href='mountpoints.php'>"._AM_UHQICEAUTH_RETSERVERS."</a>";
 
 }
 
 function uhqiceauth_srvdelform($mountdata) {
-	
-	$form = new XoopsThemeForm(_AM_UHQICEAUTH_FORM_VDEL."<br/>".$mountdata['server'].":".$mountdata['port'].$mountdata['mount'],'srvdelform','servers.php', POST);
-	
+
+	$form = new XoopsThemeForm(_AM_UHQICEAUTH_FORM_VDEL."<br/>".$mountdata['server'].":".$mountdata['port'].$mountdata['mount'],'srvdelform','mountpoints.php', POST);
+
 	$form_c = new XoopsFormCheckbox(_AM_UHQICEAUTH_FORM_DELHD,'delhd','none');
 	$form_c -> addOption(1,_AM_UHQICEAUTH_FORM_RD);
-	
+
 	$form->addElement($form_c);
-	
+
 	$form->addElement(new XoopsFormHidden("server", $mountdata['server']) );
 	$form->addElement(new XoopsFormHidden("port", $mountdata['port']) );
 	$form->addElement(new XoopsFormHidden("mount", $mountdata['mount']) );
@@ -118,11 +111,11 @@ function uhqiceauth_srvdelform($mountdata) {
 function uhqiceauth_srvintroform($title) {
 	global $xoopsDB;
 	global $sane_REQUEST;
-	
-	$form = new XoopsThemeForm($title." - ".$sane_REQUEST['server'].":".$sane_REQUEST['port'].$sane_REQUEST['mount'],'intromapform','servers.php','post');
-	
+
+	$form = new XoopsThemeForm($title." - ".$sane_REQUEST['server'].":".$sane_REQUEST['port'].$sane_REQUEST['mount'],'intromapform','mountpoints.php','post');
+
 	// Selection of introduction
-	
+
 	$form_c = new XoopsFormSelect(_AM_UHQICEAUTH_INTROS_FILE,"intronum");
 
 	$query = "SELECT * FROM ".$xoopsDB->prefix("uhqiceauth_intros");
@@ -136,17 +129,17 @@ function uhqiceauth_srvintroform($title) {
 		}
 	}
 	$form->addElement($form_c);
-	
+
 	$form->addElement(new XoopsFormText(_AM_UHQICEAUTH_INTROS_SEQ,'sequence',1,1,'10') );
-	
+
 	$form->addElement(new XoopsFormHidden("server", $sane_REQUEST['server']) );
 	$form->addElement(new XoopsFormHidden("port", $sane_REQUEST['port']) );
 	$form->addElement(new XoopsFormHidden("mount", $sane_REQUEST['mount']) );
 	$form->addElement(new XoopsFormHidden("op","addintro") );
-	
+
 	$form->addElement(new XoopsFormButton("",'post',$title,'submit') );
 
-	
+
 	$form->display();
 }
 
@@ -165,12 +158,12 @@ $sane_REQUEST = uhqiceauth_dosanity();
 switch ($op) {
 	case "insert" :
 		if ( isset($_REQUEST['verify']) ) {
-			
+
 			$lst_auth_grp = implode("|",$sane_REQUEST['lst_auth_grp']);
 			$src_auth_grp = implode("|",$sane_REQUEST['src_auth_grp']);
-			
+
 			$query = "INSERT INTO ".$xoopsDB->prefix('uhqiceauth_servers');
-			
+
 			$query .= " SET server = '".$sane_REQUEST['server']."', ";
 			$query .= "port = '".$sane_REQUEST['port']."', ";
 			$query .= "mount = '".$sane_REQUEST['mount']."', ";
@@ -181,45 +174,48 @@ switch ($op) {
 			$query .= "src_auth_grp = '".$src_auth_grp."', ";
 			$query .= "src_auth_un = '".$sane_REQUEST['src_auth_un']."', ";
 			$query .= "src_auth_pw = '".$sane_REQUEST['src_auth_pw']."'";
-			
+
 			$result = $xoopsDB->queryF($query);
 			if ($result == false) {
-				redirect_header("servers.php",10,_AM_UHQICEAUTH_SQLERR.$query."<br/>".$xoopsDB->error() );
+				redirect_header("mountpoints.php",10,_AM_UHQICEAUTH_SQLERR.$query."<br/>".$xoopsDB->error() );
 				break;
 			} else {
-				redirect_header("servers.php",10,_AM_UHQICEAUTH_ADDED.$sane_REQUEST['server'].":".$sane_REQUEST['port'].$sane_REQUEST['mount']._AM_UHQICEAUTH_SUCCESSFULLY);
+				redirect_header("mountpoints.php",10,_AM_UHQICEAUTH_ADDED.$sane_REQUEST['server'].":".$sane_REQUEST['port'].$sane_REQUEST['mount']._AM_UHQICEAUTH_SUCCESSFULLY);
 				break;
-			}			
+			}
 		} else {
+
+			$mainAdmin = new ModuleAdmin();
+			echo $mainAdmin->addNavigation('mountpoints.php');
 			xoops_cp_header();
-			echo function_exists("loadModuleAdminMenu") ? loadModuleAdminMenu(1) : adminMenu(1);
 			uhqiceauth_srvform(_AM_UHQICEAUTH_ADDSERVER);
-			xoops_cp_footer();
-		}		
+			include_once dirname(__FILE__) . '/admin_footer.php';
+
+		}
 		break;
 	case "edit" :
 		// Verify we have minimum parameters
 		if ( $sane_REQUEST['server'] && $sane_REQUEST['port'] && $sane_REQUEST['mount'] ) {
-			
+
 			// Load Record
 			$query = "SELECT * FROM ".$xoopsDB->prefix('uhqiceauth_servers')." WHERE server ='";
 			$query .= $sane_REQUEST['server']."' AND port = '".$sane_REQUEST['port']."' AND mount = '";
-			$query .= $sane_REQUEST['mount']."';";			
+			$query .= $sane_REQUEST['mount']."';";
 			$result = $xoopsDB->queryF($query);
 			if ($result == false) {
-				redirect_header("servers.php",10,_AM_UHQICEAUTH_SQLERR.$query."<br/>".$xoopsDB->error() );
+				redirect_header("mountpoints.php",10,_AM_UHQICEAUTH_SQLERR.$query."<br/>".$xoopsDB->error() );
 				break;
 			}
-			
+
 			if ( isset($_REQUEST['verify']) ) {
-				
+
 				// Modify main record
-				
+
 				$lst_auth_grp = implode("|",$sane_REQUEST['lst_auth_grp']);
 				$src_auth_grp = implode("|",$sane_REQUEST['src_auth_grp']);
-				
+
 				$query = "UPDATE ".$xoopsDB->prefix('uhqiceauth_servers');
-				
+
 				$query .= " SET server = '".$sane_REQUEST['server']."', ";
 				$query .= "port = '".$sane_REQUEST['port']."', ";
 				$query .= "mount = '".$sane_REQUEST['mount']."', ";
@@ -230,21 +226,21 @@ switch ($op) {
 				$query .= "src_auth_grp = '".$src_auth_grp."', ";
 				$query .= "src_auth_un = '".$sane_REQUEST['src_auth_un']."', ";
 				$query .= "src_auth_pw = '".$sane_REQUEST['src_auth_pw']."'";
-				
+
 				$query .= " WHERE server ='";
 				$query .= $sane_REQUEST['o_server']."' AND port = '".$sane_REQUEST['o_port']."' AND mount = '";
 				$query .= $sane_REQUEST['o_mount']."';";
-			
+
 				$result = $xoopsDB->queryF($query);
 				if ($result == false) {
-					redirect_header("servers.php",10,_AM_UHQICEAUTH_SQLERR.$query."<br/>".$xoopsDB->error() );
+					redirect_header("mountpoints.php",10,_AM_UHQICEAUTH_SQLERR.$query."<br/>".$xoopsDB->error() );
 					break;
 				} else {
 					$headerinfo = _AM_UHQICEAUTH_CHANGED.$sane_REQUEST['server'].":".$sane_REQUEST['port'].$sane_REQUEST['mount']._AM_UHQICEAUTH_SUCCESSFULLY;
 				}
-				
+
 				// Update any intro maps
-				
+
 				$query = "UPDATE ".$xoopsDB->prefix('uhqiceauth_intromap');
 				$query .= " SET server='".$sane_REQUEST['server']."', ";
 				$query .= " port='".$sane_REQUEST['port']."', ";
@@ -259,20 +255,24 @@ switch ($op) {
 				} else {
 					$headerinfo .- "<br\>"._AM_UHQICEAUTH_CHANGEMAP.$sane_REQUEST['server'].":".$sane_REQUEST['port'].$sane_REQUEST['mount']._AM_UHQICEAUTH_SUCCESSFULLY."<br/>";
 				}
-				redirect_header("servers.php",10,$headerinfo);
+				redirect_header("mountpoints.php",10,$headerinfo);
 				break;
 			} else {
 				$row = $xoopsDB->fetchArray($result);
 				$row['lst_auth_grp'] = explode("|",$row['lst_auth_grp']);
 				$row['src_auth_grp'] = explode("|",$row['src_auth_grp']);
+
 				xoops_cp_header();
-				loadModuleAdminMenu(1);
+				$mainAdmin = new ModuleAdmin();
+				echo $mainAdmin->addNavigation('mountpoints.php');
+
 				uhqiceauth_srvform(_AM_UHQICEAUTH_EDITSERVER,$row,"edit");
-				xoops_cp_footer();
-			}	
+				include_once dirname(__FILE__) . '/admin_footer.php';
+
+			}
 		} else {
-			redirect_header("servers.php",10,_AM_UHQICEAUTH_PARAMERR);
-		}				
+			redirect_header("mountpoints.php",10,_AM_UHQICEAUTH_PARAMERR);
+		}
 		break;
 	case "addintro" :
 		// Look for minimum parameters
@@ -285,21 +285,24 @@ switch ($op) {
 				$query .= " port='".$sane_REQUEST['port']."', ";
 				$query .= " mount='".$sane_REQUEST['mount']."', ";
 				$query .= " sequence='".$sane_REQUEST['sequence']."'";
-				
+
 				$result = $xoopsDB->queryF($query);
 				if ($result == false) {
-					redirect_header("servers.php",10,_AM_UHQICEAUTH_FORM_SQLERR.$query."<br/>".$xoopsDB->error() );
+					redirect_header("mountpoints.php",10,_AM_UHQICEAUTH_FORM_SQLERR.$query."<br/>".$xoopsDB->error() );
 				} else {
-					redirect_header("servers.php",10,_AM_UHQICEAUTH_INTROS_MAPADD);
+					redirect_header("mountpoints.php",10,_AM_UHQICEAUTH_INTROS_MAPADD);
 				}
 			} else {
 				xoops_cp_header();
-				loadModuleAdminMenu(1);
+				$mainAdmin = new ModuleAdmin();
+				echo $mainAdmin->addNavigation('mountpoints.php');
+
 				uhqiceauth_srvintroform(_AM_UHQICEAUTH_INTROS_MAPFORM);
-				xoops_cp_footer();
+
+				include_once dirname(__FILE__) . '/admin_footer.php';
 			}
 		} else {
-			redirect_header("servers.php",10,_AM_UHQICEAUTH_PARAMERR);
+			redirect_header("mountpoints.php",10,_AM_UHQICEAUTH_PARAMERR);
 		}
 		break;
 	case "delintro" :
@@ -313,28 +316,28 @@ switch ($op) {
 			$query .= " AND mount='".$sane_REQUEST['mount']."'";
 			$result = $xoopsDB->queryF($query);
 			if ($result == false) {
-				redirect_header("servers.php",10,_AM_UHQICEAUTH_FORM_SQLERR."<br/>".$xoopsDB->error() );
+				redirect_header("mountpoints.php",10,_AM_UHQICEAUTH_FORM_SQLERR."<br/>".$xoopsDB->error() );
 			} else {
-				redirect_header("servers.php",10,_AM_UHQICEAUTH_INTROS_MAPDEL);
+				redirect_header("mountpoints.php",10,_AM_UHQICEAUTH_INTROS_MAPDEL);
 			}
 		} else {
-			redirect_header("servers.php",10,_AM_UHQICEAUTH_PARAMERR);
+			redirect_header("mountpoints.php",10,_AM_UHQICEAUTH_PARAMERR);
 		}
-		break;	
+		break;
 	case "delete" :
 		// Verify we have minimum parameters
 		if ( $sane_REQUEST['server'] && $sane_REQUEST['port'] && $sane_REQUEST['mount'] ) {
-			
+
 			// Load Record
 			$query = "SELECT * FROM ".$xoopsDB->prefix('uhqiceauth_servers')." WHERE server = '";
 			$query .= $sane_REQUEST['server']."' AND port = '".$sane_REQUEST['port']."' AND mount = '";
-			$query .= $sane_REQUEST['mount']."';";			
+			$query .= $sane_REQUEST['mount']."';";
 			$result = $xoopsDB->queryF($query);
 			if ($result == false) {
-				redirect_header("servers.php",10,_AM_UHQICEAUTH_SQLERR.$query."<br/>".$xoopsDB->error());
+				redirect_header("mountpoints.php",10,_AM_UHQICEAUTH_SQLERR.$query."<br/>".$xoopsDB->error());
 				break;
-			} 
-			
+			}
+
 			if ( isset($_REQUEST['verify']) ) {
 				// Delete Record
 				$query = "DELETE FROM ".$xoopsDB->prefix('uhqiceauth_servers')." WHERE server = '";
@@ -346,9 +349,9 @@ switch ($op) {
 					$delok = 0;
 				} else {
 					$headerinfo = _AM_UHQICEAUTH_DELETED.$sane_REQUEST['server'].":".$sane_REQUEST['port'].$sane_REQUEST['mount']._AM_UHQICEAUTH_SUCCESSFULLY."<br/><br/>";
-					$delok = 1;	
+					$delok = 1;
 				}
-				
+
 				// Remove from intro map.
 				$query = "DELETE FROM ".$xoopsDB->prefix('uhqiceauth_intromap')." WHERE server ='";
 				$query .= $sane_REQUEST['server']."' AND port = '".$sane_REQUEST['port']."' AND mount = '";
@@ -359,14 +362,14 @@ switch ($op) {
 					$delok = 0;
 				} else {
 					$headerinfo .= _AM_UHQICEAUTH_DELETEDMAP.$sane_REQUEST['server'].":".$sane_REQUEST['port'].$sane_REQUEST['mount']._AM_UHQICEAUTH_SUCCESSFULLY."<br/><br/>";
-					$delok = 1;	
+					$delok = 1;
 				}
-				
+
 				// Delete historic data if tagged:
-				
+
 				// Delete from authtrail
 				if ( isset($_REQUEST['delhd']) && ($delok == 1) ) {
-					$query = "DELETE FROM ".$xoopsDB->prefix('uhqiceauth_authtrail')." WHERE server ='";	
+					$query = "DELETE FROM ".$xoopsDB->prefix('uhqiceauth_authtrail')." WHERE server ='";
 					$query .= $sane_REQUEST['server']."' AND port = '".$sane_REQUEST['port']."' AND mount = '";
 					$query .= $sane_REQUEST['mount']."';";
 					$result = $xoopsDB->queryF($query);
@@ -375,13 +378,13 @@ switch ($op) {
 						$delok = 0;
 					} else {
 						$headerinfo .= _AM_UHQICEAUTH_DELETED._AM_UHQICEAUTH_AUTH_PLU._AM_UHQICEAUTH_SUCCESSFULLY."<br/>";
-						$delok = 1;	
+						$delok = 1;
 					}
 				}
 
 				// Delete from mountlog
 				if ( isset($_REQUEST['delhd']) && ($delok == 1) ) {
-					$query = "DELETE FROM ".$xoopsDB->prefix('uhqiceauth_mountlog')." WHERE server ='";	
+					$query = "DELETE FROM ".$xoopsDB->prefix('uhqiceauth_mountlog')." WHERE server ='";
 					$query .= $sane_REQUEST['server']."' AND port = '".$sane_REQUEST['port']."' AND mount = '";
 					$query .= $sane_REQUEST['mount']."';";
 					$result = $xoopsDB->queryF($query);
@@ -390,13 +393,13 @@ switch ($op) {
 						$delok = 0;
 					} else {
 						$headerinfo .= _AM_UHQICEAUTH_DELETED._AM_UHQICEAUTH_MOUNTS_PLU._AM_UHQICEAUTH_SUCCESSFULLY."<br/>";
-						$delok = 1;	
+						$delok = 1;
 					}
 				}
-				
+
 				// Delete from activemounts
 				if ( isset($_REQUEST['delhd']) && ($delok == 1) ) {
-					$query = "DELETE FROM ".$xoopsDB->prefix('uhqiceauth_activemounts')." WHERE server ='";	
+					$query = "DELETE FROM ".$xoopsDB->prefix('uhqiceauth_activemounts')." WHERE server ='";
 					$query .= $sane_REQUEST['server']."' AND port = '".$sane_REQUEST['port']."' AND mount = '";
 					$query .= $sane_REQUEST['mount']."';";
 					if ($result == false) {
@@ -404,33 +407,34 @@ switch ($op) {
 						$delok = 0;
 					} else {
 						$headerinfo .= "<br/>"._AM_UHQICEAUTH_REMDB._AM_UHQICEAUTH_SUCCESSFULLY;
-						$delok = 1;	
+						$delok = 1;
 					}
-				}				
-				redirect_header("servers.php",10,$headerinfo);
+				}
+				redirect_header("mountpoints.php",10,$headerinfo);
 			} else {
 				xoops_cp_header();
-				loadModuleAdminMenu(1);
-				
+				$mainAdmin = new ModuleAdmin();
+				echo $mainAdmin->addNavigation('mountpoints.php');
+
 				// Display Record
 				$row = $xoopsDB->fetchArray($result);
-				
+
 				$data['mount'] = $row;
-								
+
 				$data['aucount'] = uhqiceauth_summarycount("AU",$row);	// Authentication Summary
 				$data['mlcount'] = uhqiceauth_summarycount("ML",$row);	// Mount Log Summary
 
 				// Render Template
-				
+
 				$xoopsTpl->assign('data',$data);
 				$xoopsTpl->display("db:admin/uhqiceauth_mountpoints_del.html");
-				
+
 				// Print Delete Form
 				uhqiceauth_srvdelform($row);
-				xoops_cp_footer();
+				include_once dirname(__FILE__) . '/admin_footer.php';
 			}
 		} else {
-			redirect_header("servers.php",10,_AM_UHQICEAUTH_PARAMERR);
+			redirect_header("mountpoints.php",10,_AM_UHQICEAUTH_PARAMERR);
 		}
 		break;
 	case "reset" :
@@ -439,7 +443,7 @@ switch ($op) {
 			$query = "UPDATE ".$xoopsDB->prefix('uhqiceauth_servers')." SET hits_pass = 0, hits_fail = 0, src_hits_pass = 0, src_hits_fail = 0 ";
 			$query .= "WHERE server = '".$sane_REQUEST['server']."' AND port = '".$sane_REQUEST['port']."' AND mount = '";
 			$query .= $sane_REQUEST['mount']."';";
-			
+
 			$result = $xoopsDB->queryF($query);
 			if ($result == false ) {
 				$headerinfo = _AM_UHQICEAUTH_SQLERR.$query."<br/>".$xoopsDB->error();
@@ -449,12 +453,14 @@ switch ($op) {
 		} else {
 			$headerinfo = _AM_UHQICEAUTH_PARAMERR;
 		}
-		redirect_header("servers.php",10,$headerinfo);
+		redirect_header("mountpoints.php",10,$headerinfo);
 		break;
 	case "none":
 	default:
 		xoops_cp_header();
-		loadModuleAdminMenu(1);
+		$mainAdmin = new ModuleAdmin();
+		echo $mainAdmin->addNavigation('mountpoints.php');
+
 		// See if we have anything first.
 		$data['servercount'] = uhqiceauth_summarycount("MP");;
 		if ( $data['servercount'] ) {
@@ -462,13 +468,13 @@ switch ($op) {
 			$query = "SELECT * FROM ".$xoopsDB->prefix('uhqiceauth_servers')." ORDER BY server, port, mount";
 			$result = $xoopsDB->queryF($query);
 			if ($result == false) {
-				redirect_header("servers.php",10,_AM_UHQICEAUTH_SQLERR.$query);
+				redirect_header("mountpoints.php",10,_AM_UHQICEAUTH_SQLERR.$query);
 				break;
 			} else {
 				$i=0;
 				while ($row = $xoopsDB->fetchArray($result) ) {
 					$data['mounts'][$i] = $row;
-					
+
 					// Look for and list intros for each mount point.
 					$query2 = "SELECT x.sequence as sequence, x.intronum as intronum, y.filename as filename ";
 					$query2 .= " FROM ".$xoopsDB->prefix("uhqiceauth_intromap")." x,";
@@ -484,14 +490,12 @@ switch ($op) {
 						$data['mounts'][$i]['intro'][$i2] = $row2;
 						$i2++;
 					}
-					$i++; 
+					$i++;
 				}
-			}		
+			}
 		}
         $xoopsTpl->assign('data',$data);
 		$xoopsTpl->display("db:admin/uhqiceauth_mountpoints.html");
-		xoops_cp_footer();		
+		include_once dirname(__FILE__) . '/admin_footer.php';
 		break;
 }
-
-?>

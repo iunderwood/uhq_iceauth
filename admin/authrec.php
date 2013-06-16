@@ -2,7 +2,7 @@
 
 /*
 UHQ-IceAuth :: XOOPS Module for IceCast Authentication
-Copyright (C) 2008-2011 :: Ian A. Underwood :: xoops@underwood-hq.org
+Copyright (C) 2008-2013 :: Ian A. Underwood :: xoops@underwood-hq.org
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,33 +19,26 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-include "../../../mainfile.php";
+include_once dirname(__FILE__) . '/admin_header.php';
 
-include XOOPS_ROOT_PATH . "/include/cp_header.php";
+if (!isset($xoopsTpl)) {
+	$xoopsTpl = new XoopsTpl();
+}
+$xoopsTpl->caching=0;
+
 include XOOPS_ROOT_PATH . "/modules/uhq_iceauth/includes/sanity.php";
 include XOOPS_ROOT_PATH . "/modules/uhq_iceauth/admin/functions.inc.php";
 include XOOPS_ROOT_PATH . "/modules/uhq_iceauth/includes/auth.inc.php";
 
-// Load frameworks
-include_once XOOPS_ROOT_PATH."/Frameworks/art/functions.php";
-include_once XOOPS_ROOT_PATH."/Frameworks/art/functions.admin.php";
-
-// Load template engine if set up a template.
-require_once XOOPS_ROOT_PATH . '/class/template.php';
-if (!isset($xoopsTpl)) {
-	$xoopsTpl = new XoopsTpl();
-}
-$xoopsTpl->xoops_setCaching(0);
-
 function uhqiceauth_authlist($authtype, $start, $limit, $orderby) {
 	global $xoopsDB;
 	$data = array();
-	
+
 	$query = "SELECT * FROM ".$xoopsDB->prefix('uhqiceauth_authtrail')." WHERE ";
 	$query .= " authtype = '".$authtype."' ORDER BY sequence ".$orderby." LIMIT ".$start.", ".$limit;
-	
+
 	$result = $xoopsDB->queryF($query);
-	
+
 	if ($result == false) {
 		$data['error'] = _AM_UHQICEAUTH_SQLERR.$query;
 		return $data;
@@ -54,7 +47,7 @@ function uhqiceauth_authlist($authtype, $start, $limit, $orderby) {
 		$data['limit'] = $limit;
 		$data['type'] = $authtype;
 
-		$i=0;		
+		$i=0;
 		while ($row = $xoopsDB->fetchArray($result) ) {
 			$data['record'][$i] = $row;
 			$data['record'][$i]['flag'] = strtolower($row['geocc']);
@@ -73,16 +66,16 @@ function uhqiceauth_authlist($authtype, $start, $limit, $orderby) {
 function uhqiceauth_authrecord($sequence) {
 	global $xoopsDB;
 	$data = array();
-	
+
 	if ($sequence) {
 		$query = "SELECT * FROM ".$xoopsDB->prefix('uhqiceauth_authtrail')." WHERE sequence = '".$sequence."'";
 		$result = $xoopsDB->queryF($query);
-		
+
 		if ($result == false) {
 			$data['error'] = _AM_UHQICEAUTH_SQLERR.$query;
 		} else {
 			if ($row = $xoopsDB->fetchArray($result) ) {
-				$data = $row;			
+				$data = $row;
 				if (uhqiceauth_checkrdns()) {
 					$data['checkdns'] = true;
 					$data['currentrdns'] = gethostbyaddr($row['userip']);
@@ -127,35 +120,41 @@ switch ($op) {
 		break;
 	case "authrecord" :
 		xoops_cp_header();
-		loadModuleAdminMenu(3);
+		$mainAdmin = new ModuleAdmin();
+		echo $mainAdmin->addNavigation('authrec.php');
 
 		$data = array();
-		
+
 		$data = uhqiceauth_authrecord($sane_REQUEST['sequence']);
-		
+
 		$xoopsTpl->assign('data',$data);
-		$xoopsTpl->display("db:admin/uhqiceauth_authrec_detail.html");		
-		xoops_cp_footer();
+		$xoopsTpl->display("db:admin/uhqiceauth_authrec_detail.html");
+		include_once dirname(__FILE__) . '/admin_footer.php';
+
 		break;
 	case "none" :
 	default:
 		xoops_cp_header();
-		loadModuleAdminMenu(3);
+
+		$mainAdmin = new ModuleAdmin();
+		echo $mainAdmin->addNavigation('authrec.php');
+
 		$data = array();
-		
+
 		$data['aucount'] = uhqiceauth_summarycount("AU");	// Authentication Summary
-		
+
 		if ( $data['aucount'] ) {
 			$data['rec'][0] = uhqiceauth_authlist("L",0,15,"DESC");
 			$data['rec'][1] = uhqiceauth_authlist("S",0,5,"DESC");
 			$data['rec'][2] = uhqiceauth_authlist("A",0,5,"DESC");
 		}
-		
+
 		$data['usegeo'] = uhqiceauth_geocheck();
 
 		$xoopsTpl->assign('data',$data);
 		$xoopsTpl->display("db:admin/uhqiceauth_authrec.html");
-		xoops_cp_footer();
+		include_once dirname(__FILE__) . '/admin_footer.php';
+
 		break;
 }
 

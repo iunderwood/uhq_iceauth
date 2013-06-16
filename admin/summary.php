@@ -19,22 +19,42 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+// Admin page setup.
+
 include_once dirname(__FILE__) . '/admin_header.php';
 
 if (!isset($xoopsTpl)) {
 	$xoopsTpl = new XoopsTpl();
 }
 $xoopsTpl->caching=0;
-// We need to include a LOT of stuff.
 
-include XOOPS_ROOT_PATH . "/modules/uhq_iceauth/includes/sanity.php";
-include XOOPS_ROOT_PATH . "/modules/uhq_iceauth/admin/functions.inc.php";
-include XOOPS_ROOT_PATH . "/class/xoopsformloader.php";
+// Start Page Display
 
 xoops_cp_header();
 $mainAdmin = new ModuleAdmin();
-echo $mainAdmin->addNavigation('ua.php');
+echo $mainAdmin->addNavigation('summary.php');
 
-echo "Nothing here ... yet.";
+// Load module functions
+
+require_once dirname(__FILE__) . "/functions.inc.php";
+
+// Summary Data
+$data['anon']		= uhqiceauth_anoncheck();
+$data['mod_geo']	= uhqiceauth_geocheck();
+$data['mime']		= uhqiceauth_mimecheck();
+
+// DB Counters
+$data['mpcount'] = uhqiceauth_summarycount("MP");	// Mount Point Summary
+$data['incount'] = uhqiceauth_summarycount("IN");	// Intro Summary
+$data['aucount'] = uhqiceauth_summarycount("AU");	// Authentication Summary
+$data['mlcount'] = uhqiceauth_summarycount("ML");	// Mount Log Summary
+$data['amcount'] = uhqiceauth_summarycount("AM");	// Active Mountpoints
+$data['spcount'] = uhqiceauth_summarycount("SP");	// Stream Login Summary
+$data['uacount'] = uhqiceauth_summarycount("UA");	// UA Bans
+$data['ipcount'] = uhqiceauth_summarycount("IP");	// IP Address Bans
+
+// Assign & Render Template
+$xoopsTpl->assign('data',$data);
+$xoopsTpl->display("db:admin/uhqiceauth_index.html");
 
 include_once dirname(__FILE__) . '/admin_footer.php';

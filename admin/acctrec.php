@@ -2,7 +2,7 @@
 
 /*
 UHQ-IceAuth :: XOOPS Module for IceCast Authentication
-Copyright (C) 2008-2011 :: Ian A. Underwood :: xoops@underwood-hq.org
+Copyright (C) 2008-2013 :: Ian A. Underwood :: xoops@underwood-hq.org
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,21 +19,17 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-include "../../../mainfile.php";
+include_once dirname(__FILE__) . '/admin_header.php';
 
-require_once XOOPS_ROOT_PATH . "/include/cp_header.php";
-require_once XOOPS_ROOT_PATH . "/modules/uhq_iceauth/includes/sanity.php";
-require_once XOOPS_ROOT_PATH . "/modules/uhq_iceauth/admin/functions.inc.php";
-
-// Load frameworks
-require_once XOOPS_ROOT_PATH."/Frameworks/art/functions.php";
-require_once XOOPS_ROOT_PATH."/Frameworks/art/functions.admin.php";
-
-require_once XOOPS_ROOT_PATH . '/class/template.php';
 if (!isset($xoopsTpl)) {
 	$xoopsTpl = new XoopsTpl();
 }
-$xoopsTpl->xoops_setCaching(0);
+$xoopsTpl->caching=0;
+
+// Load required includes
+
+require_once XOOPS_ROOT_PATH . "/modules/uhq_iceauth/includes/sanity.php";
+include_once dirname(__FILE__) . '/functions.inc.php';
 
 // Now the fun begins!
 
@@ -47,9 +43,9 @@ $sane_REQUEST = uhqiceauth_dosanity();
 
 function uhqiceauth_acct_agentsumconn($limit=10,$days=0) {
 	global $xoopsDB;
-	
+
 	$data = array();
-	
+
 	// Summary List
 	$query = "SELECT useragent, COUNT(useragent) AS total FROM ".$xoopsDB->prefix('uhqiceauth_authtrail');
 	$query .= " WHERE authtype = 'L' ";
@@ -61,27 +57,27 @@ function uhqiceauth_acct_agentsumconn($limit=10,$days=0) {
 		$query .= " LIMIT ".$limit;
 	}
 	$result = $xoopsDB->queryF($query);
-	
+
 	if (!$result) {
 		$data['error'] = _AM_UHQICEAUTH_SQLERR.$query." [".$xoopsDB->error()."]";
 		return $data;
 	}
-	
+
 	$data['limit'] = $limit;
 	$data['days'] = $days;
-	
+
 	$i=0;
 	while ($row = $xoopsDB->fetchArray($result) ) {
 		$data['ua'][$i] = $row;
 		$i++;
 	}
-	
+
 	return $data;
 }
 
 function uhqiceauth_acct_agentsumtime($limit=10, $days=0) {
 	global $xoopsDB;
-	
+
 	// Summary List
 	$query = "SELECT useragent, SUM(duration) AS duration FROM ".$xoopsDB->prefix('uhqiceauth_authtrail');
 	$query .= " WHERE authtype = 'L' AND duration > 0 ";
@@ -92,25 +88,25 @@ function uhqiceauth_acct_agentsumtime($limit=10, $days=0) {
 	if ($limit) {
 		$query .= " LIMIT ".$limit;
 	}
-	
+
 	$result = $xoopsDB->queryF($query);
-	
+
 	if (!$result) {
 		$data['error'] = _AM_UHQICEAUTH_SQLERR.$query." [".$xoopDB->error()."]";
 		return;
 	}
-	
+
 	$data['limit'] = $limit;
 	$data['days'] = $days;
-	
+
 	$i=0;
-	
+
 	while ($row = $xoopsDB->fetchArray($result) ) {
 		$data['ua'][$i] = $row;
 		$data['ua'][$i]['time'] = uhqiceauth_time($row['duration']);
 		$i++;
 	}
-	
+
 	return $data;
 }
 
@@ -120,7 +116,7 @@ function uhqiceauth_ttsl($interval = null) {
 	global $xoopsDB;
 
 	// Construct query
-	
+
 	$query = "SELECT SUM(duration) AS total, AVG(duration) AS average, COUNT(duration) AS count ";
 	$query .= "FROM ( ";
  	$query .= "SELECT duration FROM ".$xoopsDB->prefix('uhqiceauth_authtrail')." y WHERE ";
@@ -134,52 +130,46 @@ function uhqiceauth_ttsl($interval = null) {
  	$query .= ") z";
 
 	// Get Result
-	
+
 	$result = $xoopsDB->queryF($query);
  	if (!$result) {
 		return null;
 	}
 	$row = $xoopsDB->fetchArray($result);
-	
+
 	$row['ttsl'] = uhqiceauth_time( intval($row['total']));
 	$row['avg'] = uhqiceauth_time( intval($row['average']));
-	
+
 	return $row;
 }
 
-switch ($op) {
-	case "none":
-	default:
-		xoops_cp_header();
-		loadModuleAdminMenu(4);
-		
-		$data = array();
-		
-		$data['duacount'] = uhqiceauth_summarycount("DUA");
-		
-		if ($data['duacount']) {
-			$data['listbyconn'] = uhqiceauth_acct_agentsumconn(10,90);
-			$data['listbytime'] = uhqiceauth_acct_agentsumtime(10,90);
-		}
-		
-		$data['ttsl'][0] = uhqiceauth_ttsl();
-		$data['ttsl'][0]['name'] = _AM_UHQICEAUTH_STATS_TTSL_TODAY.date("Y-m-d, H:i:s");
-		
-		$data['ttsl'][1] = uhqiceauth_ttsl("1 DAY");
-		$data['ttsl'][1]['name'] = _AM_UHQICEAUTH_STATS_TTSL_24H;
-		
-		$data['ttsl'][2] = uhqiceauth_ttsl("7 DAY");
-		$data['ttsl'][2]['name'] = _AM_UHQICEAUTH_STATS_TTSL_7D;
-		
-		$data['ttsl'][3] = uhqiceauth_ttsl("30 DAY");
-		$data['ttsl'][3]['name'] = _AM_UHQICEAUTH_STATS_TTSL_30D;
-		
-		// Assign & Render Template
-		$xoopsTpl->assign('data',$data);
-		$xoopsTpl->display("db:admin/uhqiceauth_acctrec.html");
-				
-		xoops_cp_footer();
-		break;
+xoops_cp_header();
+$mainAdmin = new ModuleAdmin();
+echo $mainAdmin->addNavigation('acctrec.php');
+
+$data = array();
+
+$data['duacount'] = uhqiceauth_summarycount("DUA");
+
+if ($data['duacount']) {
+	$data['listbyconn'] = uhqiceauth_acct_agentsumconn(10,90);
+	$data['listbytime'] = uhqiceauth_acct_agentsumtime(10,90);
 }
 
-?>
+$data['ttsl'][0] = uhqiceauth_ttsl();
+$data['ttsl'][0]['name'] = _AM_UHQICEAUTH_STATS_TTSL_TODAY.date("Y-m-d, H:i:s");
+
+$data['ttsl'][1] = uhqiceauth_ttsl("1 DAY");
+$data['ttsl'][1]['name'] = _AM_UHQICEAUTH_STATS_TTSL_24H;
+
+$data['ttsl'][2] = uhqiceauth_ttsl("7 DAY");
+$data['ttsl'][2]['name'] = _AM_UHQICEAUTH_STATS_TTSL_7D;
+
+$data['ttsl'][3] = uhqiceauth_ttsl("30 DAY");
+$data['ttsl'][3]['name'] = _AM_UHQICEAUTH_STATS_TTSL_30D;
+
+// Assign & Render Template
+$xoopsTpl->assign('data',$data);
+$xoopsTpl->display("db:admin/uhqiceauth_acctrec.html");
+
+include_once dirname(__FILE__) . '/admin_footer.php';

@@ -270,5 +270,3 @@ define ("_AM_UHQICEAUTH_INTROS_PLAY_NORECORD","Intro ID not found.");
 define ("_AM_UHQICEAUTH_INTROS_PLAY_NOFILE","Unable to find file.");
 define ("_AM_UHQICEAUTH_INTROS_PLAY_ERROR","Error: ");
 define ("_AM_UHQICEAUTH_INTROS_PLAY_VLCREQ","You must have the VLC plug-in installed in order to use this feature.");
-
-?>

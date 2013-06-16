@@ -1,0 +1,9 @@
+Credits
+=======
+
+UHQ-IceAuth written by Ian A. Underwood
+
+Concept and some code from IceCast2 Auth (ice), by Mark McRitchie.
+Admin icons from the Crystal Project (http://www.everaldo.com/crystal).
+
+Thanks to Karl Hayes of Xiph.org for his assistance.
