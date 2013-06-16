@@ -1,5 +1,8 @@
 ====[ v0.93 -- 2013-06-xx ]====
 
+Feature Adds
+* Now caputres and stores referers sent on a listener_add.  (IceCast 2.3.3 KH)
+
 Code Changes
 * Converted to XOOPS 2.5.5 Admin GUI.
 

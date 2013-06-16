@@ -339,11 +339,22 @@ function xoops_module_update_uhq_iceauth(&$module, $oldversion = null) {
 			$module->setErrors("Error adding DB table uhqiceauth_ipbans");
 			return false;
 		}
-		
-		
+
+
 		$oldversion=90;
 	}
-		
+
+	if ($oldversion < 93) {
+		// Add column to the auth table to store the referer.
+		$query = "ALTER TABLE ".$xoopsDB->prefix("uhqiceauth_authtrail")." ADD referer VARCHAR(128) AFTER useragent";
+		$result = $xoopsDB->queryF($query);
+		if (! $result) {
+			$module->setErrors("Error adding field matchtype in uhqiceauth_uabans");
+			return false;
+		}
+		$oldversion = 93;
+	}
+
 	return true;
 }
 

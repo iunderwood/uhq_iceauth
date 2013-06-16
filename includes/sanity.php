@@ -35,8 +35,11 @@ function uhqiceauth_dosanity() {
 	if ( isset($_REQUEST['duration']) ) {
 		$sanerequest['duration'] = $myts->addSlashes($_REQUEST['duration']);
 	}
-		
-	// Module Variables		
+	if ( isset($_REQUEST['referer']) ) {
+		$sanerequest['referer'] = $myts->addSlashes($_REQUEST['referer']);
+	}
+
+	// Module Variables
 	if ( isset($_REQUEST['timelimit']) ) {
 		$sanerequest['timelimit'] = $myts->addSlashes($_REQUEST['timelimit']);
 	}

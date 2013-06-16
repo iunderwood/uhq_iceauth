@@ -28,6 +28,7 @@ CREATE TABLE uhqiceauth_authtrail (
 	clientid		INT			UNSIGNED NOT NULL,
 	username		CHAR(20),
 	useragent		VARCHAR(128),
+	referer			VARCHAR(128),
 	userip			CHAR(50)	NOT NULL,
 	userrdns		VARCHAR(64),
 	duration		INT			UNSIGNED,

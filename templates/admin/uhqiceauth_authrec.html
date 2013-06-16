@@ -43,6 +43,7 @@
 					<{if $data.usegeo}>
 						<th><{$smarty.const._AM_UHQICEAUTH_LIST_GEO}></th>
 					<{/if}>
+					<th><{$smarty.const._AM_UHQICEAUTH_LIST_REFERER}></th>
 				</tr>
 				<{foreach item=list from=$recordlist.record}>
 				<tr class="<{cycle values="odd,even"}>">
@@ -90,6 +91,12 @@
 							<{if $list.ccname}><{$list.ccname}><{/if}>
 						</td>
 					<{/if}>
+					<td>
+						<{if $list.referer}>
+							<{$list.referer}>
+						<{else}><font color=green>-</font>
+						<{/if}>
+					</td>
 		  		</tr>
 				<{/foreach}>
 			</table>

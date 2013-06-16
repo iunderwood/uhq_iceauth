@@ -134,8 +134,9 @@ define ("_AM_UHQICEAUTH_ADR_NOREC","Not Recorded");
 define ("_AM_UHQICEAUTH_ADR_UA","User Agent:");
 define ("_AM_UHQICEAUTH_ADR_UANP","UA Not Provided");
 define ("_AM_UHQICEAUTH_ADR_GEOLOC","Geolocation: ");
-define ("_AM_UHQiCEAUTH_ADR_NOGEO","No Data Available");
+define ("_AM_UHQICEAUTH_ADR_NOGEO","No Data Available");
 define ("_AM_UHQICEAUTH_ADR_RETURN","Return to Authentication");
+define ("_AM_UHQICEAUTH_ADR_REFERER","Referencing Site: ");
 
 // Auth Information Comments
 
@@ -211,6 +212,7 @@ define ("_AM_UHQICEAUTH_LIST_DATEUSED","Date Used");
 define ("_AM_UHQICEAUTH_LIST_INTERVAL","Interval");
 define ("_AM_UHQICEAUTH_LIST_TTSL","TTSL");
 define ("_AM_UHQICEAUTH_LIST_AVGTTSL","Average TTSL");
+define ("_AM_UHQICEAUTH_LIST_REFERER","Referer");
 
 // Mount Point Elements
 

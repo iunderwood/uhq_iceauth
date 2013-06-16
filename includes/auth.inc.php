@@ -319,6 +319,9 @@ function uhqiceauth_authlog($sane_REQUEST, $authtype, $authstat, $authinfo=null)
 	}
 	$query .= "useragent = '".$sane_REQUEST['agent']."', ";
 	$query .= "userip = '".$sane_REQUEST['ip']."'";
+	if (isset($sane_REQUEST['referer'])) {
+		$query .= ", referer = '".$sane_REQUEST['referer']."'";
+	}
 
 	// Do Geolocation
 
