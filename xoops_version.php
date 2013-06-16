@@ -29,7 +29,7 @@ $modversion['credits']		= "Underwood Headquarters";
 $modversion['help']         = 'page=help';
 $modversion['license']      = 'GNU GPL 2.0 or later';
 $modversion['license_url']  = "www.gnu.org/licenses/gpl-2.0.html";
-$modversion['official'] = 0;
+$modversion['official'] 	= 0;
 $modversion['image']		= "images/uhq_iceauth_slogo.png";
 $modversion['dirname']		= "uhq_iceauth";
 

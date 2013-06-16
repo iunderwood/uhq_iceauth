@@ -2,7 +2,7 @@
 
 /*
 UHQ-IceAuth :: XOOPS Module for IceCast Authentication
-Copyright (C) 2008-2011 :: Ian A. Underwood :: xoops@underwood-hq.org
+Copyright (C) 2008-2013 :: Ian A. Underwood :: xoops@underwood-hq.org
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,12 +25,12 @@ include '../../mainfile.php';
 
 if (is_object($xoopsUser)) {
 	$block['username'] = $xoopsUser->getVar('uname');
-	
+
 	// Check DB for entry
-	
+
 	$query = "SELECT * FROM ".$xoopsDB->prefix("uhqiceauth_streampass");
 	$query .= " WHERE un = '".utf8_encode($block['username'])."'";
-	
+
 	$result = $xoopsDB->queryF($query);
 	if ($result == false) {
 		redirect_header($_SERVER['HTTP_REFERER'],10,_MD_UHQICEAUTH_CSP_DBERR);
@@ -53,5 +53,3 @@ if (is_object($xoopsUser)) {
 } else {
 	redirect_header($_SERVER['HTTP_REFERER'],10,_MD_UHQICEAUTH_CSP_LOGIN);
 }
-
-?>

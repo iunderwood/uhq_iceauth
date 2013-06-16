@@ -2,7 +2,7 @@
 
 /*
 UHQ-IceAuth :: XOOPS Module for IceCast Authentication
-Copyright (C) 2008-2011 :: Ian A. Underwood :: xoops@underwood-hq.org
+Copyright (C) 2008-2013 :: Ian A. Underwood :: xoops@underwood-hq.org
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 // Returns User ID if username and password authenticate successfully.
-
 function uhqiceauth_checkuser($un, $pw) {
 
 	global $xoopsDB;
@@ -69,20 +68,15 @@ function uhqiceauth_checkuser($un, $pw) {
 	return false;
 }
 
-
 // Returns true if the user's groups intersect with the groups passed.
-
 function uhqiceauth_checkgroup($uid, $grp) {
 
 	// Get User
-
 	$member_handler =& xoops_gethandler('member');
 	$user =& $member_handler->getUser($uid);
 
 	// Check Group
-
 	$rtn = false;
-
 	if (in_array(XOOPS_GROUP_ANONYMOUS, $grp)) {
 		$rtn = true;
 	} elseif (is_object($user)) {
@@ -90,11 +84,9 @@ function uhqiceauth_checkgroup($uid, $grp) {
 	}
 
 	return $rtn;
-
 }
 
 // The following functions check on variables in the module configuration.
-
 function uhqiceauth_checkrdns() {
 
 	// Load module options
@@ -127,9 +119,7 @@ function uhqiceauth_checklogadmin() {
 	}
 }
 
-
 // Puts the header in the HTTP header, and echoes it on a line of its own, if requested.
-
 function uhqiceauth_header($hdr_txt) {
 	global $iceheaders;
 	global $iceheadercount;
@@ -143,13 +133,11 @@ function uhqiceauth_header($hdr_txt) {
 }
 
 // Dumps the intro file if we've got one.
-
 function uhqiceauth_introdump($mountrow=array(),$header) {
 
 	global $xoopsDB;
 
 	// Look and see if there are any intros.
-
 	$query = "SELECT COUNT(*) FROM ".$xoopsDB->prefix("uhqiceauth_intromap");
 	$query .= " WHERE server='".$mountrow['server']."' AND";
 	$query .= " port='".$mountrow['port']."' AND";
@@ -163,7 +151,6 @@ function uhqiceauth_introdump($mountrow=array(),$header) {
 	}
 
 	// Set header
-
 	if ($intros == 0) {
 		uhqiceauth_header($header,1);
 		return false;
@@ -176,7 +163,6 @@ function uhqiceauth_introdump($mountrow=array(),$header) {
 		$query .= " AND x.mount='".$mountrow['mount']."'";
 		$query .= " AND x.intronum=y.intronum";
 		$query .= " ORDER BY x.sequence";
-
 		$result = $xoopsDB->queryF($query);
 		if ($result == false) {
 			// Base authentication if query fails.
@@ -219,7 +205,6 @@ function uhqiceauth_introdump($mountrow=array(),$header) {
 }
 
 // Increments the hits for the listener counters.
-
 function uhqiceauth_addhit($server,$port,$mount,$hit = false) {
 	global $xoopsDB;
 
@@ -238,7 +223,6 @@ function uhqiceauth_addhit($server,$port,$mount,$hit = false) {
 }
 
 // Increments the hits for the source counters.
-
 function uhqiceauth_srcaddhit($server,$port,$mount,$hit = false) {
 	global $xoopsDB;
 
@@ -257,7 +241,6 @@ function uhqiceauth_srcaddhit($server,$port,$mount,$hit = false) {
 }
 
 // Plug-in for Geolocation
-
 function uhqiceauth_geolocate($ip) {
 	global $module_handler;
 
@@ -278,7 +261,6 @@ function uhqiceauth_geolocate($ip) {
 }
 
 // Logs authentication requests.
-
 function uhqiceauth_authlog($sane_REQUEST, $authtype, $authstat, $authinfo=null) {
 	global $xoopsDB;
 
@@ -324,7 +306,6 @@ function uhqiceauth_authlog($sane_REQUEST, $authtype, $authstat, $authinfo=null)
 	}
 
 	// Do Geolocation
-
 	$location = uhqiceauth_geolocate($sane_REQUEST['ip']);
 
 	if (is_object($location)) {
@@ -356,7 +337,6 @@ function uhqiceauth_authlog($sane_REQUEST, $authtype, $authstat, $authinfo=null)
 }
 
 // Logs accounting information when a listener disconnects.
-
 function uhqiceauth_acctlog($sane_REQUEST) {
 	global $xoopsDB;
 
@@ -440,7 +420,6 @@ function uhqiceauth_acctlog($sane_REQUEST) {
 }
 
 // Log mountpoint changes & maintain a list of active mountpoints.
-
 function uhqiceauth_mountlog($sane_REQUEST) {
 	global $xoopsDB;
 
@@ -498,7 +477,6 @@ function uhqiceauth_mountlog($sane_REQUEST) {
 }
 
 // Verify UA is acceptable.
-
 function uhqiceauth_ua_verify($testua) {
 	global $xoopsDB;
 
@@ -527,5 +505,3 @@ function uhqiceauth_ua_verify($testua) {
 	// Test if we pass our UA tests.
 	return true;
 }
-
-?>

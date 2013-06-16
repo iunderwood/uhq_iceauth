@@ -330,6 +330,3 @@ switch ($op) {
 
 		break;
 }
-
-
-?>

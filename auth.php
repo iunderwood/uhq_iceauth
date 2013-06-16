@@ -2,7 +2,7 @@
 
 /*
 UHQ-IceAuth :: XOOPS Module for IceCast Authentication
-Copyright (C) 2008-2011 :: Ian A. Underwood :: xoops@underwood-hq.org
+Copyright (C) 2008-2013 :: Ian A. Underwood :: xoops@underwood-hq.org
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ $print_hdr = 1;			// Show header array by default.
 
 // Okay, we need options!
 if ($_REQUEST['action']) {
-	
+
 	// Make requests sane.
 	$sane_REQUEST = uhqiceauth_dosanity();
 
@@ -45,14 +45,14 @@ if ($_REQUEST['action']) {
 	$xoopsModule		=& $modhandler->getByDirname('uhq_iceauth');
 	$config_handler		=& xoops_gethandler('config');
 	$xoopsModuleConfig	=& $config_handler->getConfigsByCat(0,$xoopsModule->getVar('mid'));
-	
+
 	// Process Actions
 	switch ( $_REQUEST['action'] ) {
 		case "stream_auth":		// Too much common code
 		case "listener_add":
 			// Make sure we have the mount, server, port, and requesting IP.
 			if ( $sane_REQUEST['server'] && $sane_REQUEST['port'] && $sane_REQUEST['mount'] && $sane_REQUEST['ip'] ) {
-		
+
 				// Try and locate mount in DB
 				$query = "SELECT COUNT(*) FROM ".$xoopsDB->prefix("uhqiceauth_servers")." WHERE ";
 				$query .= "server = '".$sane_REQUEST['server']."' AND port = '".$sane_REQUEST['port']."' AND mount = '".$sane_REQUEST['mount']."';";
@@ -66,7 +66,7 @@ if ($_REQUEST['action']) {
 				}
 
 				if ($svr_count) {	// If Mount Found
-					
+
 					// Load mount data, break if query fails.
 					$query = "SELECT * FROM ".$xoopsDB->prefix("uhqiceauth_servers")." WHERE ";
 					$query .= "server = '".$sane_REQUEST['server']."' AND port = '".$sane_REQUEST['port']."' AND mount = '".$sane_REQUEST['mount']."';";
@@ -80,7 +80,7 @@ if ($_REQUEST['action']) {
 					$row = $xoopsDB->fetchArray($result);
 					$row['lst_auth_grp'] = explode("|",$row['lst_auth_grp']);
 					$row['src_auth_grp'] = explode("|",$row['src_auth_grp']);
-					
+
 					if ( $_REQUEST['action'] == "listener_add") {
 						// Check here to make sure the specified UA isn't banned.
 
@@ -89,10 +89,10 @@ if ($_REQUEST['action']) {
 							uhqiceauth_authlog($sane_REQUEST,'L',false,301);
 							break;
 						}
-						
+
 						// Check against username/pw.  Handling is based on mount type.
 						$user = uhqiceauth_checkuser($sane_REQUEST['user'], $sane_REQUEST['pass']);
-						
+
 						switch ($row['lst_auth_typ']) {
 							case "A" :	// Anonymous
 								// Reset user if auth failed.  Anonymous moutpoints don't care if the auth is correct.
@@ -101,14 +101,14 @@ if ($_REQUEST['action']) {
 								}
 								// Check UA Bans
 								// Check IP Bans
-								
+
 								// User is good if we've got no bans to consider.
-								
+
 								// Enforce a time limit.
 				  				if ($row['timelimit'] > 0) {
 				  					uhqiceauth_header($xoopsModuleConfig['hdr_time']." ".$row['timelimit']);
 				  				}
-				
+
 								// Intro Dump is last.
 								uhqiceauth_authlog($sane_REQUEST,'L',true);
 								if (uhqiceauth_introdump($row,$xoopsModuleConfig['hdr_auth'])) {
@@ -129,12 +129,12 @@ if ($_REQUEST['action']) {
 			  					}
 								// Check UA Bans
 								// Check IP Bans
-															
+
 					  			// Enforce Time Limit
 				  				if ($row['timelimit'] > 0) {
 				  					uhqiceauth_header($xoopsModuleConfig['hdr_time']." ".$row['timelimit']);
 				  				}
-				
+
 								// Check for and dump any intros.
 								uhqiceauth_authlog($sane_REQUEST,'L',true);
 								if (uhqiceauth_introdump($row,$xoopsModuleConfig['hdr_auth'])) {
@@ -202,7 +202,7 @@ if ($_REQUEST['action']) {
 		  							}
 				  					// Report good if we've gotten this far.
 				  					uhqiceauth_header($xoopsModuleConfig['hdr_auth'],1);
-		  				
+
 				  					// Add time limit if we're using it
 		  							if ($xoopsModuleConfig['undef_time'] > 0 ) {
 		  								uhqiceauth_header($xoopsModuleConfig['hdr_time']." ".$xoopsModuleConfig['undef_time'],1);
@@ -213,7 +213,7 @@ if ($_REQUEST['action']) {
 						  		break;
 				  			case "A" : // Always Allow
 								uhqiceauth_header ($xoopsModuleConfig['hdr_auth'],1);
-								
+
 			  					// Add time limit if we're using it
 	  							if ($xoopsModuleConfig['undef_time'] > 0 ) {
 	  								uhqiceauth_header($xoopsModuleConfig['hdr_time']." ".$xoopsModuleConfig['undef_time'],1);
@@ -222,7 +222,7 @@ if ($_REQUEST['action']) {
 							default: // Never Allow
 								uhqiceauth_header ($xoopsModuleConfig['hdr_msg']._MD_UHQICEAUTH_ERROR_UNDEF." ".$sane_REQUEST['mount'],1);
 								break;
-			  			} 
+			  			}
 			  		} else {
 			  			uhqiceauth_header($xoopsModuleConfig['hdr_msg']._MD_UHQICEAUTH_ERROR_SRCREQ.$sane_REQUEST['mount'],1);
 			  		}
@@ -301,5 +301,3 @@ if ($_REQUEST['action']) {
   echo ("This file is not meant to be called directly.");
 
 }
-
-?>
