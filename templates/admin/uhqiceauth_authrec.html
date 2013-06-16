@@ -39,6 +39,7 @@
 					<th><{$smarty.const._AM_UHQICEAUTH_LIST_HASH}></th>
 					<th><{$smarty.const._AM_UHQICEAUTH_LIST_TIME}></th>
 					<th><{$smarty.const._AM_UHQICEAUTH_LIST_SVR}></th>
+					<th></th>
 					<th><{$smarty.const._AM_UHQICEAUTH_LIST_LOG}></th>
 					<{if $data.usegeo}>
 						<th><{$smarty.const._AM_UHQICEAUTH_LIST_GEO}></th>
@@ -56,19 +57,21 @@
 						<{else}>
 							<{$smarty.const._AM_UHQICEAUTH_AUTH_ANON}>
 						<{/if}>
+					</td>
+					<td>
 
 						<{if $recordlist.type == "S"}>
 							<{if $list.authstat == "P"}>
 								<{$smarty.const._AM_UHQICEAUTH_AUTH_SCPASS}>
 							<{else}>
-								<{$smarty.const._AM_UHQICEAUTH_AUTH_SCFAIL}>
+								<{$list.authinfo}> :: <{$smarty.const._AM_UHQICEAUTH_AUTH_SCFAIL}>
 							<{/if}>
 							<{$list.userip}>
 						<{elseif $recordlist.type == "L"}>
 							<{if $list.authstat == "P"}>
 								<{$smarty.const._AM_UHQICEAUTH_AUTH_SCPASS}>
 							<{else}>
-								<{$smarty.const._AM_UHQICEAUTH_AUTH_SCFAIL}>
+								<{$list.authinfo}> :: <{$smarty.const._AM_UHQICEAUTH_AUTH_SCFAIL}>
 							<{/if}>
 							<{$list.userip}>
 							<{if $list.duration != ''}>&nbsp;-&nbsp;<{$list.duration}>s<{/if}>
@@ -76,7 +79,7 @@
 							<{if $list.authstat == "P"}>
 								<{$smarty.const._AM_UHQICEAUTH_AUTH_AUPASS}>
 							<{else}>
-								<{$smarty.const._AM_UHQICEAUTH_AUTH_AUFAIL}>
+								<{$list.authinfo}> ::<{$smarty.const._AM_UHQICEAUTH_AUTH_AUFAIL}>
 							<{/if}>
 							<{$list.userip}>
 						<{/if}>

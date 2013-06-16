@@ -480,11 +480,7 @@ function uhqiceauth_mountlog($sane_REQUEST) {
 function uhqiceauth_ua_verify($testua) {
 	global $xoopsDB;
 
-	return true;
-
-	// Code in development for v0.9
-
-	$query = "SELECT * FROM ".$xoopsDB-prefix('uhqiceauth_uabans');
+	$query = "SELECT * FROM ".$xoopsDB->prefix('uhqiceauth_uabans');
 
 	$result = $xoopsDB->queryF($query);
 

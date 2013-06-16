@@ -82,9 +82,9 @@ if ($_REQUEST['action']) {
 					$row['src_auth_grp'] = explode("|",$row['src_auth_grp']);
 
 					if ( $_REQUEST['action'] == "listener_add") {
-						// Check here to make sure the specified UA isn't banned.
 
-						if (uhqiceauth_ua_verify($_SERVER['HTTP_USER_AGENT']) == false) {
+						// Check here to make sure the specified UA isn't banned.
+						if (uhqiceauth_ua_verify($sane_REQUEST['agent']) == false) {
 							uhqiceauth_header($xoopsModuleConfig['hdr_msg']._MD_UHQICEAUTH_ERROR_UABAN,1);
 							uhqiceauth_authlog($sane_REQUEST,'L',false,301);
 							break;

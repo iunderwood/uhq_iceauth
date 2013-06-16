@@ -42,6 +42,7 @@ define ("_AM_UHQICEAUTH_FORM_AUTHA","Anonymous");
 define ("_AM_UHQICEAUTH_FORM_AUTHD","Check User");
 define ("_AM_UHQICEAUTH_FORM_AUTHS","Source UN/PW");
 define ("_AM_UHQICEAUTH_FORM_AUTHN","Not Used");
+define ("_AM_UHQICEAUTH_FORM_USERAGENT","User Agent:");
 
 // Codecs
 
@@ -74,6 +75,7 @@ define ("_AM_UHQICEAUTH_PARAMERR", "Insufficient Parameters");
 define ("_AM_UHQICEAUTH_RETINDEX","Return to Index");
 define ("_AM_UHQICEAUTH_RETSERVERS", "Return to Mountpoints");
 define ("_AM_UHQICEAUTH_RETMOUNTS", "Return to Mountpoint Records");
+define ("_AM_UHQICEAUTH_RETUA","Return to User Agent Bans");
 define ("_AM_UHQICEAUTH_ADDED","Added ");
 define ("_AM_UHQICEAUTH_CHANGED","Changed ");
 define ("_AM_UHQICEAUTH_DELETED","Deleted ");
@@ -83,6 +85,7 @@ define ("_AM_UHQICEAUTH_CHANGEMAP","Updated Intro Maps for ");
 define ("_AM_UHQICEAUTH_RESET","Reset counters for ");
 define ("_AM_UHQICEAUTH_SUCCESSFULLY"," successfully.");
 define ("_AM_UHQICEAUTH_ADDSERVER", "Add Mount Point");
+define ("_AM_UHQICEAUTH_ADDUA","Add User Agent");
 define ("_AM_UHQICEAUTH_EDITSERVER", "Edit Mount Point");
 define ("_AM_UHQICEAUTH_NOLIMIT","No Limit");
 define ("_AM_UHQICEAUTH_NOINTROS","No Intros");
@@ -212,7 +215,7 @@ define ("_AM_UHQICEAUTH_LIST_ACT","Action");
 define ("_AM_UHQICEAUTH_LIST_ACT_EDIT","Edit");
 define ("_AM_UHQICEAUTH_LIST_ACT_DEL","Delete");
 define ("_AM_UHQICEAUTH_LIST_ACT_PLAY","Play");
-define ("_AM_UHQICEAUTH_LIST_USERAGENT","User Agent");
+define ("_AM_UHQICEAUTH_LIST_USERAGENT","User Agent Needle");
 define ("_AM_UHQICEAUTH_LIST_CONNECTS","Connects");
 define ("_AM_UHQICEAUTH_LIST_PASS","Pass");
 define ("_AM_UHQICEAUTH_LIST_FAIL","Fail");
@@ -257,6 +260,10 @@ define ("_AM_UHQICEAUTH_SP_ONE"," Stream Login");
 define ("_AM_UHQICEAUTH_UABAN_NONE","No User Agents Banned");
 define ("_AM_UHQICEAUTH_UABAN_PLU"," User Agents");
 define ("_AM_UHQICEAUTH_UABAN_ONE"," User Agent");
+
+define ("_AM_UHQICEAUTH_UABAN_TEST","Test User Agent");
+define ("_AM_UHQICEAUTH_UA_PASS"," passes UA testing.");
+define ("_AM_UHQICEAUTH_UA_FAIL"," fails UA testing.");
 
 // IP Ban Elements
 

@@ -98,9 +98,16 @@ function uhqiceauth_dosanity() {
 	if ( isset($_REQUEST['intronum']) ) {
 		$sanerequest['intronum'] = intval($_REQUEST['intronum']);
 	}
+
 	// Administrative Fields
 	if ( isset($_REQUEST['sequence']) ) {
 		$sanerequest['sequence'] = intval($_REQUEST['sequence']);
+	}
+	if ( isset($_REQUEST['testua']) ) {
+		$sanerequest['testua'] = $myts->addSlashes($_REQUEST['testua']);
+	}
+	if ( isset($_REQUEST['useragent']) ) {
+		$sanerequest['useragent'] = $myts->addSlashes($_REQUEST['useragent']);
 	}
 
 	return $sanerequest;

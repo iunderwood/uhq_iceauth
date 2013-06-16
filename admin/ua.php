@@ -25,16 +25,122 @@ if (!isset($xoopsTpl)) {
 	$xoopsTpl = new XoopsTpl();
 }
 $xoopsTpl->caching=0;
-// We need to include a LOT of stuff.
 
 include XOOPS_ROOT_PATH . "/modules/uhq_iceauth/includes/sanity.php";
 include XOOPS_ROOT_PATH . "/modules/uhq_iceauth/admin/functions.inc.php";
+include XOOPS_ROOT_PATH . "/modules/uhq_iceauth/includes/auth.inc.php";
+
 include XOOPS_ROOT_PATH . "/class/xoopsformloader.php";
 
-xoops_cp_header();
-$mainAdmin = new ModuleAdmin();
-echo $mainAdmin->addNavigation('ua.php');
+// Assign default operator
+if ( isset($_REQUEST['op']) ) {
+	$op = $_REQUEST['op'];
+} else {
+	$op = "none";
+}
 
-echo "Nothing here ... yet.";
+$sane_REQUEST = uhqiceauth_dosanity();
 
-include_once dirname(__FILE__) . '/admin_footer.php';
+function uhqiceauth_uaform($title) {
+	$form = new XoopsThemeForm($title,'uaform','ua.php', 'POST');
+
+	$form->addElement(new XoopsFormText(_AM_UHQICEAUTH_FORM_USERAGENT, "useragent",40,50) );
+
+	$form->addElement(new XoopsFormHidden("op", "insert") );
+	$form->addElement(new XoopsFormHidden("verify", "1") );
+
+	$form->addElement(new XoopsFormButton("",'post',$title,'submit') );
+	$form->display();
+
+	echo "<br/><br/><a href='ua.php'>"._AM_UHQICEAUTH_RETUA."</a>";
+}
+
+function uhqiceauth_ualist() {
+	global $xoopsDB;
+
+	$query = "SELECT * FROM ".$xoopsDB->prefix('uhqiceauth_uabans')." ORDER BY useragent";
+
+	$result = $xoopsDB->queryF($query);
+	if ($result == false) {
+		// Return nothing on a DB error.
+		return;
+	} else {
+		$i=0;
+		$data = array();
+		while ($row = $xoopsDB->fetchArray($result) ) {
+			$data['list'][$i] = $row;
+			$i++;
+		}
+		return $data;
+	}
+}
+
+// Return the last 10 log entries where a UA ban has been observed
+function uhqiceauth_uaauthbans() {
+}
+
+switch ($op) {
+	case "insert":
+		if ( isset($_REQUEST['verify']) ) {
+			$query = "INSERT INTO ".$xoopsDB->prefix('uhqiceauth_uabans');
+			$query .= " SET useragent = '".$sane_REQUEST['useragent']."'";
+			$result = $xoopsDB->queryF($query);
+
+			if ($result == false) {
+				redirect_header("ua.php",10,_AM_UHQICEAUTH_SQLERR.$query."<br/>".$xoopsDB->error() );
+				break;
+			} else {
+				redirect_header("ua.php",10,_AM_UHQICEAUTH_ADDED.$sane_REQUEST['useragent']._AM_UHQICEAUTH_SUCCESSFULLY);
+				break;
+			}
+		} else {
+			xoops_cp_header();
+			$mainAdmin = new ModuleAdmin();
+			echo $mainAdmin->addNavigation('ua.php');
+			uhqiceauth_uaform(_AM_UHQICEAUTH_ADDUA);
+			include_once dirname(__FILE__) . '/admin_footer.php';
+		}
+		break;
+	case "delete":
+		// Verify we have minimum parameters
+		if ( $sane_REQUEST['sequence']  ) {
+
+			// Delete Record
+			$query = "DELETE FROM ".$xoopsDB->prefix('uhqiceauth_uabans')." WHERE sequence = '".$sane_REQUEST['sequence']."'";
+			$result = $xoopsDB->queryF($query);
+			if ($result == false) {
+				$headerinfo = _AM_UHQICEAUTH_SQLERR.$query."<br/>".$xoopsDB->error()."<br/>";
+			} else {
+				$headerinfo = _AM_UHQICEAUTH_DELETED.$sane_REQUEST['sequence']._AM_UHQICEAUTH_SUCCESSFULLY."<br/><br/>";
+			}
+			redirect_header("ua.php",10,$headerinfo);
+		} else {
+			redirect_header("ua.php",10,_AM_UHQICEAUTH_PARAMERR);
+		}
+		break;
+	case "testua":
+		$result = uhqiceauth_ua_verify($sane_REQUEST['testua']);
+		if ($result) {
+			redirect_header("ua.php",30,$sane_REQUEST['testua']._AM_UHQICEAUTH_UA_PASS);
+		} else {
+			redirect_header("ua.php",30,$sane_REQUEST['testua']._AM_UHQICEAUTH_UA_FAIL);
+		}
+		break;
+	default:
+		xoops_cp_header();
+		$mainAdmin = new ModuleAdmin();
+		echo $mainAdmin->addNavigation('ua.php');
+
+		// See if we have anything first.
+		$data['uacount'] = uhqiceauth_summarycount("UA");;
+		if ( $data['uacount'] ) {
+			$data['uadata'] = uhqiceauth_ualist();
+		}
+
+		// Assign & Render Template
+		$xoopsTpl->assign('data',$data);
+		$xoopsTpl->display("db:admin/uhqiceauth_ua.html");
+
+		include_once dirname(__FILE__) . '/admin_footer.php';
+		break;
+}
