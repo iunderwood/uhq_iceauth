@@ -184,13 +184,11 @@ switch ($op) {
 				break;
 			}
 		} else {
-
+			xoops_cp_header();
 			$mainAdmin = new ModuleAdmin();
 			echo $mainAdmin->addNavigation('mountpoints.php');
-			xoops_cp_header();
 			uhqiceauth_srvform(_AM_UHQICEAUTH_ADDSERVER);
 			include_once dirname(__FILE__) . '/admin_footer.php';
-
 		}
 		break;
 	case "edit" :
