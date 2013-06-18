@@ -76,7 +76,25 @@ function uhqiceauth_ualist() {
 }
 
 // Return the last 10 log entries where a UA ban has been observed
-function uhqiceauth_uaauthbans() {
+function uhqiceauth_uaauthbans($start,$limit=10) {
+	global $xoopsDB;
+
+	$query = "SELECT * FROM ".$xoopsDB->prefix('uhqiceauth_authlog');
+	$query .=" WHERE authinfo = 301 ORDER BY logtime DESC LIMIT ".$limit;
+
+	$result = $xoopsDB->queryF($query);
+	if ($result == false) {
+		// Return nothing on a DB error.
+		return;
+	} else {
+		$i=0;
+		$data = array();
+		while ($row = $xoopsDB->fetchArray($result) ) {
+			$data['banlog'][$i] = $row;
+			$i++;
+		}
+		return $data;
+	}
 }
 
 switch ($op) {
