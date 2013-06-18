@@ -157,7 +157,6 @@ $modversion['config'][] = array (
 );
 
 // Log Admin Updates?
-
 $modversion['config'][] = array (
 	'name'			=> 'logadminupdate',
 	'title'			=> '_MI_UHQICEAUTH_MODCFG_LOGADMIN',
@@ -167,22 +166,15 @@ $modversion['config'][] = array (
 	'default'		=> 1
 );
 
-// Group 1: Display Limits
-
-
-
 // Administrative Items
-
 $modversion['hasAdmin'] = 1;
 $modversion['adminindex'] = "admin/index.php";
 $modversion['adminmenu'] = "admin/menu.php";
 
 // Menu Items
-
 $modversion['hasMain'] = 1;
 
 // Templates
-
 $modversion['templates'][1]['file']			= "admin/uhqiceauth_intros.html";
 $modversion['templates'][1]['description']	= _MI_UHQICEAUTH_TEMPLATE_INTROS;
 $modversion['templates'][2]['file']			= "admin/uhqiceauth_introplay.html";
@@ -209,7 +201,6 @@ $modversion['templates'][12]['file']		= "admin/uhqiceauth_mountpoints_del.html";
 $modversion['templates'][12]['description']	= _MI_UHQICEAUTH_TEMPLATE_MOUNTPOINT_DEL;
 
 // Blocks
-
 $i=0;
 $modversion['blocks'][$i]['file']			= "uhqiceauth_blocks.php";
 $modversion['blocks'][$i]['name']			= _MI_UHQICEAUTH_BLOCK_ACTIVEMOUNTS_NAME;
@@ -218,7 +209,6 @@ $modversion['blocks'][$i]['show_func']		= "b_uhqiceauth_activemounts_show";
 $modversion['blocks'][$i]['edit_func']		= "b_uhqiceauth_activemounts_edit";
 $modversion['blocks'][$i]['template']		= "uhqiceauth_activemounts.html";
 $modversion['blocks'][$i]['options']		= "";
-
 $i++;
 $modversion['blocks'][$i]['file']			= "uhqiceauth_blocks.php";
 $modversion['blocks'][$i]['name']			= _MI_UHQICEAUTH_BLOCK_STREAMPASS_NAME;

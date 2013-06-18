@@ -2,6 +2,7 @@
 
 Feature Adds
 * Now caputres and stores referers sent on a listener_add.  (IceCast 2.3.3 KH)
+* User Agent bans are now allowed.  This is a needle in a haystack search, where the needles are stored on the site, and the haystack is the UA reported by IceCast.
 
 Code Changes
 * Converted to XOOPS 2.5.5 Admin GUI.

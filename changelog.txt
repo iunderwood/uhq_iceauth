@@ -14,6 +14,6 @@ uhq_iceauth :: changelog.txt
 * Capability to update MIME types through the module if any are missing.
 * Module: Continue improvements to DB failure reporting.
 * Module: Add capability to display who is listening right now across all mountpoints.  Live snapshot required as log data is not necessarily reliable.
-* Module: User Agent Bans, fails users if their user agents contain any strings in the uabans table.
 * Module: IP Bans, fails users whose IPs fall into a given range.
 * Module: Store IPs with a numberic value instead of their friendly version.
+* Module: IP Bans should cover IPv6 as well.
