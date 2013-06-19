@@ -51,7 +51,7 @@ $modversion['icons32']        = 'images/';
 
 // About Section
 
-$modversion['release_date']			= '2013/06/31';
+$modversion['release_date']			= '2013/06/22';
 $modversion['module_website_url']	= "xoops.underwood-hq.org";
 $modversion['module_website_name']	= "XOOPS@UHQ";
 $modversion['module_status']		= "RC";
