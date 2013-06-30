@@ -1,5 +1,5 @@
 <{if $error}>
-	<p><font color=red><{$smarty.const._AM_UHQICEAUTH_SQLERR}></font>: <{$error}></p>
+	<p><span style="color: red; "><{$smarty.const._AM_UHQICEAUTH_SQLERR}></span>: <{$error}></p>
 <{elseif $data}>
 	<{if $data.incount > 0}>
 		<script type="text/javascript">
@@ -57,5 +57,3 @@
 		<p><{$smarty.const._AM_UHQICEAUTH_INTROS_NONE}></p>
 	<{/if}>
 <{/if}>
-
-<p><a href='intros.php?op=insert'><{$smarty.const._AM_UHQICEAUTH_INTROS_ADD}></p>

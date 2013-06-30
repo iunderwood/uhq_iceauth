@@ -303,6 +303,8 @@ switch ($op) {
 		xoops_cp_header();
 		$mainAdmin = new ModuleAdmin();
 		echo $mainAdmin->addNavigation('intros.php');
+        $mainAdmin->addItemButton(_AM_UHQICEAUTH_INTROS_ADD, 'intros.php?op=insert', 'add');
+        echo $mainAdmin->renderButton("left"); // ‘right’ is default
 
 		$data['incount'] = uhqiceauth_summarycount("IN");
 

@@ -93,7 +93,7 @@ function uhqiceauth_acct_agentsumtime($limit=10, $days=0) {
 
 	if (!$result) {
 		$data['error'] = _AM_UHQICEAUTH_SQLERR.$query." [".$xoopDB->error()."]";
-		return;
+		return null;
 	}
 
 	$data['limit'] = $limit;
