@@ -1,5 +1,5 @@
 <{if $data.error}>
-	<font color=red><{$data.error}></font>
+	<span style="color: red; "><{$data.error}></span>
 <{elseif $data}>
 	<{$smarty.const._AM_UHQICEAUTH_ADR_DETAIL}><{$data.sequence}><br/>
 	<br/>
@@ -18,7 +18,7 @@
 	<br/>
 
 	<{if $data.authstat == "F"}>
-		<br/><b><font color=red><Authentication Failed><{$smarty.const._AM_UHQICEAUTH_ADR_AUTHFAIL}> :: <{$data.authinfo}></font></b><br/>
+		<br/><b><span style="color: red; "><Authentication Failed><{$smarty.const._AM_UHQICEAUTH_ADR_AUTHFAIL}> :: <{$data.authinfo}></span></b><br/>
 	<{/if}>
 
 	<br/>
@@ -77,7 +77,7 @@
 	<{if $data.referer}>
 		<{$data.referer}>
 	<{else}>
-		<font color=green>-</font>
+		<span style="color: green; ">-</span>
 	<{/if}>
 	<br/>
 <{/if}>

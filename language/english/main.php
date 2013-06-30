@@ -24,5 +24,3 @@ define("_MD_UHQICEAUTH_CSP_DBERR","Database error!");
 define("_MD_UHQICEAUTH_CSP_NOPW","No PW to clear!");
 define("_MD_UHQICEAUTH_CSP_LOGIN","You must be logged in to do this!");
 define("_MD_UHQICEAUTH_CSP_RESETOK","Password reset successfully!");
-
-?>

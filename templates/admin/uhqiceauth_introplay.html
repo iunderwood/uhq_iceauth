@@ -1,11 +1,11 @@
 <{if $error}>	
 
-<font color=red><{$smarty.const._AM_UHQICEAUTH_INTROS_PLAY_ERROR}></font>: <{$error}>
+<span style="color: red; "><{$smarty.const._AM_UHQICEAUTH_INTROS_PLAY_ERROR}></span>: <{$error}>
 
 <{elseif $data}>
 
 <style>
-	*	 	{ font-family:Trebuchet Ms, Arial; font-size:12px; }
+	*	 	{ font-family:Trebuchet Ms, Arial, serif; font-size:12px; }
 	select, 
 	input	{ border:1px solid silver; }
 </style>
@@ -14,9 +14,9 @@
 <script language="javascript" src="/modules/uhq_iceauth/includes/VLCcontrols/VLCobject.js"></script>
 <script type="text/javascript" src="/modules/uhq_iceauth/includes/VLCcontrols/VLCcontrols.js"></script>
 
-<center>Listening to: <i><{$data.filename}></i></center>
+<div style="text-align: center;">Listening to: <i><{$data.filename}></i></div>
 <div id="player">
-	<font color=red><{$smarty.const._AM_UHQICEAUTH_INTROS_PLAY_ERROR}></font>: <{$smarty.const._AM_UHQICEAUTH_INTROS_PLAY_VLCREQ}>
+	<span style="color: red; "><{$smarty.const._AM_UHQICEAUTH_INTROS_PLAY_ERROR}></span>: <{$smarty.const._AM_UHQICEAUTH_INTROS_PLAY_VLCREQ}>
 </div>
 
 <script type="text/javascript">

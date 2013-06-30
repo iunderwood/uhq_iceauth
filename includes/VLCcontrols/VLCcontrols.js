@@ -373,7 +373,7 @@ function formatTime(timeVal)
         return timeHour+":"+timeMin+":"+timeSec;
     else
         return timeMin+":"+timeSec;
-};
+}
 
 function format_time2( s )
 {

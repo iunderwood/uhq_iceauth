@@ -1,5 +1,5 @@
 <{if $error}>
-	<font color=red><{$smarty.const._AM_UHQICEAUTH_SQLERR}></font>: <{$error}>
+	<span style="color: red; "><{$smarty.const._AM_UHQICEAUTH_SQLERR}></span>: <{$error}>
 <{elseif $data}>
 	<p>
 		<{if $data.aucount == 0}><{$smarty.const._AM_UHQICEAUTH_AUTH_NONE}>
@@ -100,7 +100,7 @@
 					<td>
 						<{if $list.referer}>
 							<{$list.referer}>
-						<{else}><font color=green>-</font>
+						<{else}><span style="color: green; ">-</span>
 						<{/if}>
 					</td>
 		  		</tr>
