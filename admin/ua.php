@@ -63,7 +63,7 @@ function uhqiceauth_ualist() {
 	$result = $xoopsDB->queryF($query);
 	if ($result == false) {
 		// Return nothing on a DB error.
-		return;
+        return null;
 	} else {
 		$i=0;
 		$data = array();
@@ -85,7 +85,7 @@ function uhqiceauth_uaauthbans($start,$limit=10) {
 	$result = $xoopsDB->queryF($query);
 	if ($result == false) {
 		// Return nothing on a DB error.
-		return;
+        return null;
 	} else {
 		$i=0;
 		$data = array();

@@ -101,7 +101,7 @@ switch ($op) {
 	case "insert" :
 		if ( isset($_REQUEST['verify']) ) {
 			// If the upload is good, save the file and DB info.
-			$uploader = new XoopsMediaUploader(XOOPS_ROOT_PATH."/modules/uhq_iceauth/intros",$uhqiceauth_intro_mimes,1048576);
+			$uploader = new XoopsMediaUploader(XOOPS_ROOT_PATH."/modules/uhq_iceauth/intros",$uhqiceauth_intro_mimes,9048576);
 			if ($uploader->fetchMedia($_POST['xoops_upload_file'][0]) ) {
 				$uploader->setPrefix('intro-');
 				if ( $uploader->upload() ) {
@@ -303,6 +303,8 @@ switch ($op) {
 		xoops_cp_header();
 		$mainAdmin = new ModuleAdmin();
 		echo $mainAdmin->addNavigation('intros.php');
+        $mainAdmin->addItemButton(_AM_UHQICEAUTH_INTROS_ADD, 'intros.php?op=insert', 'add');
+        echo $mainAdmin->renderButton("left"); // ‘right’ is default
 
 		$data['incount'] = uhqiceauth_summarycount("IN");
 

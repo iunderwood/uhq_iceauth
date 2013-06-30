@@ -458,6 +458,8 @@ switch ($op) {
 		xoops_cp_header();
 		$mainAdmin = new ModuleAdmin();
 		echo $mainAdmin->addNavigation('mountpoints.php');
+        $mainAdmin->addItemButton(_AM_UHQICEAUTH_ADDSERVER, 'mountpoints.php?op=insert', 'add');
+        echo $mainAdmin->renderButton("left"); // ‘right’ is default
 
 		// See if we have anything first.
 		$data['servercount'] = uhqiceauth_summarycount("MP");;

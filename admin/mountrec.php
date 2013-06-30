@@ -54,7 +54,7 @@ function uhqiceauth_mount($start, $limit, $orderby) {
 	$result = $xoopsDB->queryF($query);
 	if ($result == false) {
 		// Return nothing on a DB error.
-		return;
+        return null;
 	} else {
 		$i=0;
 		$data = array();

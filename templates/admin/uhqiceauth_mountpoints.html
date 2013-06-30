@@ -1,5 +1,5 @@
 <{if $error}>
-	<font color=red><{$smarty.const._AM_UHQICEAUTH_SQLERR}></font>: <{$error}>
+	<span style="color: red; "><{$smarty.const._AM_UHQICEAUTH_SQLERR}></span>: <{$error}>
 <{elseif $data}>
 
 	<p>
@@ -66,30 +66,28 @@
 	  <{else}><{$smarty.const._AM_UHQICEAUTH_UNDEF}><{$list.src_auth_typ}><{/if}>
 	</td>
 
-    <td>L:<font color=green><{$list.hits_pass}></font>/<font color=red><{$list.hits_fail}></font>
-      <br/>S:<font color=green><{$list.src_hits_pass}></font>/<font color=red><{$list.src_hits_fail}></font></td>
+    <td>L:<span style="color: green; "><{$list.hits_pass}></span>/<span style="color: red; "><{$list.hits_fail}></span>
+      <br/>S:<span style="color: green; "><{$list.src_hits_pass}></span>/<span style="color: red; "><{$list.src_hits_fail}></span></td>
 
     <td>
 	  <a href='mountpoints.php?op=edit&server=<{$list.server}>&port=<{$list.port}>&mount=<{$list.mount}>'
 	  title='<{$smarty.const._AM_UHQICEAUTH_LIST_MEDIT}>'>
-	  <img src='/modules/uhq_iceauth/images/list_edit.png' width=24 height=24 alt='<{$smarty.const._AM_UHQICEAUTH_LIST_MEDIT}>'></a>&nbsp;
+	  <img src='<{xoModuleIcons16 edit.png}>' alt='<{$smarty.const._AM_UHQICEAUTH_LIST_MEDIT}>'></a>&nbsp;
 
       <a href='mountpoints.php?op=delete&server=<{$list.server}>&port=<{$list.port}>&mount=<{$list.mount}>'
       title='<{$smarty.const._AM_UHQICEAUTH_LIST_MDEL}>'>
-	  <img src='/modules/uhq_iceauth/images/list_delete.png' width=24 height=24 alt='<{$smarty.const._AM_UHQICEAUTH_LIST_MDEL}>'></a>&nbsp;
+	  <img src='<{xoModuleIcons16 delete.png}>'alt='<{$smarty.const._AM_UHQICEAUTH_LIST_MDEL}>'></a>&nbsp;
 
       <a href='mountpoints.php?op=reset&server=<{$list.server}>&port=<{$list.port}>&mount=<{$list.mount}>'
 	  title='<{$smarty.const._AM_UHQICEAUTH_LIST_MRESET}>'>
-      <img src='/modules/uhq_iceauth/images/list_reset.png' width=24 height=24 alt='<{$smarty.const._AM_UHQICEAUTH_LIST_MRESET}>'></a>&nbsp;
+      <img src='<{xoModuleIcons32 synchronized.png}>' width=16 height=16 alt='<{$smarty.const._AM_UHQICEAUTH_LIST_MRESET}>'></a>&nbsp;
 
       <a href='mountpoints.php?op=addintro&server=<{$list.server}>&port=<{$list.port}>&mount=<{$list.mount}>'
       title='<{$smarty.const._AM_UHQICEAUTH_LIST_MINTRO}>'>
-      <img src='/modules/uhq_iceauth/images/list_add.png' width=24 height=24 alt='<{$smarty.const._AM_UHQICEAUTH_LIST_MINTRO}>'></a>
+      <img src='<{xoModuleIcons16 add.png}>'  alt='<{$smarty.const._AM_UHQICEAUTH_LIST_MINTRO}>'></a>
 	</td>
 
   </tr>
 <{/foreach}>
 </table>
 <{/if}>
-
-<p><a href='mountpoints.php?op=insert'><{$smarty.const._AM_UHQICEAUTH_ADDSERVER}></a></p>

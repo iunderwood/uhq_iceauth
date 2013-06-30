@@ -76,5 +76,3 @@ define("_MI_UHQICEAUTH_ADMENU_MOUNTREC", "Mount Records");
 define("_MI_UHQICEAUTH_ADMENU_STREAMPASS","Stream Logins");
 define("_MI_UHQICEAUTH_ADMENU_UA", "UA Bans");
 define("_MI_UHQICEAUTH_ADMENU_IPBAN","IP Bans");
-
-?>
