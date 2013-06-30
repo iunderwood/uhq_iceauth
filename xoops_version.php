@@ -51,7 +51,7 @@ $modversion['icons32']        = 'images/';
 
 // About Section
 
-$modversion['release_date']			= '2013/06/22';
+$modversion['release_date']			= '2013/06/29';
 $modversion['module_website_url']	= "xoops.underwood-hq.org";
 $modversion['module_website_name']	= "XOOPS@UHQ";
 $modversion['module_status']		= "RC";
@@ -77,6 +77,8 @@ $modversion['sqlfile']['mysql'] = "sql/uhq_iceauth.sql";
 
 $modversion['tables'][] = "uhqiceauth_servers";
 $modversion['tables'][] = "uhqiceauth_authtrail";
+$modversion['tables'][] = "uhqiceauth_mountlog";
+$modversion['tables'][] = "uhqiceauth_activemounts";
 $modversion['tables'][] = "uhqiceauth_intros";
 $modversion['tables'][] = "uhqiceauth_intromap";
 $modversion['tables'][] = "uhqiceauth_streampass";
@@ -86,7 +88,6 @@ $modversion['tables'][] = "uhqiceauth_ipbans";
 // Configuration Items
 
 $modversion['hasConfig'] = 1;
-$modversion['system_menu'] = 1;
 
 $modversion['config'][] = array (
 	'name'				=> 'hdr_auth',
@@ -168,6 +169,7 @@ $modversion['config'][] = array (
 
 // Administrative Items
 $modversion['hasAdmin'] = 1;
+$modversion['system_menu'] = 1;
 $modversion['adminindex'] = "admin/index.php";
 $modversion['adminmenu'] = "admin/menu.php";
 

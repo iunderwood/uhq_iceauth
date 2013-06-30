@@ -1,4 +1,9 @@
-====[ v0.93 -- 2013-06-xx ]====
+Release v0.94 :: TBD
+
+Fixes
+* Added "uhqiceauth_mountlog" and "uhqiceauth_activemounts" to xoops_version.
+
+====[ v0.93 -- 2013-06-29 ]====
 
 Feature Adds
 * Now caputres and stores referers sent on a listener_add.  (IceCast 2.3.3 KH)
