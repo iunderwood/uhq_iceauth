@@ -2,7 +2,7 @@
 
 /*
 UHQ-IceAuth :: XOOPS Module for IceCast Authentication
-Copyright (C) 2008-2013 :: Ian A. Underwood :: xoops@underwood-hq.org
+Copyright (C) 2008-2015 :: Ian A. Underwood :: xoops@underwood-hq.org
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 // Modular Definitions
 
 $modversion['name'] 		= _MI_UHQICEAUTH_NAME;
-$modversion['version']		= 0.93;
+$modversion['version']		= 0.94;
 $modversion['description']	= _MI_UHQICEAUTH_DESC;
 $modversion['author']		= "Ian A. Underwood";
 $modversion['credits']		= "Underwood Headquarters";
@@ -211,6 +211,7 @@ $modversion['blocks'][$i]['show_func']		= "b_uhqiceauth_activemounts_show";
 $modversion['blocks'][$i]['edit_func']		= "b_uhqiceauth_activemounts_edit";
 $modversion['blocks'][$i]['template']		= "uhqiceauth_activemounts.html";
 $modversion['blocks'][$i]['options']		= "";
+
 $i++;
 $modversion['blocks'][$i]['file']			= "uhqiceauth_blocks.php";
 $modversion['blocks'][$i]['name']			= _MI_UHQICEAUTH_BLOCK_STREAMPASS_NAME;
