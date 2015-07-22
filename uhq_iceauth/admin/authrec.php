@@ -19,7 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-include_once dirname(__FILE__) . '/admin_header.php';
+include_once __DIR__ . '/admin_header.php';
 
 if (!isset($xoopsTpl)) {
 	$xoopsTpl = new XoopsTpl();
@@ -129,7 +129,7 @@ switch ($op) {
 
 		$xoopsTpl->assign('data',$data);
 		$xoopsTpl->display("db:admin/uhqiceauth_authrec_detail.html");
-		include_once dirname(__FILE__) . '/admin_footer.php';
+		include_once __DIR__ . '/admin_footer.php';
 
 		break;
 	case "none" :
@@ -153,7 +153,7 @@ switch ($op) {
 
 		$xoopsTpl->assign('data',$data);
 		$xoopsTpl->display("db:admin/uhqiceauth_authrec.html");
-		include_once dirname(__FILE__) . '/admin_footer.php';
+		include_once __DIR__ . '/admin_footer.php';
 
 		break;
 }

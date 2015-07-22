@@ -19,7 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-include_once dirname(__FILE__) . '/admin_header.php';
+include_once __DIR__ . '/admin_header.php';
 
 if (!isset($xoopsTpl)) {
 	$xoopsTpl = new XoopsTpl();
@@ -29,7 +29,7 @@ $xoopsTpl->caching=0;
 // Load required includes
 
 require_once XOOPS_ROOT_PATH . "/modules/uhq_iceauth/includes/sanity.php";
-include_once dirname(__FILE__) . '/functions.inc.php';
+include_once __DIR__ . '/functions.inc.php';
 
 // Now the fun begins!
 
@@ -172,4 +172,4 @@ $data['ttsl'][3]['name'] = _AM_UHQICEAUTH_STATS_TTSL_30D;
 $xoopsTpl->assign('data',$data);
 $xoopsTpl->display("db:admin/uhqiceauth_acctrec.html");
 
-include_once dirname(__FILE__) . '/admin_footer.php';
+include_once __DIR__ . '/admin_footer.php';

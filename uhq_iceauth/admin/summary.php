@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // Admin page setup.
 
-include_once dirname(__FILE__) . '/admin_header.php';
+include_once __DIR__ . '/admin_header.php';
 
 if (!isset($xoopsTpl)) {
 	$xoopsTpl = new XoopsTpl();
@@ -36,7 +36,7 @@ echo $mainAdmin->addNavigation('summary.php');
 
 // Load module functions
 
-require_once dirname(__FILE__) . "/functions.inc.php";
+require_once __DIR__ . "/functions.inc.php";
 
 // Summary Data
 $data['anon']		= uhqiceauth_anoncheck();
@@ -57,4 +57,4 @@ $data['ipcount'] = uhqiceauth_summarycount("IP");	// IP Address Bans
 $xoopsTpl->assign('data',$data);
 $xoopsTpl->display("db:admin/uhqiceauth_index.html");
 
-include_once dirname(__FILE__) . '/admin_footer.php';
+include_once __DIR__ . '/admin_footer.php';

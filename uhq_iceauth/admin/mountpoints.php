@@ -19,7 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-include_once dirname(__FILE__) . '/admin_header.php';
+include_once __DIR__ . '/admin_header.php';
 
 require_once XOOPS_ROOT_PATH . "/modules/uhq_iceauth/includes/sanity.php";
 require_once XOOPS_ROOT_PATH . "/modules/uhq_iceauth/admin/functions.inc.php";
@@ -188,7 +188,7 @@ switch ($op) {
 			$mainAdmin = new ModuleAdmin();
 			echo $mainAdmin->addNavigation('mountpoints.php');
 			uhqiceauth_srvform(_AM_UHQICEAUTH_ADDSERVER);
-			include_once dirname(__FILE__) . '/admin_footer.php';
+			include_once __DIR__ . '/admin_footer.php';
 		}
 		break;
 	case "edit" :
@@ -265,7 +265,7 @@ switch ($op) {
 				echo $mainAdmin->addNavigation('mountpoints.php');
 
 				uhqiceauth_srvform(_AM_UHQICEAUTH_EDITSERVER,$row,"edit");
-				include_once dirname(__FILE__) . '/admin_footer.php';
+				include_once __DIR__ . '/admin_footer.php';
 
 			}
 		} else {
@@ -297,7 +297,7 @@ switch ($op) {
 
 				uhqiceauth_srvintroform(_AM_UHQICEAUTH_INTROS_MAPFORM);
 
-				include_once dirname(__FILE__) . '/admin_footer.php';
+				include_once __DIR__ . '/admin_footer.php';
 			}
 		} else {
 			redirect_header("mountpoints.php",10,_AM_UHQICEAUTH_PARAMERR);
@@ -429,7 +429,7 @@ switch ($op) {
 
 				// Print Delete Form
 				uhqiceauth_srvdelform($row);
-				include_once dirname(__FILE__) . '/admin_footer.php';
+				include_once __DIR__ . '/admin_footer.php';
 			}
 		} else {
 			redirect_header("mountpoints.php",10,_AM_UHQICEAUTH_PARAMERR);
@@ -496,6 +496,6 @@ switch ($op) {
 		}
         $xoopsTpl->assign('data',$data);
 		$xoopsTpl->display("db:admin/uhqiceauth_mountpoints.html");
-		include_once dirname(__FILE__) . '/admin_footer.php';
+		include_once __DIR__ . '/admin_footer.php';
 		break;
 }

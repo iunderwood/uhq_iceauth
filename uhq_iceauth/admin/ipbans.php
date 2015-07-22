@@ -19,7 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-include_once dirname(__FILE__) . '/admin_header.php';
+include_once __DIR__ . '/admin_header.php';
 
 if (!isset($xoopsTpl)) {
 	$xoopsTpl = new XoopsTpl();
@@ -36,4 +36,4 @@ echo $mainAdmin->addNavigation('ipbans.php');
 
 echo "Nothing here ... yet.";
 
-include_once dirname(__FILE__) . '/admin_footer.php';
+include_once __DIR__ . '/admin_footer.php';

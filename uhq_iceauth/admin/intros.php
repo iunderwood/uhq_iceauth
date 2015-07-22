@@ -19,7 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-include_once dirname(__FILE__) . '/admin_header.php';
+include_once __DIR__ . '/admin_header.php';
 
 if (!isset($xoopsTpl)) {
 	$xoopsTpl = new XoopsTpl();
@@ -131,7 +131,7 @@ switch ($op) {
 			$mainAdmin = new ModuleAdmin();
 			echo $mainAdmin->addNavigation('intros.php');
 			uhqiceauth_introform(_AM_UHQICEAUTH_INTROS_ADD);
-			include_once dirname(__FILE__) . '/admin_footer.php';
+			include_once __DIR__ . '/admin_footer.php';
 
 		}
 		break;
@@ -181,7 +181,7 @@ switch ($op) {
 				$mainAdmin = new ModuleAdmin();
 				echo $mainAdmin->addNavigation('intros.php');
 				uhqiceauth_introdelform(_AM_UHQICEAUTH_INTROS_DELETE,$row);
-				include_once dirname(__FILE__) . '/admin_footer.php';
+				include_once __DIR__ . '/admin_footer.php';
 
 			}
 		} else {
@@ -259,7 +259,7 @@ switch ($op) {
 				$mainAdmin = new ModuleAdmin();
 				echo $mainAdmin->addNavigation('intros.php');
 				uhqiceauth_introform(_AM_UHQICEAUTH_INTROS_EDIT,$row,$op);
-				include_once dirname(__FILE__) . '/admin_footer.php';
+				include_once __DIR__ . '/admin_footer.php';
 
 			}
 
@@ -328,7 +328,7 @@ switch ($op) {
 		}
 
 		$xoopsTpl->display("db:admin/uhqiceauth_intros.html");
-		include_once dirname(__FILE__) . '/admin_footer.php';
+		include_once __DIR__ . '/admin_footer.php';
 
 		break;
 }

@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // Admin page setup.
 
-include_once dirname(__FILE__) . '/admin_header.php';
+include_once __DIR__ . '/admin_header.php';
 
 if (!isset($xoopsTpl)) {
 	$xoopsTpl = new XoopsTpl();
@@ -30,7 +30,7 @@ $xoopsTpl->caching=0;
 
 // Load Admin Includes
 
-require_once dirname(__FILE__) . "/functions.inc.php";
+require_once __DIR__ . "/functions.inc.php";
 
 require_once XOOPS_ROOT_PATH . "/modules/uhq_iceauth/includes/sanity.php";
 require_once XOOPS_ROOT_PATH . "/modules/uhq_iceauth/includes/functions.php";
@@ -118,5 +118,5 @@ switch ($op) {
 		$xoopsTpl->assign('data',$data);
 		$xoopsTpl->display("db:admin/uhqiceauth_mountrec.html");
 
-		include_once dirname(__FILE__) . '/admin_footer.php';
+		include_once __DIR__ . '/admin_footer.php';
 }

@@ -21,10 +21,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 defined("XOOPS_ROOT_PATH") or die("XOOPS root path not defined");
 
-$path = dirname(dirname(dirname(dirname(__FILE__))));
+$path = dirname(dirname(dirname(__DIR__)));
 include_once $path . '/mainfile.php';
 
-$dirname         = basename(dirname(dirname(__FILE__)));
+$dirname         = basename(dirname(__DIR__));
 $module_handler  = xoops_gethandler('module');
 $module          = $module_handler->getByDirname($dirname);
 $pathIcon32      = $module->getInfo('icons32');
