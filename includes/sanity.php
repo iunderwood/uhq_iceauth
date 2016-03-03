@@ -2,7 +2,7 @@
 
 /*
 UHQ-IceAuth :: XOOPS Module for IceCast Authentication
-Copyright (C) 2008-2015 :: Ian A. Underwood :: xoops@underwood-hq.org
+Copyright (C) 2008-2016 :: Ian A. Underwood :: xoops@underwood-hq.org
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -34,8 +34,17 @@ function uhqiceauth_dosanity() {
 		$sanerequest['port'] = intval($_REQUEST['port']);
 	}
 	if ( isset($_REQUEST['mount']) ) {
+	    // Sanitize First
 		$sanerequest['mount'] = $myts->addSlashes($_REQUEST['mount']);
-	}
+
+		// Fix for MusePlayer
+		$axepos = strpos ('?',$sanerequest['mount'])
+
+        if ($axepos !== false) {
+            $sanerequest['mount'] = substr($sanerequest['mount'],0,$axepos);
+        }
+    }
+
 	if ( isset($_REQUEST['user']) ) {
 		$sanerequest['user'] = $myts->addSlashes($_REQUEST['user']);
 	}
