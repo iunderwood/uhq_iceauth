@@ -90,6 +90,10 @@ if ($_REQUEST['action']) {
 							break;
 						}
 
+						// Check IP Bans Here
+
+						// Check Country Bans Here
+
 						// Check against username/pw.  Handling is based on mount type.
 						$user = uhqiceauth_checkuser($sane_REQUEST['user'], $sane_REQUEST['pass']);
 
@@ -99,10 +103,6 @@ if ($_REQUEST['action']) {
 								if (!$user) {
 									unset ($sane_REQUEST['user']);
 								}
-								// Check UA Bans
-								// Check IP Bans
-
-								// User is good if we've got no bans to consider.
 
 								// Enforce a time limit.
 				  				if ($row['timelimit'] > 0) {
@@ -127,8 +127,6 @@ if ($_REQUEST['action']) {
 						  			uhqiceauth_authlog($sane_REQUEST,'L',false,102);
 			  						break;
 			  					}
-								// Check UA Bans
-								// Check IP Bans
 
 					  			// Enforce Time Limit
 				  				if ($row['timelimit'] > 0) {
