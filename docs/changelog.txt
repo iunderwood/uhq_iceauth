@@ -1,7 +1,11 @@
-Release v0.94 :: TBD
+====[ v0.94 -- 2016-03-27 ]====
 
 Fixes
 * Added "uhqiceauth_mountlog" and "uhqiceauth_activemounts" to xoops_version.
+* Further sanity checking on authentication, now supporting the MusePlayer.
+
+Code Changes
+* Updated copyright to 2016.
 
 ====[ v0.93 -- 2013-06-29 ]====
 

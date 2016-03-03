@@ -2,7 +2,7 @@
 
 /*
 UHQ-IceAuth :: XOOPS Module for IceCast Authentication
-Copyright (C) 2008-2015 :: Ian A. Underwood :: xoops@underwood-hq.org
+Copyright (C) 2008-2016 :: Ian A. Underwood :: xoops@underwood-hq.org
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@ $modversion['icons32']        = 'images/';
 
 // About Section
 
-$modversion['release_date']			= '2013/06/29';
+$modversion['release_date']			= '2016/03/27';
 $modversion['module_website_url']	= "xoops.underwood-hq.org";
 $modversion['module_website_name']	= "XOOPS@UHQ";
 $modversion['module_status']		= "RC";
