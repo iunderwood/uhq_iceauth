@@ -215,7 +215,6 @@ define ("_AM_UHQICEAUTH_LIST_ACT","Action");
 define ("_AM_UHQICEAUTH_LIST_ACT_EDIT","Edit");
 define ("_AM_UHQICEAUTH_LIST_ACT_DEL","Delete");
 define ("_AM_UHQICEAUTH_LIST_ACT_PLAY","Play");
-define ("_AM_UHQICEAUTH_LIST_USERAGENT","User Agent Needle");
 define ("_AM_UHQICEAUTH_LIST_CONNECTS","Connects");
 define ("_AM_UHQICEAUTH_LIST_PASS","Pass");
 define ("_AM_UHQICEAUTH_LIST_FAIL","Fail");
@@ -264,6 +263,9 @@ define ("_AM_UHQICEAUTH_UABAN_ONE"," User Agent");
 define ("_AM_UHQICEAUTH_UABAN_TEST","Test User Agent");
 define ("_AM_UHQICEAUTH_UA_PASS"," passes UA testing.");
 define ("_AM_UHQICEAUTH_UA_FAIL"," fails UA testing.");
+
+define ("_AM_UHQICEAUTH_LIST_USERAGENT","User Agent Needle");
+define ("_AM_UHQICEAUTH_LIST_UADEL","Delete UA Needle");
 
 // IP Ban Elements
 
