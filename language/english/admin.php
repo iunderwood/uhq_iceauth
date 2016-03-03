@@ -234,6 +234,8 @@ define ("_AM_UHQICEAUTH_LIST_INTERVAL","Interval");
 define ("_AM_UHQICEAUTH_LIST_TTSL","TTSL");
 define ("_AM_UHQICEAUTH_LIST_AVGTTSL","Average TTSL");
 define ("_AM_UHQICEAUTH_LIST_REFERER","Referer");
+define ("_AM_UHQICEAUTH_LIST_USERAGENT","User Agent");
+
 
 // Mount Point Elements
 
@@ -264,7 +266,7 @@ define ("_AM_UHQICEAUTH_UABAN_TEST","Test User Agent");
 define ("_AM_UHQICEAUTH_UA_PASS"," passes UA testing.");
 define ("_AM_UHQICEAUTH_UA_FAIL"," fails UA testing.");
 
-define ("_AM_UHQICEAUTH_LIST_USERAGENT","User Agent Needle");
+define ("_AM_UHQICEAUTH_LIST_UANEEDLE","User Agent Needle");
 define ("_AM_UHQICEAUTH_LIST_UADEL","Delete UA Needle");
 
 // IP Ban Elements
