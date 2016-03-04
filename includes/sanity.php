@@ -38,7 +38,7 @@ function uhqiceauth_dosanity() {
 		$sanerequest['mount'] = $myts->addSlashes($_REQUEST['mount']);
 
 		// Fix for MusePlayer
-		$axepos = strpos ('?',$sanerequest['mount'])
+		$axepos = strpos ($sanerequest['mount'],'?');
 
         if ($axepos !== false) {
             $sanerequest['mount'] = substr($sanerequest['mount'],0,$axepos);
