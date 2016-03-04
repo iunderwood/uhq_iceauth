@@ -1,0 +1,20 @@
+<div id="help-template" class="outer">
+    <h1 class="head">Help:
+        <a class="ui-corner-all tooltip" href="<{$xoops_url}>/modules/uhq_iceauth/admin/index.php"
+           title="UHQ_IceAuth Administration"> UHQ_IceAuth
+            <img src="<{xoAdminIcons home.png}>"
+                 alt="UHQ_IceAuth Administration"/>
+        </a>
+    </h1>
+
+	<hr>
+
+    <h4 class="odd">UA Bans</h4>
+	<br/>
+	<p>It is possible to automatically exclude certain players from authenticating to a stream based upon their reported user agent.  This is a useful capability to have as many stream rippers and other unsavory tools tune in with known user agents.</p>
+	<p>The filtering approach can be referred to the "needle in the haystack".  This is a simple text search where if a full reported user agent contains the needle, then the ban takes effect.  Be aware that the search is a simple match and intelligent UA filtering is not available at this point.</p>
+	<p>As a simple example, configuring the needle of <i>ripper</i> in the UA needle, any UA reporting <i>ripper</i> anywhere in the string of the user agent will be denied connection to the given stream.  Accordingly, adding <i>Mozilla</i> as a UA needle would deny stream access to virtually all browsers.  Please use this feature carefully.</p>
+	<br/>
+	<hr>
+
+</div>

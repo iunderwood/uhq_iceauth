@@ -2,7 +2,7 @@
 
 /*
 UHQ-IceAuth :: XOOPS Module for IceCast Authentication
-Copyright (C) 2008-2015 :: Ian A. Underwood :: xoops@underwood-hq.org
+Copyright (C) 2008-2016 :: Ian A. Underwood :: xoops@underwood-hq.org
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,6 +23,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 define("_MI_UHQICEAUTH_NAME","UHQ_IceAuth");
 define("_MI_UHQICEAUTH_DESC","This module allows IceCast 2.3.0 or higher to authenticate against your XOOPS database.");
+
+// Help Information
+
+define("_MI_UHQICEAUTH_HELP_INTRO","Introduction");
+define("_MI_UHQICEAUTH_HELP_MOUNTS","Mountpoints");
+define("_MI_UHQICEAUTH_HELP_UA","UA Bans");
 
 // Installer Conditions
 

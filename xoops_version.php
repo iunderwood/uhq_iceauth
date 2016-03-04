@@ -36,11 +36,14 @@ $modversion['dirname']		= "uhq_iceauth";
 // Better Help Section
 
 $i=0;
-$modversion['helpsection'][$i]['name'] = "Introduction";
-$modversion['helpsection'][$i]['link'] = "page=help";
+$modversion['helpsection'][$i]['name'] = _MI_UHQICEAUTH_HELP_INTRO;
+$modversion['helpsection'][$i]['link'] = "page=help_intro";
 $i++;
-$modversion['helpsection'][$i]['name'] = "Mount Points";
-$modversion['helpsection'][$i]['link'] = "page=mountpoints";
+$modversion['helpsection'][$i]['name'] = _MI_UHQICEAUTH_HELP_MOUNTS;
+$modversion['helpsection'][$i]['link'] = "page=help_mounts";
+$i++;
+$modversion['helpsection'][$i]['name'] = _MI_UHQICEAUTH_HELP_UA;
+$modversion['helpsection'][$i]['link'] = "page=help_uabans";
 
 
 // Administrative Defines
@@ -59,7 +62,7 @@ $modversion['module_status']		= "RC";
 // Minimums
 
 $modversion['min_php']      = '5.2';
-$modversion['min_xoops']    = "2.5.6";
+$modversion['min_xoops']    = '2.5.6';
 $modversion['min_admin']    = '1.1';
 $modversion['min_db']       = array(
     'mysql'  => '5.0.7',
