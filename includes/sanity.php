@@ -24,7 +24,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 function uhqiceauth_dosanity() {
 
 	$sanerequest = array();
-	$myts =& MyTextsanitizer::getInstance();
+	$myts = MyTextsanitizer::getInstance();
 
 	// IceCast Variables
 	if ( isset($_REQUEST['server']) ) {

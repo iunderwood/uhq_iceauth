@@ -32,7 +32,7 @@ include XOOPS_ROOT_PATH . "/modules/uhq_iceauth/admin/functions.inc.php";
 include XOOPS_ROOT_PATH . "/class/xoopsformloader.php";
 include XOOPS_ROOT_PATH . "/class/uploader.php";
 
-$myts =& MyTextsanitizer::getInstance();
+$myts = MyTextsanitizer::getInstance();
 
 // Now the fun begins!
 
