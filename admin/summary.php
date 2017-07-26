@@ -21,40 +21,40 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // Admin page setup.
 
-include_once __DIR__ . '/admin_header.php';
+require_once __DIR__ . '/admin_header.php';
 
 if (!isset($xoopsTpl)) {
-	$xoopsTpl = new XoopsTpl();
+    $xoopsTpl = new XoopsTpl();
 }
-$xoopsTpl->caching=0;
+$xoopsTpl->caching = 0;
 
 // Start Page Display
 
 xoops_cp_header();
-$mainAdmin = new ModuleAdmin();
-echo $mainAdmin->addNavigation('summary.php');
+$adminObject = \Xmf\Module\Admin::getInstance();
+$adminObject->displayNavigation(basename(__FILE__));
 
 // Load module functions
 
-require_once __DIR__ . "/functions.inc.php";
+require_once __DIR__ . '/functions.inc.php';
 
 // Summary Data
-$data['anon']		= uhqiceauth_anoncheck();
-$data['mod_geo']	= uhqiceauth_geocheck();
-$data['mime']		= uhqiceauth_mimecheck();
+$data['anon']    = uhqiceauth_anoncheck();
+$data['mod_geo'] = uhqiceauth_geocheck();
+$data['mime']    = uhqiceauth_mimecheck();
 
 // DB Counters
-$data['mpcount'] = uhqiceauth_summarycount("MP");	// Mount Point Summary
-$data['incount'] = uhqiceauth_summarycount("IN");	// Intro Summary
-$data['aucount'] = uhqiceauth_summarycount("AU");	// Authentication Summary
-$data['mlcount'] = uhqiceauth_summarycount("ML");	// Mount Log Summary
-$data['amcount'] = uhqiceauth_summarycount("AM");	// Active Mountpoints
-$data['spcount'] = uhqiceauth_summarycount("SP");	// Stream Login Summary
-$data['uacount'] = uhqiceauth_summarycount("UA");	// UA Bans
-$data['ipcount'] = uhqiceauth_summarycount("IP");	// IP Address Bans
+$data['mpcount'] = uhqiceauth_summarycount('MP');   // Mount Point Summary
+$data['incount'] = uhqiceauth_summarycount('IN');   // Intro Summary
+$data['aucount'] = uhqiceauth_summarycount('AU');   // Authentication Summary
+$data['mlcount'] = uhqiceauth_summarycount('ML');   // Mount Log Summary
+$data['amcount'] = uhqiceauth_summarycount('AM');   // Active Mountpoints
+$data['spcount'] = uhqiceauth_summarycount('SP');   // Stream Login Summary
+$data['uacount'] = uhqiceauth_summarycount('UA');   // UA Bans
+$data['ipcount'] = uhqiceauth_summarycount('IP');   // IP Address Bans
 
 // Assign & Render Template
-$xoopsTpl->assign('data',$data);
-$xoopsTpl->display("db:admin/uhqiceauth_index.html");
+$xoopsTpl->assign('data', $data);
+$xoopsTpl->display('db:admin/uhqiceauth_index.tpl');
 
-include_once __DIR__ . '/admin_footer.php';
+require_once __DIR__ . '/admin_footer.php';

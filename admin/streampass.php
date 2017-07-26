@@ -19,26 +19,25 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-include_once __DIR__ . '/admin_header.php';
+require_once __DIR__ . '/admin_header.php';
 
 if (!isset($xoopsTpl)) {
-	$xoopsTpl = new XoopsTpl();
+    $xoopsTpl = new XoopsTpl();
 }
-$xoopsTpl->caching=0;
+$xoopsTpl->caching = 0;
 
-
-require_once XOOPS_ROOT_PATH . "/modules/uhq_iceauth/includes/sanity.php";
-require_once XOOPS_ROOT_PATH . "/modules/uhq_iceauth/includes/functions.php";
+require_once XOOPS_ROOT_PATH . '/modules/uhq_iceauth/includes/sanity.php';
+require_once XOOPS_ROOT_PATH . '/modules/uhq_iceauth/includes/functions.php';
 
 // Admin Requirements
-require_once XOOPS_ROOT_PATH . "/modules/uhq_iceauth/admin/functions.inc.php";
+require_once XOOPS_ROOT_PATH . '/modules/uhq_iceauth/admin/functions.inc.php';
 
 // Assign default operator
 
-if ( isset($_REQUEST['op']) ) {
-	$op = $_REQUEST['op'];
+if (isset($_REQUEST['op'])) {
+    $op = $_REQUEST['op'];
 } else {
-	$op = "none";
+    $op = 'none';
 }
 
 $saneREQ = uhqiceauth_dosanity();
@@ -46,54 +45,53 @@ $saneREQ = uhqiceauth_dosanity();
 // Do our stuff.
 
 switch ($op) {
-	case "del":
-		if (isset ($saneREQ['user']) ) {
-			// Check DB for entry
+    case 'del':
+        if (isset($saneREQ['user'])) {
+            // Check DB for entry
 
-			$query = "SELECT * FROM ".$xoopsDB->prefix("uhqiceauth_streampass");
-			$query .= " WHERE un = '".utf8_encode($saneREQ['user'])."'";
+            $query = 'SELECT * FROM ' . $xoopsDB->prefix('uhqiceauth_streampass');
+            $query .= " WHERE un = '" . utf8_encode($saneREQ['user']) . "'";
 
-			$result = $xoopsDB->queryF($query);
-			if ($result == false) {
-				redirect_header("streampass.php",10,_AM_UHQICEAUTH_SQLERR.$query."<br/>".$xoopsDB->error());
-			} else {
-				if ($row = $xoopsDB->fetchArray($result)) {
+            $result = $xoopsDB->queryF($query);
+            if ($result === false) {
+                redirect_header('streampass.php', 10, _AM_UHQICEAUTH_SQLERR . $query . '<br>' . $xoopsDB->error());
+            } else {
+                if ($row = $xoopsDB->fetchArray($result)) {
+                    $query  = 'DELETE FROM ' . $xoopsDB->prefix('uhqiceauth_streampass') . ' WHERE';
+                    $query  .= " un = '" . utf8_encode($saneREQ['user']) . "'";
+                    $result = $xoopsDB->queryF($query);
 
-					$query = "DELETE FROM ".$xoopsDB->prefix("uhqiceauth_streampass")." WHERE";
-					$query .= " un = '".utf8_encode($saneREQ['user'])."'";
-					$result = $xoopsDB->queryF($query);
+                    if ($result === false) {
+                        redirect_header('streampass.php', 10, _AM_UHQICEAUTH_SQLERR . $query . '<br>' . $xoopsDB->error());
+                    } else {
+                        redirect_header('streampass.php', 10, _AM_UHQICEAUTH_SP_DELOK . $saneREQ['user']);
+                    }
+                } else {
+                    redirect_header('streampass.php', 10, _AM_UHQICEAUTH_SP_NOPW);
+                }
+            }
+            break;
+        } else {
+            redirect_header('streampass.php', 10, _AM_UHQICEAUTH_PARAMERR);
+        }
+        break;
+    case 'none':
+    default:
+        // Header
+        xoops_cp_header();
+        $adminObject = \Xmf\Module\Admin::getInstance();
+        $adminObject->displayNavigation(basename(__FILE__));
 
-					if ($result == false) {
-						redirect_header("streampass.php",10,_AM_UHQICEAUTH_SQLERR.$query."<br/>".$xoopsDB->error());
-					} else {
-						redirect_header("streampass.php",10,_AM_UHQICEAUTH_SP_DELOK.$saneREQ['user']);
-					}
-				} else {
-					redirect_header("streampass.php",10,_AM_UHQICEAUTH_SP_NOPW);
-				}
-			}
-			break;
-		} else {
-			redirect_header("streampass.php",10,_AM_UHQICEAUTH_PARAMERR);
-		}
-		break;
-	case "none":
-	default:
-		// Header
-		xoops_cp_header();
-		$mainAdmin = new ModuleAdmin();
-		echo $mainAdmin->addNavigation('streampass.php');
+        // Stream Login Infos
+        $data['spcount'] = uhqiceauth_summarycount('SP');
+        if ($data['spcount'] > 0) {
+            $data['spdata'] = uhqiceauth_raw_streampass();
+        }
 
-		// Stream Login Infos
-		$data['spcount'] = uhqiceauth_summarycount("SP");
-		if ( $data['spcount'] > 0 ) {
-			$data['spdata'] = uhqiceauth_raw_streampass();
-		}
+        // Assign & Render Template
+        $xoopsTpl->assign('data', $data);
+        $xoopsTpl->display('db:admin/uhqiceauth_streampass.tpl');
 
-		// Assign & Render Template
-		$xoopsTpl->assign('data',$data);
-		$xoopsTpl->display("db:admin/uhqiceauth_streampass.html");
-
-		// Footer
-		include_once __DIR__ . '/admin_footer.php';
+        // Footer
+        require_once __DIR__ . '/admin_footer.php';
 }

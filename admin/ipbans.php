@@ -19,21 +19,21 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-include_once __DIR__ . '/admin_header.php';
+require_once __DIR__ . '/admin_header.php';
 
 if (!isset($xoopsTpl)) {
-	$xoopsTpl = new XoopsTpl();
+    $xoopsTpl = new XoopsTpl();
 }
-$xoopsTpl->caching=0;
+$xoopsTpl->caching = 0;
 
-include XOOPS_ROOT_PATH . "/modules/uhq_iceauth/includes/sanity.php";
-include XOOPS_ROOT_PATH . "/modules/uhq_iceauth/admin/functions.inc.php";
-include XOOPS_ROOT_PATH . "/class/xoopsformloader.php";
+include XOOPS_ROOT_PATH . '/modules/uhq_iceauth/includes/sanity.php';
+include XOOPS_ROOT_PATH . '/modules/uhq_iceauth/admin/functions.inc.php';
+include XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
 
 xoops_cp_header();
-$mainAdmin = new ModuleAdmin();
-echo $mainAdmin->addNavigation('ipbans.php');
+$adminObject = \Xmf\Module\Admin::getInstance();
+$adminObject->displayNavigation(basename(__FILE__));
 
-echo "Nothing here ... yet.";
+echo 'Nothing here ... yet.';
 
-include_once __DIR__ . '/admin_footer.php';
+require_once __DIR__ . '/admin_footer.php';

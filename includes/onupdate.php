@@ -19,360 +19,386 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-function xoops_module_update_uhq_iceauth(&$module, $oldversion = null) {
+function xoops_module_update_uhq_iceauth(XoopsModule $module, $oldversion = null)
+{
+    global $xoopsDB;
 
-	global $xoopsDB;
+    // Add table to all versions less than v0.2.
 
-	// Add table to all versions less than v0.2.
+    if ($oldversion < 20) {
+        $query  = 'CREATE TABLE ' . $xoopsDB->prefix('uhqiceauth_servers') . ' (
+                server          CHAR(50)    NOT NULL,
+                port            INT         UNSIGNED NOT NULL,
+                mount           CHAR(20)    NOT NULL,
+                timelimit       INT         UNSIGNED NOT NULL,
+                lst_auth_typ    CHAR(1)     NOT NULL,
+                lst_auth_grp    VARCHAR(64) NOT NULL,
+                src_auth_typ        CHAR(1)     NOT NULL,
+                src_auth_grp    VARCHAR(64) NOT NULL,
+                src_auth_un     CHAR(20)    NOT NULL,
+                src_auth_pw     CHAR(20)    NOT NULL,
+                hits_pass       INT         UNSIGNED NOT NULL,
+                hits_fail       INT         UNSIGNED NOT NULL,
+                PRIMARY KEY (server,port,mount)
+            ) ENGINE=MyISAM;';
+        $result = $xoopsDB->queryF($query);
+        if (!$result) {
+            $module->setErrors('Error adding DB table uhqiceauth_servers');
 
-	if ($oldversion < 20) {
-		$query = 'CREATE TABLE '.$xoopsDB->prefix("uhqiceauth_servers").' (
-				server			CHAR(50)	NOT NULL,
-				port			INT			UNSIGNED NOT NULL,
-				mount			CHAR(20)	NOT NULL,
-				timelimit		INT			UNSIGNED NOT NULL,
-				lst_auth_typ	CHAR(1)		NOT NULL,
-				lst_auth_grp	VARCHAR(64)	NOT NULL,
-				src_auth_typ		CHAR(1)		NOT NULL,
-				src_auth_grp	VARCHAR(64)	NOT NULL,
-				src_auth_un		CHAR(20)	NOT NULL,
-				src_auth_pw		CHAR(20)	NOT NULL,
-				hits_pass		INT			UNSIGNED NOT NULL,
-				hits_fail		INT			UNSIGNED NOT NULL,
-				PRIMARY KEY (server,port,mount)
-			) ENGINE=MyISAM;';
-		$result = $xoopsDB->queryF($query);
-		if (! $result) {
-			$module->setErrors("Error adding DB table uhqiceauth_servers");
-			return false;
-		} else {
-			// Upgrade successful.  Do next revision.
-			$oldversion = 21;
-		}
-	}
+            return false;
+        } else {
+            // Upgrade successful.  Do next revision.
+            $oldversion = 21;
+        }
+    }
 
-	// Modify tables for v0.3
+    // Modify tables for v0.3
 
-	if ($oldversion == 21) {
-		$query = "ALTER TABLE ".$xoopsDB->prefix("uhqiceauth_servers")." ADD src_hits_pass INT UNSIGNED NOT NULL AFTER hits_fail";
-		$result = $xoopsDB->queryF($query);
-		if (! $result) {
-			$module->setErrors ("Error adding src_hits_pass field.");
-			return false;
-		}
-		$query = "ALTER TABLE ".$xoopsDB->prefix("uhqiceauth_servers")." ADD src_hits_fail INT UNSIGNED NOT NULL AFTER src_hits_pass";
-		$result = $xoopsDB->queryF($query);
-		if (! $result) {
-			$module->setErrors ("Error adding src_hits_fail field.");
-			return false;
-		}
+    if ($oldversion == 21) {
+        $query  = 'ALTER TABLE ' . $xoopsDB->prefix('uhqiceauth_servers') . ' ADD src_hits_pass INT UNSIGNED NOT NULL AFTER hits_fail';
+        $result = $xoopsDB->queryF($query);
+        if (!$result) {
+            $module->setErrors('Error adding src_hits_pass field.');
 
-		$query = 'CREATE TABLE '.$xoopsDB->prefix("uhqiceauth_authtrail").' (
-				sequence		INT			UNSIGNED NOT NULL AUTO_INCREMENT,
-				logtime			DATETIME,
-				server			CHAR(50)	NOT NULL,
-				port			INT			UNSIGNED NOT NULL,
-				mount			CHAR(20)	NOT NULL,
-				authtype		CHAR(1)		NOT NULL,
-				authstat		CHAR(1)		NOT NULL,
-				clientid		INT			UNSIGNED NOT NULL,
-				username		CHAR(20),
-				useragent		CHAR(40),
-				userip			CHAR(50)	NOT NULL,
-				duration		INT			UNSIGNED,
-				stoptime		DATETIME,
-				PRIMARY KEY (sequence)
-			) ENGINE=MyISAM;';
-		$result = $xoopsDB->queryF($query);
-		if (! $result) {
-			$module->setErrors("Error adding DB table uhqiceauth_authtrail");
-			return false;
-		}
+            return false;
+        }
+        $query  = 'ALTER TABLE ' . $xoopsDB->prefix('uhqiceauth_servers') . ' ADD src_hits_fail INT UNSIGNED NOT NULL AFTER src_hits_pass';
+        $result = $xoopsDB->queryF($query);
+        if (!$result) {
+            $module->setErrors('Error adding src_hits_fail field.');
 
-		$query = 'CREATE TABLE '.$xoopsDB->prefix("uhqiceauth_accounting").' (
-				sequence		INT			UNSIGNED NOT NULL AUTO_INCREMENT,
-				logtime			TIMESTAMP,
-				server			CHAR(50)	NOT NULL,
-				port			INT			UNSIGNED NOT NULL,
-				mount			CHAR(20)	NOT NULL,
-				clientid		INT			UNSIGNED NOT NULL,
-				username		CHAR(20),
-				duration		INT			UNSIGNED NOT NULL,
-				PRIMARY KEY (sequence)
-			) ENGINE=MyISAM;';
-		$result = $xoopsDB->queryF($query);
-		if (! $result) {
-			$module->setErrors("Error adding DB table uhqiceauth_accounting");
-			return false;
-		}
+            return false;
+        }
 
-		$oldversion = 30;
-	}
+        $query  = 'CREATE TABLE ' . $xoopsDB->prefix('uhqiceauth_authtrail') . ' (
+                sequence        INT         UNSIGNED NOT NULL AUTO_INCREMENT,
+                logtime         DATETIME,
+                server          CHAR(50)    NOT NULL,
+                port            INT         UNSIGNED NOT NULL,
+                mount           CHAR(20)    NOT NULL,
+                authtype        CHAR(1)     NOT NULL,
+                authstat        CHAR(1)     NOT NULL,
+                clientid        INT         UNSIGNED NOT NULL,
+                username        CHAR(20),
+                useragent       CHAR(40),
+                userip          CHAR(50)    NOT NULL,
+                duration        INT         UNSIGNED,
+                stoptime        DATETIME,
+                PRIMARY KEY (sequence)
+            ) ENGINE=MyISAM;';
+        $result = $xoopsDB->queryF($query);
+        if (!$result) {
+            $module->setErrors('Error adding DB table uhqiceauth_authtrail');
 
-	// Modify tables for v0.4
+            return false;
+        }
 
-	if ($oldversion == 30) {
-		$query = "ALTER TABLE ".$xoopsDB->prefix("uhqiceauth_accounting")." ADD useragent CHAR(40) AFTER username";
-		$result = $xoopsDB->queryF($query);
-		if (! $result) {
-			$module->setErrors("Error adding useragent field.");
-			return false;
-		}
+        $query  = 'CREATE TABLE ' . $xoopsDB->prefix('uhqiceauth_accounting') . ' (
+                sequence        INT         UNSIGNED NOT NULL AUTO_INCREMENT,
+                logtime         TIMESTAMP,
+                server          CHAR(50)    NOT NULL,
+                port            INT         UNSIGNED NOT NULL,
+                mount           CHAR(20)    NOT NULL,
+                clientid        INT         UNSIGNED NOT NULL,
+                username        CHAR(20),
+                duration        INT         UNSIGNED NOT NULL,
+                PRIMARY KEY (sequence)
+            ) ENGINE=MyISAM;';
+        $result = $xoopsDB->queryF($query);
+        if (!$result) {
+            $module->setErrors('Error adding DB table uhqiceauth_accounting');
 
-		$query = "ALTER TABLE ".$xoopsDB->prefix("uhqiceauth_accounting")." ADD userip char(50) AFTER useragent";
-		$result = $xoopsDB->queryF($query);
-		if (! $result) {
-			$module->setErrors("Error adding userip field.");
-			return false;
-		}
+            return false;
+        }
 
-		$query = "ALTER TABLE ".$xoopsDB->prefix("uhqiceauth_accounting")." ADD starttime DATETIME AFTER userip";
-		$result = $xoopsDB->queryF($query);
-		if (! $result) {
-			$module->setErrors("Error adding DB starttime field.");
-			return false;
-		}
+        $oldversion = 30;
+    }
 
-		$query = 'CREATE TABLE '.$xoopsDB->prefix("uhqiceauth_mountlog").' (
-				sequence		INT			UNSIGNED NOT NULL AUTO_INCREMENT,
-				logtime			TIMESTAMP,
-				server			CHAR(50)	NOT NULL,
-				port			INT			UNSIGNED NOT NULL,
-				mount			CHAR(20)	NOT NULL,
-				action			CHAR(1)		NOT NULL,
-				PRIMARY KEY (sequence)
-			) ENGINE=MyISAM;';
-		$result = $xoopsDB->queryF($query);
-		if (! $result) {
-			$module->setErrors("Error adding DB table uhqiceauth_mountlog");
-			return false;
-		}
+    // Modify tables for v0.4
 
-		$query = 'CREATE TABLE '.$xoopsDB->prefix("uhqiceauth_activemounts").' (
-				server			CHAR(50)	NOT NULL,
-				port			INT			UNSIGNED NOT NULL,
-				mount			CHAR(20)	NOT NULL,
-				starttime		TIMESTAMP,
-				PRIMARY KEY (server,port,mount)
-			) ENGINE=MyISAM;';
-		$result = $xoopsDB->queryF($query);
-		if (! $result) {
-			$module->setErrors("Error adding DB table uhqiceauth_activemounts");
-			return false;
-		}
+    if ($oldversion == 30) {
+        $query  = 'ALTER TABLE ' . $xoopsDB->prefix('uhqiceauth_accounting') . ' ADD useragent CHAR(40) AFTER username';
+        $result = $xoopsDB->queryF($query);
+        if (!$result) {
+            $module->setErrors('Error adding useragent field.');
 
-		$oldversion = 40;
-	}
+            return false;
+        }
 
-	if ($oldversion == 40) {
+        $query  = 'ALTER TABLE ' . $xoopsDB->prefix('uhqiceauth_accounting') . ' ADD userip CHAR(50) AFTER useragent';
+        $result = $xoopsDB->queryF($query);
+        if (!$result) {
+            $module->setErrors('Error adding userip field.');
 
-		// Set Main Menu to visibility of 0
+            return false;
+        }
 
-		$sql = "UPDATE " . $xoopsDB->prefix('modules') . " SET weight = 0 WHERE dirname = 'uhq_iceauth'";
-		if ( $xoopsDB->queryF($sql) ) {
-			echo _MI_UHQICEAUTH_WEIGHT_OK;
-		} else {
-			echo _MI_UHQICEAUTH_WEIGHT_NOK;
-		}
+        $query  = 'ALTER TABLE ' . $xoopsDB->prefix('uhqiceauth_accounting') . ' ADD starttime DATETIME AFTER userip';
+        $result = $xoopsDB->queryF($query);
+        if (!$result) {
+            $module->setErrors('Error adding DB starttime field.');
 
-		$oldversion = 50;
-	}
-	// Return true if we get this far!
+            return false;
+        }
 
-	if ($oldversion == 50) {
+        $query  = 'CREATE TABLE ' . $xoopsDB->prefix('uhqiceauth_mountlog') . ' (
+                sequence        INT         UNSIGNED NOT NULL AUTO_INCREMENT,
+                logtime         TIMESTAMP,
+                server          CHAR(50)    NOT NULL,
+                port            INT         UNSIGNED NOT NULL,
+                mount           CHAR(20)    NOT NULL,
+                action          CHAR(1)     NOT NULL,
+                PRIMARY KEY (sequence)
+            ) ENGINE=MyISAM;';
+        $result = $xoopsDB->queryF($query);
+        if (!$result) {
+            $module->setErrors('Error adding DB table uhqiceauth_mountlog');
 
-		// Need a larger User Agent field
+            return false;
+        }
 
-		$query = "ALTER TABLE ". $xoopsDB->prefix("uhqiceauth_authtrail").' MODIFY useragent VARCHAR(96)';
+        $query  = 'CREATE TABLE ' . $xoopsDB->prefix('uhqiceauth_activemounts') . ' (
+                server          CHAR(50)    NOT NULL,
+                port            INT         UNSIGNED NOT NULL,
+                mount           CHAR(20)    NOT NULL,
+                starttime       TIMESTAMP,
+                PRIMARY KEY (server,port,mount)
+            ) ENGINE=MyISAM;';
+        $result = $xoopsDB->queryF($query);
+        if (!$result) {
+            $module->setErrors('Error adding DB table uhqiceauth_activemounts');
 
-		$result = $xoopsDB->queryF($query);
-		if (! $result) {
-			$module->setErrors("Error modifying useragent in uhqiceauth_authtrail");
-			return false;
-		}
+            return false;
+        }
 
-		$query = "ALTER TABLE ". $xoopsDB->prefix("uhqiceauth_accounting").' MODIFY useragent VARCHAR(96)';
+        $oldversion = 40;
+    }
 
-		$result = $xoopsDB->queryF($query);
-		if (! $result) {
-			$module->setErrors("Error modifying useragent in uhqiceauth_accounting");
-			return false;
-		}
+    if ($oldversion == 40) {
 
-		// New SQL Tables
+        // Set Main Menu to visibility of 0
 
-		$query = 'CREATE TABLE '.$xoopsDB->prefix("uhqiceauth_intros").' (
-				intronum		INT			UNSIGNED NOT NULL AUTO_INCREMENT,
-				filename		CHAR(50)	NOT NULL,
-				codec			CHAR(1)		NOT NULL,
-				description		VARCHAR(255),
-				PRIMARY KEY (intronum)
-			) ENGINE=MyISAM;';
-		$result = $xoopsDB->queryF($query);
-		if (! $result) {
-			$module->setErrors("Error adding DB table uhqiceauth_intros");
-			return false;
-		}
+        $sql = 'UPDATE ' . $xoopsDB->prefix('modules') . " SET weight = 0 WHERE dirname = 'uhq_iceauth'";
+        if ($xoopsDB->queryF($sql)) {
+            echo _MI_UHQICEAUTH_WEIGHT_OK;
+        } else {
+            echo _MI_UHQICEAUTH_WEIGHT_NOK;
+        }
 
-		$query = 'CREATE TABLE '.$xoopsDB->prefix("uhqiceauth_intromap").' (
-				intronum		INT			UNSIGNED NOT NULL,
-				server			CHAR(50)	NOT NULL,
-				port			INT			UNSIGNED NOT NULL,
-				mount			CHAR(20)	NOT NULL,
-				sequence		INT			UNSIGNED NOT NULL,
-				PRIMARY KEY (intronum,server,port,mount)
-			) ENGINE=MyISAM;';
-		$result = $xoopsDB->queryF($query);
-		if (! $result) {
-			$module->setErrors("Error adding DB table uhqiceauth_intromap");
-			return false;
-		}
+        $oldversion = 50;
+    }
+    // Return true if we get this far!
 
-		$query = 'CREATE TABLE '.$xoopsDB->prefix("uhqiceauth_streampass").' (
-				un		VARCHAR(50) NOT NULL,
-				pw		VARCHAR(50) NOT NULL,
-				added	DATETIME,
-				used	DATETIME,
-				PRIMARY KEY (un,pw)
-			) ENGINE=MyISAM;';
-		$result = $xoopsDB->queryF($query);
-		if (! $result) {
-			$module->setErrors("Error adding DB table uhqiceauth_streampass");
-			return false;
-		}
+    if ($oldversion == 50) {
 
-		$oldversion = 60;
-	}
+        // Need a larger User Agent field
 
-	if ($oldversion == 60) {
+        $query = 'ALTER TABLE ' . $xoopsDB->prefix('uhqiceauth_authtrail') . ' MODIFY useragent VARCHAR(96)';
 
-		// Adding FQDN recording to the authentication log.
-		$query = "ALTER TABLE ".$xoopsDB->prefix("uhqiceauth_authtrail")." ADD userrdns VARCHAR(64) AFTER userip";
-		$result = $xoopsDB->queryF($query);
-		if (! $result) {
-			$module->setErrors("Error adding DB userrdns field.");
-			return false;
-		}
+        $result = $xoopsDB->queryF($query);
+        if (!$result) {
+            $module->setErrors('Error modifying useragent in uhqiceauth_authtrail');
 
-		// Adding authinfo to the authentication log to allow for specific comments.
-		$query = "ALTER TABLE ".$xoopsDB->prefix("uhqiceauth_authtrail")." ADD authinfo INT AFTER authstat";
-		$result = $xoopsDB->queryF($query);
-		if (! $result) {
-			$module->setErrors("Error adding DB userrdns field.");
-			return false;
-		}
+            return false;
+        }
 
-		// Adding user agent ban table.
-		$query = 'CREATE TABLE '.$xoopsDB->prefix("uhqiceauth_uabans").' (
-			  sequence		INT			UNSIGNED NOT NULL AUTO_INCREMENT,
-			  useragent		VARCHAR(96),
-			  PRIMARY KEY (sequence)
-			) ENGINE=MyISAM;';
-		$result = $xoopsDB->queryF($query);
-		if (! $result) {
-			$module->setErrors("Error adding DB table uhqiceauth_uabans");
-			return false;
-		}
+        $query = 'ALTER TABLE ' . $xoopsDB->prefix('uhqiceauth_accounting') . ' MODIFY useragent VARCHAR(96)';
 
-		$oldversion = 70;
-	}
+        $result = $xoopsDB->queryF($query);
+        if (!$result) {
+            $module->setErrors('Error modifying useragent in uhqiceauth_accounting');
 
-	if ($oldversion == 70) {
+            return false;
+        }
 
-		// Adding Geolocation Country Code to the authentication log
+        // New SQL Tables
 
-		$query = "ALTER TABLE ".$xoopsDB->prefix("uhqiceauth_authtrail")." ADD geocc CHAR(2) AFTER stoptime";
-		$result = $xoopsDB->queryF($query);
-		if (! $result) {
-			$module->setErrors("Error adding DB geocc field.");
-			return false;
-		}
+        $query  = 'CREATE TABLE ' . $xoopsDB->prefix('uhqiceauth_intros') . ' (
+                intronum        INT         UNSIGNED NOT NULL AUTO_INCREMENT,
+                filename        CHAR(50)    NOT NULL,
+                codec           CHAR(1)     NOT NULL,
+                description     VARCHAR(255),
+                PRIMARY KEY (intronum)
+            ) ENGINE=MyISAM;';
+        $result = $xoopsDB->queryF($query);
+        if (!$result) {
+            $module->setErrors('Error adding DB table uhqiceauth_intros');
 
-		// Adding Geolocation Region to the authentication log
+            return false;
+        }
 
-		$query = "ALTER TABLE ".$xoopsDB->prefix("uhqiceauth_authtrail")." ADD georegion VARCHAR(128) AFTER geocc";
-		$result = $xoopsDB->queryF($query);
-		if (! $result) {
-			$module->setErrors("Error adding DB georegion field.");
-			return false;
-		}
+        $query  = 'CREATE TABLE ' . $xoopsDB->prefix('uhqiceauth_intromap') . ' (
+                intronum        INT         UNSIGNED NOT NULL,
+                server          CHAR(50)    NOT NULL,
+                port            INT         UNSIGNED NOT NULL,
+                mount           CHAR(20)    NOT NULL,
+                sequence        INT         UNSIGNED NOT NULL,
+                PRIMARY KEY (intronum,server,port,mount)
+            ) ENGINE=MyISAM;';
+        $result = $xoopsDB->queryF($query);
+        if (!$result) {
+            $module->setErrors('Error adding DB table uhqiceauth_intromap');
 
-		// Adding Geolocation City to the authentication log
+            return false;
+        }
 
-		$query = "ALTER TABLE ".$xoopsDB->prefix("uhqiceauth_authtrail")." ADD geocity VARCHAR(128) AFTER georegion";
-		$result = $xoopsDB->queryF($query);
-		if (! $result) {
-			$module->setErrors("Error adding DB geocity field.");
-			return false;
-		}
+        $query  = 'CREATE TABLE ' . $xoopsDB->prefix('uhqiceauth_streampass') . ' (
+                un      VARCHAR(50) NOT NULL,
+                pw      VARCHAR(50) NOT NULL,
+                added   DATETIME,
+                used    DATETIME,
+                PRIMARY KEY (un,pw)
+            ) ENGINE=MyISAM;';
+        $result = $xoopsDB->queryF($query);
+        if (!$result) {
+            $module->setErrors('Error adding DB table uhqiceauth_streampass');
 
-		// Need a larger User Agent field
+            return false;
+        }
 
-		$query = "ALTER TABLE ". $xoopsDB->prefix("uhqiceauth_authtrail").' MODIFY useragent VARCHAR(128)';
+        $oldversion = 60;
+    }
 
-		$result = $xoopsDB->queryF($query);
-		if (! $result) {
-			$module->setErrors("Error modifying useragent in uhqiceauth_authtrail");
-			return false;
-		}
+    if ($oldversion == 60) {
 
-		$query = "ALTER TABLE ". $xoopsDB->prefix("uhqiceauth_uabans").' MODIFY useragent VARCHAR(128)';
+        // Adding FQDN recording to the authentication log.
+        $query  = 'ALTER TABLE ' . $xoopsDB->prefix('uhqiceauth_authtrail') . ' ADD userrdns VARCHAR(64) AFTER userip';
+        $result = $xoopsDB->queryF($query);
+        if (!$result) {
+            $module->setErrors('Error adding DB userrdns field.');
 
-		$result = $xoopsDB->queryF($query);
-		if (! $result) {
-			$module->setErrors("Error modifying useragent in uhqiceauth_uabans");
-			return false;
-		}
+            return false;
+        }
 
-		$query - "DROP TABLE ".$xoopsDB->prefix("uhqiceauth_accounting");
-		$result = $xoopsDB->queryF($query);
-		if (! $result) {
-			$module->setErrors("Error removing table uhqiceauth_accounting");
-			return false;
-		}
+        // Adding authinfo to the authentication log to allow for specific comments.
+        $query  = 'ALTER TABLE ' . $xoopsDB->prefix('uhqiceauth_authtrail') . ' ADD authinfo INT AFTER authstat';
+        $result = $xoopsDB->queryF($query);
+        if (!$result) {
+            $module->setErrors('Error adding DB userrdns field.');
 
-		$oldversion = 80;
-	}
+            return false;
+        }
 
-	if ($oldversion == 80) {
-		// Further modifications to the UA Ban Table.
+        // Adding user agent ban table.
+        $query  = 'CREATE TABLE ' . $xoopsDB->prefix('uhqiceauth_uabans') . ' (
+              sequence      INT         UNSIGNED NOT NULL AUTO_INCREMENT,
+              useragent     VARCHAR(96),
+              PRIMARY KEY (sequence)
+            ) ENGINE=MyISAM;';
+        $result = $xoopsDB->queryF($query);
+        if (!$result) {
+            $module->setErrors('Error adding DB table uhqiceauth_uabans');
 
-		$query = "ALTER TABLE ".$xoopsDB->prefix("uhqiceauth_uabans")." ADD matchtype CHAR(1) AFTER useragent";
-		$result = $xoopsDB->queryF($query);
-		if (! $result) {
-			$module->setErrors("Error adding field matchtype in uhqiceauth_uabans");
-			return false;
-		}
+            return false;
+        }
 
-		// Create IP Ban Table
+        $oldversion = 70;
+    }
 
-		$query = 'CREATE TABLE '.$xoopsDB->prefix("uhqiceauth_ipbans").' (
-				startip		INT			UNSIGNED,
-				endip		INT			UNSIGNED,
-				added		DATETIME,
-				comment		VARCHAR(128),
-				PRIMARY KEY (startip,endip)
-			) ENGINE=MyISAM;';
-		$result = $xoopsDB->queryF($query);
-		if (! $result) {
-			$module->setErrors("Error adding DB table uhqiceauth_ipbans");
-			return false;
-		}
+    if ($oldversion == 70) {
 
+        // Adding Geolocation Country Code to the authentication log
 
-		$oldversion=90;
-	}
+        $query  = 'ALTER TABLE ' . $xoopsDB->prefix('uhqiceauth_authtrail') . ' ADD geocc CHAR(2) AFTER stoptime';
+        $result = $xoopsDB->queryF($query);
+        if (!$result) {
+            $module->setErrors('Error adding DB geocc field.');
 
-	if ($oldversion < 93) {
-		// Add column to the auth table to store the referer.
-		$query = "ALTER TABLE ".$xoopsDB->prefix("uhqiceauth_authtrail")." ADD referer VARCHAR(128) AFTER useragent";
-		$result = $xoopsDB->queryF($query);
-		if (! $result) {
-			$module->setErrors("Error adding field matchtype in uhqiceauth_uabans");
-			return false;
-		}
-		$oldversion = 93;
-	}
+            return false;
+        }
 
-	return true;
+        // Adding Geolocation Region to the authentication log
+
+        $query  = 'ALTER TABLE ' . $xoopsDB->prefix('uhqiceauth_authtrail') . ' ADD georegion VARCHAR(128) AFTER geocc';
+        $result = $xoopsDB->queryF($query);
+        if (!$result) {
+            $module->setErrors('Error adding DB georegion field.');
+
+            return false;
+        }
+
+        // Adding Geolocation City to the authentication log
+
+        $query  = 'ALTER TABLE ' . $xoopsDB->prefix('uhqiceauth_authtrail') . ' ADD geocity VARCHAR(128) AFTER georegion';
+        $result = $xoopsDB->queryF($query);
+        if (!$result) {
+            $module->setErrors('Error adding DB geocity field.');
+
+            return false;
+        }
+
+        // Need a larger User Agent field
+
+        $query = 'ALTER TABLE ' . $xoopsDB->prefix('uhqiceauth_authtrail') . ' MODIFY useragent VARCHAR(128)';
+
+        $result = $xoopsDB->queryF($query);
+        if (!$result) {
+            $module->setErrors('Error modifying useragent in uhqiceauth_authtrail');
+
+            return false;
+        }
+
+        $query = 'ALTER TABLE ' . $xoopsDB->prefix('uhqiceauth_uabans') . ' MODIFY useragent VARCHAR(128)';
+
+        $result = $xoopsDB->queryF($query);
+        if (!$result) {
+            $module->setErrors('Error modifying useragent in uhqiceauth_uabans');
+
+            return false;
+        }
+
+        $query - 'DROP TABLE ' . $xoopsDB->prefix('uhqiceauth_accounting');
+        $result = $xoopsDB->queryF($query);
+        if (!$result) {
+            $module->setErrors('Error removing table uhqiceauth_accounting');
+
+            return false;
+        }
+
+        $oldversion = 80;
+    }
+
+    if ($oldversion == 80) {
+        // Further modifications to the UA Ban Table.
+
+        $query  = 'ALTER TABLE ' . $xoopsDB->prefix('uhqiceauth_uabans') . ' ADD matchtype CHAR(1) AFTER useragent';
+        $result = $xoopsDB->queryF($query);
+        if (!$result) {
+            $module->setErrors('Error adding field matchtype in uhqiceauth_uabans');
+
+            return false;
+        }
+
+        // Create IP Ban Table
+
+        $query  = 'CREATE TABLE ' . $xoopsDB->prefix('uhqiceauth_ipbans') . ' (
+                startip     INT         UNSIGNED,
+                endip       INT         UNSIGNED,
+                added       DATETIME,
+                comment     VARCHAR(128),
+                PRIMARY KEY (startip,endip)
+            ) ENGINE=MyISAM;';
+        $result = $xoopsDB->queryF($query);
+        if (!$result) {
+            $module->setErrors('Error adding DB table uhqiceauth_ipbans');
+
+            return false;
+        }
+
+        $oldversion = 90;
+    }
+
+    if ($oldversion < 93) {
+        // Add column to the auth table to store the referer.
+        $query  = 'ALTER TABLE ' . $xoopsDB->prefix('uhqiceauth_authtrail') . ' ADD referer VARCHAR(128) AFTER useragent';
+        $result = $xoopsDB->queryF($query);
+        if (!$result) {
+            $module->setErrors('Error adding field matchtype in uhqiceauth_uabans');
+
+            return false;
+        }
+        $oldversion = 93;
+    }
+
+    return true;
 }

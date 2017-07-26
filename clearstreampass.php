@@ -19,37 +19,36 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-include '../../mainfile.php';
+include __DIR__ . '/../../mainfile.php';
 
 // Simply clear out the temporary password in the stream table if the user requests it.  Redirect to page called from.
 
 if (is_object($xoopsUser)) {
-	$block['username'] = $xoopsUser->getVar('uname');
+    $block['username'] = $xoopsUser->getVar('uname');
 
-	// Check DB for entry
+    // Check DB for entry
 
-	$query = "SELECT * FROM ".$xoopsDB->prefix("uhqiceauth_streampass");
-	$query .= " WHERE un = '".utf8_encode($block['username'])."'";
+    $query = 'SELECT * FROM ' . $xoopsDB->prefix('uhqiceauth_streampass');
+    $query .= " WHERE un = '" . utf8_encode($block['username']) . "'";
 
-	$result = $xoopsDB->queryF($query);
-	if ($result == false) {
-		redirect_header($_SERVER['HTTP_REFERER'],10,_MD_UHQICEAUTH_CSP_DBERR);
-	} else {
-		if ($row = $xoopsDB->fetchArray($result)) {
+    $result = $xoopsDB->queryF($query);
+    if ($result === false) {
+        redirect_header($_SERVER['HTTP_REFERER'], 10, _MD_UHQICEAUTH_CSP_DBERR);
+    } else {
+        if ($row = $xoopsDB->fetchArray($result)) {
+            $query  = 'DELETE FROM ' . $xoopsDB->prefix('uhqiceauth_streampass') . ' WHERE';
+            $query  .= " un = '" . utf8_encode($block['username']) . "'";
+            $result = $xoopsDB->queryF($query);
 
-			$query = "DELETE FROM ".$xoopsDB->prefix("uhqiceauth_streampass")." WHERE";
-			$query .= " un = '".utf8_encode($block['username'])."'";
-			$result = $xoopsDB->queryF($query);
-
-			if ($result == false) {
-				redirect_header($_SERVER['HTTP_REFERER'],10,_MD_UHQICEAUTH_CSP_DBERR);
-			} else {
-				redirect_header($_SERVER['HTTP_REFERER'],10,_MD_UHQICEAUTH_CSP_RESETOK);
-			}
-		} else {
-			redirect_header($_SERVER['HTTP_REFERER'],10,_MD_UHQICEAUTH_CSP_NOPW);
-		}
-	}
+            if ($result === false) {
+                redirect_header($_SERVER['HTTP_REFERER'], 10, _MD_UHQICEAUTH_CSP_DBERR);
+            } else {
+                redirect_header($_SERVER['HTTP_REFERER'], 10, _MD_UHQICEAUTH_CSP_RESETOK);
+            }
+        } else {
+            redirect_header($_SERVER['HTTP_REFERER'], 10, _MD_UHQICEAUTH_CSP_NOPW);
+        }
+    }
 } else {
-	redirect_header($_SERVER['HTTP_REFERER'],10,_MD_UHQICEAUTH_CSP_LOGIN);
+    redirect_header($_SERVER['HTTP_REFERER'], 10, _MD_UHQICEAUTH_CSP_LOGIN);
 }
