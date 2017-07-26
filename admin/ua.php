@@ -42,7 +42,7 @@ if ( isset($_REQUEST['op']) ) {
 $sane_REQUEST = uhqiceauth_dosanity();
 
 function uhqiceauth_uaform($title) {
-	$form = new XoopsThemeForm($title,'uaform','ua.php', 'POST');
+	$form = new XoopsThemeForm($title,'uaform','ua.php', 'post', true);
 
 	$form->addElement(new XoopsFormText(_AM_UHQICEAUTH_FORM_USERAGENT, "useragent",40,50) );
 

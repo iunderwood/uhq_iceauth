@@ -45,7 +45,7 @@ function uhqiceauth_srvform($title, $formdata, $op) {
 		$formdata['src_auth_un'] = "source";	// Default source username
 	}
 
-	$form = new XoopsThemeForm($title,'srvform','mountpoints.php', 'POST');
+	$form = new XoopsThemeForm($title,'srvform','mountpoints.php', 'post', true);
 
 	$form->addElement(new XoopsFormText(_AM_UHQICEAUTH_FORM_IPFQDN, "server",40,50,$formdata['server']) );
 	$form->addElement(new XoopsFormText(_AM_UHQICEAUTH_FORM_PORT, "port",5,5,$formdata['port']) );
@@ -112,7 +112,7 @@ function uhqiceauth_srvintroform($title) {
 	global $xoopsDB;
 	global $sane_REQUEST;
 
-	$form = new XoopsThemeForm($title." - ".$sane_REQUEST['server'].":".$sane_REQUEST['port'].$sane_REQUEST['mount'],'intromapform','mountpoints.php','post');
+	$form = new XoopsThemeForm($title." - ".$sane_REQUEST['server'].":".$sane_REQUEST['port'].$sane_REQUEST['mount'],'intromapform','mountpoints.php','post', true);
 
 	// Selection of introduction
 

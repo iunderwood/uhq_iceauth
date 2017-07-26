@@ -50,7 +50,7 @@ function uhqiceauth_introform($title,$formdata=array(),$op=null) {
 		$formdata['codec'] = 'O';
 	}
 
-	$form = new XoopsThemeForm($title,'introform','intros.php', 'post');
+	$form = new XoopsThemeForm($title,'introform','intros.php', 'post', true);
 
 	if ($op == "edit") {
 		$form->addElement(new XoopsFormFile(_AM_UHQICEAUTH_INTROS_EDITFILE, 'introfile', 1048576));
