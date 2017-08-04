@@ -298,3 +298,12 @@ define('_AM_UHQICEAUTH_INTROS_PLAY_NORECORD', 'Intro ID not found.');
 define('_AM_UHQICEAUTH_INTROS_PLAY_NOFILE', 'Unable to find file.');
 define('_AM_UHQICEAUTH_INTROS_PLAY_ERROR', 'Error: ');
 define('_AM_UHQICEAUTH_INTROS_PLAY_VLCREQ', 'You must have the VLC plug-in installed in order to use this feature.');
+
+//0.93
+define('_AM_UHQICEAUTH_UPGRADEFAILED0', "Update failed - couldn't rename field '%s'");
+define('_AM_UHQICEAUTH_UPGRADEFAILED1', "Update failed - couldn't add new fields");
+define('_AM_UHQICEAUTH_UPGRADEFAILED2', "Update failed - couldn't rename table '%s'");
+define('_AM_UHQICEAUTH_ERROR_COLUMN', 'Could not create column in database : %s');
+define('_AM_UHQICEAUTH_ERROR_BAD_XOOPS', 'This module requires XOOPS %s+ (%s installed)');
+define('_AM_UHQICEAUTH_ERROR_BAD_PHP', 'This module requires PHP version %s+ (%s installed)');
+define('_AM_UHQICEAUTH_ERROR_TAG_REMOVAL', 'Could not remove tags from Tag Module');

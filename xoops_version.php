@@ -36,12 +36,14 @@ $modversion['image']         = 'assets/images/logoModule.png';
 $modversion['dirname']       = basename(__DIR__);
 
 // Better Help Section
-$i                                     = 0;
-$modversion['helpsection'][$i]['name'] = 'Introduction';
-$modversion['helpsection'][$i]['link'] = 'page=help';
-$i++;
-$modversion['helpsection'][$i]['name'] = 'Mount Points';
-$modversion['helpsection'][$i]['link'] = 'page=mountpoints';
+// ------------------- Help files ------------------- //
+$modversion['helpsection'] = array(
+    ['name' => _MI_UHQICEAUTH_OVERVIEW, 'link' => 'page=help'],
+    ['name' => _MI_UHQICEAUTH_DISCLAIMER, 'link' => 'page=disclaimer'],
+    ['name' => _MI_UHQICEAUTH_LICENSE, 'link' => 'page=license'],
+    ['name' => _MI_UHQICEAUTH_SUPPORT, 'link' => 'page=support'],
+    ['name' => _MI_UHQICEAUTH_MOUNT_POINTS, 'link' => 'page=mountpoints'],
+);
 
 // Administrative Defines
 //$modversion['dirmoduleadmin'] = '/Frameworks/moduleclasses/moduleadmin';
