@@ -44,7 +44,7 @@ if (isset($_REQUEST['op'])) {
 
 $sane_REQUEST = uhqiceauth_dosanity();
 
-function uhqiceauth_introform($title, $formdata = array(), $op = null)
+function uhqiceauth_introform($title, $formdata = [], $op = null)
 {
     if ($formdata == null) {
         $formdata['codec'] = 'O';

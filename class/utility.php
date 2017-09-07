@@ -119,7 +119,7 @@ class UhqIceAuthUtility extends XoopsObject
             }
         }
 
-        if (!$success) {
+        if (false === $success) {
             $module->setErrors(sprintf(_AM_UHQICEAUTH_ERROR_BAD_XOOPS, $requiredVer, $currentVer));
         }
 

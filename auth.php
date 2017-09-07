@@ -30,7 +30,7 @@ $xoopsLogger->activated = false;
 
 // Set our global variables
 
-$iceheaders     = array();  // Array which stores all the headers auth adds
+$iceheaders     = [];  // Array which stores all the headers auth adds
 $iceheadercount = 0;    // Incrementing count of all headers
 $print_hdr      = 1;         // Show header array by default.
 

@@ -23,7 +23,7 @@ require_once XOOPS_ROOT_PATH . '/modules/uhq_iceauth/includes/functions.php';
 
 function b_uhqiceauth_activemounts_show()
 {
-    $block = array();
+    $block = [];
 
     // All we do is show what mountpoints are active.
 
@@ -47,7 +47,7 @@ function b_uhqiceauth_activemounts_edit()
 
 function b_uhqiceauth_streampass_show()
 {
-    $block = array();
+    $block = [];
 
     global $xoopsUser;
     global $xoopsDB;

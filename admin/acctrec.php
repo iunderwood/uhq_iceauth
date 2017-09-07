@@ -45,7 +45,7 @@ function uhqiceauth_acct_agentsumconn($limit = 10, $days = 0)
 {
     global $xoopsDB;
 
-    $data = array();
+    $data = [];
 
     // Summary List
     $query = 'SELECT useragent, COUNT(useragent) AS total FROM ' . $xoopsDB->prefix('uhqiceauth_authtrail');
@@ -152,7 +152,7 @@ xoops_cp_header();
 $adminObject = \Xmf\Module\Admin::getInstance();
 $adminObject->displayNavigation(basename(__FILE__));
 
-$data = array();
+$data = [];
 
 $data['duacount'] = uhqiceauth_summarycount('DUA');
 

@@ -59,7 +59,7 @@ function uhqiceauth_raw_activemounts()
         // return nothing on a DB error.  Error can be pulled later.
         return null;
     } else {
-        $data = array();
+        $data = [];
         $i    = 0;
         while ($row = $xoopsDB->fetchArray($result)) {
             $data['mount'][$i] = $row;
@@ -85,7 +85,7 @@ function uhqiceauth_raw_streampass($start = 0, $limit = 0)
         // Return nothing on a DB Error.
         return null;
     } else {
-        $data = array();
+        $data = [];
         while ($row = $xoopsDB->fetchArray($result)) {
             $data['list'][$i] = $row;
             $i++;

@@ -116,7 +116,7 @@ function uhqiceauth_time($duration)
 
 // Define array of acceptable MIME type for the intro uploader
 
-$uhqiceauth_intro_mimes = array('audio/ogg', 'video/ogg', 'audio/mpeg', 'video/mpeg', 'audio/aac');
+$uhqiceauth_intro_mimes = ['audio/ogg', 'video/ogg', 'audio/mpeg', 'video/mpeg', 'audio/aac'];
 
 // Return status of Geolocation Module
 

@@ -58,7 +58,7 @@ function uhqiceauth_mount($start, $limit, $orderby)
         return null;
     } else {
         $i    = 0;
-        $data = array();
+        $data = [];
 
         $data['start'] = $start;
         $data['limit'] = $limit;

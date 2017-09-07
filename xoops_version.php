@@ -37,13 +37,13 @@ $modversion['dirname']       = basename(__DIR__);
 
 // Better Help Section
 // ------------------- Help files ------------------- //
-$modversion['helpsection'] = array(
+$modversion['helpsection'] = [
     ['name' => _MI_UHQICEAUTH_OVERVIEW, 'link' => 'page=help'],
     ['name' => _MI_UHQICEAUTH_DISCLAIMER, 'link' => 'page=disclaimer'],
     ['name' => _MI_UHQICEAUTH_LICENSE, 'link' => 'page=license'],
     ['name' => _MI_UHQICEAUTH_SUPPORT, 'link' => 'page=support'],
     ['name' => _MI_UHQICEAUTH_MOUNT_POINTS, 'link' => 'page=mountpoints'],
-);
+];
 
 // Administrative Defines
 //$modversion['dirmoduleadmin'] = '/Frameworks/moduleclasses/moduleadmin';
@@ -60,7 +60,7 @@ $modversion['module_website_name'] = 'XOOPS@UHQ';
 $modversion['min_php']   = '5.5';
 $modversion['min_xoops'] = '2.5.9';
 $modversion['min_admin'] = '1.1';
-$modversion['min_db']    = array('mysql' => '5.5');
+$modversion['min_db']    = ['mysql' => '5.5'];
 
 // Install Options
 $modversion['onInstall'] = 'includes/oninstall.php';
@@ -83,83 +83,83 @@ $modversion['tables'][] = 'uhqiceauth_uabans';
 $modversion['hasConfig']   = 1;
 $modversion['system_menu'] = 1;
 
-$modversion['config'][] = array(
+$modversion['config'][] = [
     'name'        => 'hdr_auth',
     'title'       => '_MI_UHQICEAUTH_MODCFG_HDRAUTH',
     'description' => '_MI_UHQICEAUTH_MODCFG_HDRAUTH_DESC',
     'formtype'    => 'textbox',
     'valuetype'   => 'text',
     'default'     => 'icecast-auth-user: 1'
-);
+];
 
-$modversion['config'][] = array(
+$modversion['config'][] = [
     'name'        => 'hdr_msg',
     'title'       => '_MI_UHQICEAUTH_MODCFG_HDRMSG',
     'description' => '_MI_UHQICEAUTH_MODCFG_HDRMSG_DESC',
     'formtype'    => 'textbox',
     'valuetype'   => 'text',
     'default'     => 'icecast-auth-message: '
-);
+];
 
-$modversion['config'][] = array(
+$modversion['config'][] = [
     'name'        => 'hdr_time',
     'title'       => '_MI_UHQICEAUTH_MODCFG_HDRTIME',
     'description' => '_MI_UHQICEAUTH_MODCFG_HDRTIME_DESC',
     'formtype'    => 'textbox',
     'valuetype'   => 'text',
     'default'     => 'icecast-auth-timelimit: '
-);
+];
 
-$modversion['config'][] = array(
+$modversion['config'][] = [
     'name'        => 'undef_action',
     'title'       => '_MI_UHQICEAUTH_MODCFG_UNDEF',
     'description' => '_MI_UHQICEAUTH_MODCFG_UNDEF_DESC',
     'formtype'    => 'select',
     'valuetype'   => 'text',
-    'options'     => array(
+    'options'     => [
         _MI_UHQICEAUTH_MODCFG_UNDEF_OPTA => 'A',
         _MI_UHQICEAUTH_MODCFG_UNDEF_OPTN => 'N',
         _MI_UHQICEAUTH_MODCFG_UNDEF_OPTD => 'D'
-    ),
+    ],
     'default'     => 'N'
-);
+];
 
-$modversion['config'][] = array(
+$modversion['config'][] = [
     'name'        => 'undef_group',
     'title'       => '_MI_UHQICEAUTH_MODCFG_GROUPS',
     'description' => '_MI_UHQICEAUTH_MODCFG_GROUPS_DESC',
     'formtype'    => 'group_multi',
     'valuetype'   => 'array',
-    'default'     => array(XOOPS_GROUP_ADMIN)
-);
+    'default'     => [XOOPS_GROUP_ADMIN]
+];
 
-$modversion['config'][] = array(
+$modversion['config'][] = [
     'name'        => 'undef_time',
     'title'       => '_MI_UHQICEAUTH_MODCFG_TIME',
     'description' => '_MI_UHQICEAUTH_MODCFG_TIME_DESC',
     'formtype'    => 'textbox',
     'valuetype'   => 'int',
     'default'     => 0
-);
+];
 
-$modversion['config'][] = array(
+$modversion['config'][] = [
     'name'        => 'rdns',
     'title'       => '_MI_UHQICEAUTH_MODCFG_RDNS',
     'description' => '_MI_UHQICEAUTH_MODCFG_RDNS_DESC',
     'formtype'    => 'yesno',
     'valuetype'   => 'int',
     'default'     => 0
-);
+];
 
 // Log Admin Updates?
-$modversion['config'][] = array(
+$modversion['config'][] = [
     'name'        => 'logadminupdate',
     'title'       => '_MI_UHQICEAUTH_MODCFG_LOGADMIN',
     'description' => '_MI_UHQICEAUTH_MODCFG_LOGADMIN_DESC',
     'formtype'    => 'yesno',
     'valuetype'   => 'int',
     'default'     => 1
-);
+];
 
 // Administrative Items
 $modversion['hasAdmin']   = 1;

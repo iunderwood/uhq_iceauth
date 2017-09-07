@@ -33,7 +33,7 @@ include XOOPS_ROOT_PATH . '/modules/uhq_iceauth/includes/auth.inc.php';
 function uhqiceauth_authlist($authtype, $start, $limit, $orderby)
 {
     global $xoopsDB;
-    $data = array();
+    $data = [];
 
     $query = 'SELECT * FROM ' . $xoopsDB->prefix('uhqiceauth_authtrail') . ' WHERE ';
     $query .= " authtype = '" . $authtype . "' ORDER BY sequence " . $orderby . ' LIMIT ' . $start . ', ' . $limit;
@@ -70,7 +70,7 @@ function uhqiceauth_authlist($authtype, $start, $limit, $orderby)
 function uhqiceauth_authrecord($sequence)
 {
     global $xoopsDB;
-    $data = array();
+    $data = [];
 
     if ($sequence) {
         $query  = 'SELECT * FROM ' . $xoopsDB->prefix('uhqiceauth_authtrail') . " WHERE sequence = '" . $sequence . "'";
@@ -129,7 +129,7 @@ switch ($op) {
         $adminObject = \Xmf\Module\Admin::getInstance();
         $adminObject->displayNavigation(basename(__FILE__));
 
-        $data = array();
+        $data = [];
 
         $data = uhqiceauth_authrecord($sane_REQUEST['sequence']);
 
@@ -145,7 +145,7 @@ switch ($op) {
         $adminObject = \Xmf\Module\Admin::getInstance();
         $adminObject->displayNavigation(basename(__FILE__));
 
-        $data = array();
+        $data = [];
 
         $data['aucount'] = uhqiceauth_summarycount('AU');   // Authentication Summary
 

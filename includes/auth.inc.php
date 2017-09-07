@@ -137,7 +137,7 @@ function uhqiceauth_header($hdr_txt)
 }
 
 // Dumps the intro file if we've got one.
-function uhqiceauth_introdump($mountrow = array(), $header)
+function uhqiceauth_introdump($mountrow = [], $header)
 {
     global $xoopsDB;
 

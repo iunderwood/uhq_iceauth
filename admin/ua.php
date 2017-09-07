@@ -68,7 +68,7 @@ function uhqiceauth_ualist()
         return null;
     } else {
         $i    = 0;
-        $data = array();
+        $data = [];
         while ($row = $xoopsDB->fetchArray($result)) {
             $data['list'][$i] = $row;
             $i++;
@@ -92,7 +92,7 @@ function uhqiceauth_uaauthbans($start, $limit = 10)
         return null;
     } else {
         $i    = 0;
-        $data = array();
+        $data = [];
         while ($row = $xoopsDB->fetchArray($result)) {
             $data['banlog'][$i] = $row;
             $i++;
