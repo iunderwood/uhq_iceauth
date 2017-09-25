@@ -31,7 +31,7 @@ function b_uhqiceauth_activemounts_show()
 
     $block = uhqiceauth_raw_activemounts();
 
-    if ($block == null) {
+    if (null == $block) {
         // DB error should be stored in the last DB call.
         $block['error'] = _MB_UHQICEAUTH_ACTIVE_DBERR . ' [' . $xoopsDB->error() . ']';
     }
@@ -63,7 +63,7 @@ function b_uhqiceauth_streampass_show()
         $query .= " WHERE un = '" . utf8_encode(strtolower($block['username'])) . "'";
 
         $result = $xoopsDB->queryF($query);
-        if ($result === false) {
+        if (false === $result) {
             $block['error'] = $xoopsDB->error();
 
             return $block;
@@ -79,7 +79,7 @@ function b_uhqiceauth_streampass_show()
                 $query .= " un = '" . utf8_encode(strtolower($block['username'])) . "'";
 
                 $result = $xoopsDB->queryF($query);
-                if ($result === false) {
+                if (false === $result) {
                     $block['error'] = $xoopsDB->error();
 
                     return $block;

@@ -38,7 +38,7 @@ function uhqiceauth_checkuser($un, $pw)
         $query .= " WHERE un='" . strtolower($un) . "' AND pw='" . $pw . "'";
 
         $result = $xoopsDB->queryF($query);
-        if ($result === false) {
+        if (false === $result) {
             // Return false if DB query fails.
         } else {
             // Query passed.  Fetch result.
@@ -98,7 +98,7 @@ function uhqiceauth_checkrdns()
     $xoopsModuleConfig = $configHandler->getConfigsByCat(0, $xoopsModule->getVar('mid'));
 
     // Return true if reverse DNS is enabled in the configuration
-    if ($xoopsModuleConfig['rdns'] == 1) {
+    if (1 == $xoopsModuleConfig['rdns']) {
         return true;
     } else {
         return false;
@@ -115,7 +115,7 @@ function uhqiceauth_checklogadmin()
     $xoopsModuleConfig = $configHandler->getConfigsByCat(0, $xoopsModule->getVar('mid'));
 
     // Return true if module-wide administrative update logging is enabled in the configuration
-    if ($xoopsModuleConfig['logadminupdate'] == 1) {
+    if (1 == $xoopsModuleConfig['logadminupdate']) {
         return true;
     } else {
         return false;
@@ -148,14 +148,14 @@ function uhqiceauth_introdump($mountrow = [], $header)
     $query .= " mount='" . $mountrow['mount'] . "'";
 
     $result = $xoopsDB->queryF($query);
-    if ($result === false) {
+    if (false === $result) {
         $intros = 0;
     } else {
         list($intros) = $xoopsDB->fetchRow($result);
     }
 
     // Set header
-    if ($intros == 0) {
+    if (0 == $intros) {
         uhqiceauth_header($header, 1);
 
         return false;
@@ -169,7 +169,7 @@ function uhqiceauth_introdump($mountrow = [], $header)
         $query  .= ' AND x.intronum=y.intronum';
         $query  .= ' ORDER BY x.sequence';
         $result = $xoopsDB->queryF($query);
-        if ($result === false) {
+        if (false === $result) {
             // Base authentication if query fails.
             uhqiceauth_header($header, 1);
 
@@ -225,7 +225,7 @@ function uhqiceauth_addhit($server, $port, $mount, $hit = false)
     $query .= " WHERE server = '" . $server . "' AND port = '" . $port . "' AND mount = '" . $mount . "'";
 
     $result = $xoopsDB->queryF($query);
-    if ($result === false) {
+    if (false === $result) {
         echo '<b>SQL Error at:</b> ' . $query;
     }
 }
@@ -244,7 +244,7 @@ function uhqiceauth_srcaddhit($server, $port, $mount, $hit = false)
     $query .= " WHERE server = '" . $server . "' AND port = '" . $port . "' AND mount = '" . $mount . "'";
 
     $result = $xoopsDB->queryF($query);
-    if ($result === false) {
+    if (false === $result) {
         echo '<b>SQL Error at:</b> ' . $query;
     }
 }
@@ -284,9 +284,9 @@ function uhqiceauth_authlog($sane_REQUEST, $authtype, $authstat, $authinfo = nul
     $query .= "mount = '" . $sane_REQUEST['mount'] . "', ";
 
     // Change source authentication to A if there's an admin flag passed.
-    if (($authtype === 'S') && $_REQUEST['admin']) {
+    if (('S' === $authtype) && $_REQUEST['admin']) {
         // Log if admin logging is true, otherwise skip the logs altogether.
-        if (uhqiceauth_checklogadmin() === true) {
+        if (true === uhqiceauth_checklogadmin()) {
             $query .= "authtype = 'A', ";
         } else {
             return true;
@@ -296,14 +296,14 @@ function uhqiceauth_authlog($sane_REQUEST, $authtype, $authstat, $authinfo = nul
     }
 
     // If authentication passes, flag status as P, otherwise F.
-    if ($authstat === true) {
+    if (true === $authstat) {
         $query .= "authstat = 'P', ";
     } else {
         $query .= "authstat = 'F', ";
     }
 
     // Add any comment codes if they were passed.
-    if ($authinfo != null) {
+    if (null != $authinfo) {
         $query .= "authinfo = '" . trim($authinfo) . "', ";
     }
 
@@ -321,13 +321,13 @@ function uhqiceauth_authlog($sane_REQUEST, $authtype, $authstat, $authinfo = nul
     $location = uhqiceauth_geolocate($sane_REQUEST['ip']);
 
     if (is_object($location)) {
-        if ($location->country != null) {
+        if (null != $location->country) {
             $query .= ", geocc = '" . $location->country . "' ";
         }
-        if ($location->region != null) {
+        if (null != $location->region) {
             $query .= ", georegion = '" . $location->region . "' ";
         }
-        if ($location->city != null) {
+        if (null != $location->city) {
             $query .= ", geocity = '" . $location->city . "'";
         }
     }
@@ -339,14 +339,14 @@ function uhqiceauth_authlog($sane_REQUEST, $authtype, $authstat, $authinfo = nul
 
     $result = $xoopsDB->queryF($query);
 
-    if ($result === false) {
+    if (false === $result) {
         echo '<b>SQL Error at: </b> ' . $query;
     }
 
     // Run the hit counter
-    if ($authtype === 'L') {
+    if ('L' === $authtype) {
         uhqiceauth_addhit($sane_REQUEST['server'], $sane_REQUEST['port'], $sane_REQUEST['mount'], $authstat);
-    } elseif ($authtype === 'S') {
+    } elseif ('S' === $authtype) {
         uhqiceauth_srcaddhit($sane_REQUEST['server'], $sane_REQUEST['port'], $sane_REQUEST['mount'], $authstat);
     }
 }
@@ -371,7 +371,7 @@ function uhqiceauth_acctlog($sane_REQUEST)
     $authrecord = 0;
 
     $result = $xoopsDB->queryF($query);
-    if ($result === false) {
+    if (false === $result) {
         echo '<b>SQL Error at:</b> ' . $query;
     } else {
         $row = $xoopsDB->fetchArray($result);
@@ -388,7 +388,7 @@ function uhqiceauth_acctlog($sane_REQUEST)
         $query .= " WHERE sequence = '" . $authrecord . "'";
 
         $result = $xoopsDB->queryF($query);
-        if ($result === false) {
+        if (false === $result) {
             echo '<b>SQL Error at:</b> ' . $query;
         }
     } else {
@@ -411,13 +411,13 @@ function uhqiceauth_acctlog($sane_REQUEST)
         $location = uhqiceauth_geolocate($sane_REQUEST['ip']);
 
         if (is_object($location)) {
-            if ($location->country != null) {
+            if (null != $location->country) {
                 $query .= "geocc = '" . $location->country . "', ";
             }
-            if ($location->region != null) {
+            if (null != $location->region) {
                 $query .= "georegion = '" . $location->region . "', ";
             }
-            if ($location->city != null) {
+            if (null != $location->city) {
                 $query .= "geocity = '" . $location->city . "', ";
             }
         }
@@ -432,7 +432,7 @@ function uhqiceauth_acctlog($sane_REQUEST)
 
         $result = $xoopsDB->queryF($query);
 
-        if ($result === false) {
+        if (false === $result) {
             echo '<b>SQL Error at:</b> ' . $query;
         }
     }
@@ -443,7 +443,7 @@ function uhqiceauth_mountlog($sane_REQUEST)
 {
     global $xoopsDB;
 
-    if ($_REQUEST['action'] === 'mount_add') {
+    if ('mount_add' === $_REQUEST['action']) {
         // Insert into Log
         $query = 'INSERT INTO ' . $xoopsDB->prefix('uhqiceauth_mountlog') . ' SET ';
         $query .= "server = '" . $sane_REQUEST['server'] . "', ";
@@ -452,7 +452,7 @@ function uhqiceauth_mountlog($sane_REQUEST)
         $query .= "action = 'A'";
 
         $result = $xoopsDB->queryF($query);
-        if ($result === false) {
+        if (false === $result) {
             echo '<b>SQL Error at:</b> ' . $query;
         }
 
@@ -463,14 +463,14 @@ function uhqiceauth_mountlog($sane_REQUEST)
         $query .= "mount = '" . $sane_REQUEST['mount'] . "'";
 
         $result = $xoopsDB->queryF($query);
-        if ($result === false) {
+        if (false === $result) {
             echo '<b>SQL Error at:</b> ' . $query;
         }
 
         return true;
     }
 
-    if ($_REQUEST['action'] === 'mount_remove') {
+    if ('mount_remove' === $_REQUEST['action']) {
         $query = 'INSERT INTO ' . $xoopsDB->prefix('uhqiceauth_mountlog') . ' SET ';
         $query .= "server = '" . $sane_REQUEST['server'] . "', ";
         $query .= "port = '" . $sane_REQUEST['port'] . "', ";
@@ -478,7 +478,7 @@ function uhqiceauth_mountlog($sane_REQUEST)
         $query .= "action = 'R'";
 
         $result = $xoopsDB->queryF($query);
-        if ($result === false) {
+        if (false === $result) {
             echo '<b>SQL Error at:</b> ' . $query;
         }
 
@@ -488,7 +488,7 @@ function uhqiceauth_mountlog($sane_REQUEST)
         $query  .= "port = '" . $sane_REQUEST['port'] . "' AND ";
         $query  .= "mount = '" . $sane_REQUEST['mount'] . "'";
         $result = $xoopsDB->queryF($query);
-        if ($result === false) {
+        if (false === $result) {
             echo '<b>SQL Error at:</b> ' . $query;
         }
 
@@ -505,13 +505,13 @@ function uhqiceauth_ua_verify($testua)
 
     $result = $xoopsDB->queryF($query);
 
-    if ($result === false) {
+    if (false === $result) {
         // If the DB fails, pass the user agent test.
         return true;
     }
 
     while ($row = $xoopsDB->fetchArray($result)) {
-        if (strpos($testua, $row['useragent']) === false) {
+        if (false === strpos($testua, $row['useragent'])) {
             // UA Pases.  Do nothing.
         } else {
             // UA Fails

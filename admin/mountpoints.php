@@ -36,7 +36,7 @@ function uhqiceauth_srvform($title, $formdata, $op)
 {
 
     // Insert some detaults if the data is null
-    if ($formdata == null) {
+    if (null == $formdata) {
         $formdata['timelimit']    = 0;         // No time limits by default
         $formdata['lst_auth_typ'] = 'D';    // Verify Listener against DB
         $formdata['lst_auth_grp'] = '2';    // Listener must be registered
@@ -70,7 +70,7 @@ function uhqiceauth_srvform($title, $formdata, $op)
     $form->addElement(new XoopsFormText(_AM_UHQICEAUTH_FORM_SRCUN, 'src_auth_un', 20, 20, $formdata['src_auth_un']));
     $form->addElement(new XoopsFormText(_AM_UHQICEAUTH_FORM_SRCPW, 'src_auth_pw', 20, 20, $formdata['src_auth_pw']));
 
-    if ($op == 'edit') {
+    if ('edit' == $op) {
         // Set query to get current info, in case we change the IP/Port/Mountpoint
         $form->addElement(new XoopsFormHidden('o_server', $formdata['server']));
         $form->addElement(new XoopsFormHidden('o_port', $formdata['port']));
@@ -120,7 +120,7 @@ function uhqiceauth_srvintroform($title)
 
     $query  = 'SELECT * FROM ' . $xoopsDB->prefix('uhqiceauth_intros');
     $result = $xoopsDB->queryF($query);
-    if ($result === false) {
+    if (false === $result) {
         // Do not add options.
     } else {
         // Load option from DB
@@ -174,7 +174,7 @@ switch ($op) {
             $query .= "src_auth_pw = '" . $sane_REQUEST['src_auth_pw'] . "'";
 
             $result = $xoopsDB->queryF($query);
-            if ($result === false) {
+            if (false === $result) {
                 redirect_header('mountpoints.php', 10, _AM_UHQICEAUTH_SQLERR . $query . '<br>' . $xoopsDB->error());
                 break;
             } else {
@@ -198,7 +198,7 @@ switch ($op) {
             $query  .= $sane_REQUEST['server'] . "' AND port = '" . $sane_REQUEST['port'] . "' AND mount = '";
             $query  .= $sane_REQUEST['mount'] . "';";
             $result = $xoopsDB->queryF($query);
-            if ($result === false) {
+            if (false === $result) {
                 redirect_header('mountpoints.php', 10, _AM_UHQICEAUTH_SQLERR . $query . '<br>' . $xoopsDB->error());
                 break;
             }
@@ -228,7 +228,7 @@ switch ($op) {
                 $query .= $sane_REQUEST['o_mount'] . "';";
 
                 $result = $xoopsDB->queryF($query);
-                if ($result === false) {
+                if (false === $result) {
                     redirect_header('mountpoints.php', 10, _AM_UHQICEAUTH_SQLERR . $query . '<br>' . $xoopsDB->error());
                     break;
                 } else {
@@ -245,7 +245,7 @@ switch ($op) {
                 $query  .= $sane_REQUEST['o_server'] . "' AND port = '" . $sane_REQUEST['0Oport'] . "' AND mount = '";
                 $query  .= $sane_REQUEST['o_mount'] . "';";
                 $result = $xoopsDB->queryF($query);
-                if ($result === false) {
+                if (false === $result) {
                     $headerinfo .= "<br\>" . _AM_UHQICEAUTH_SQLERR . $query . '<br>' . $xoopsDB->error() . '<br>';
                     $delok      = 0;
                 } else {
@@ -282,7 +282,7 @@ switch ($op) {
                 $query .= " sequence='" . $sane_REQUEST['sequence'] . "'";
 
                 $result = $xoopsDB->queryF($query);
-                if ($result === false) {
+                if (false === $result) {
                     redirect_header('mountpoints.php', 10, _AM_UHQICEAUTH_FORM_SQLERR . $query . '<br>' . $xoopsDB->error());
                 } else {
                     redirect_header('mountpoints.php', 10, _AM_UHQICEAUTH_INTROS_MAPADD);
@@ -310,7 +310,7 @@ switch ($op) {
             $query  .= " AND port='" . $sane_REQUEST['port'] . "'";
             $query  .= " AND mount='" . $sane_REQUEST['mount'] . "'";
             $result = $xoopsDB->queryF($query);
-            if ($result === false) {
+            if (false === $result) {
                 redirect_header('mountpoints.php', 10, _AM_UHQICEAUTH_FORM_SQLERR . '<br>' . $xoopsDB->error());
             } else {
                 redirect_header('mountpoints.php', 10, _AM_UHQICEAUTH_INTROS_MAPDEL);
@@ -328,7 +328,7 @@ switch ($op) {
             $query  .= $sane_REQUEST['server'] . "' AND port = '" . $sane_REQUEST['port'] . "' AND mount = '";
             $query  .= $sane_REQUEST['mount'] . "';";
             $result = $xoopsDB->queryF($query);
-            if ($result === false) {
+            if (false === $result) {
                 redirect_header('mountpoints.php', 10, _AM_UHQICEAUTH_SQLERR . $query . '<br>' . $xoopsDB->error());
                 break;
             }
@@ -339,7 +339,7 @@ switch ($op) {
                 $query  .= $sane_REQUEST['server'] . "' AND port = '" . $sane_REQUEST['port'] . "' AND mount = '";
                 $query  .= $sane_REQUEST['mount'] . "';";
                 $result = $xoopsDB->queryF($query);
-                if ($result === false) {
+                if (false === $result) {
                     $headerinfo = _AM_UHQICEAUTH_SQLERR . $query . '<br>' . $xoopsDB->error() . '<br>';
                     $delok      = 0;
                 } else {
@@ -352,7 +352,7 @@ switch ($op) {
                 $query  .= $sane_REQUEST['server'] . "' AND port = '" . $sane_REQUEST['port'] . "' AND mount = '";
                 $query  .= $sane_REQUEST['mount'] . "';";
                 $result = $xoopsDB->queryF($query);
-                if ($result === false) {
+                if (false === $result) {
                     $headerinfo .= _AM_UHQICEAUTH_SQLERR . $query . '<br>' . $xoopsDB->error() . '<br>';
                     $delok      = 0;
                 } else {
@@ -363,12 +363,12 @@ switch ($op) {
                 // Delete historic data if tagged:
 
                 // Delete from authtrail
-                if (isset($_REQUEST['delhd']) && ($delok == 1)) {
+                if (isset($_REQUEST['delhd']) && (1 == $delok)) {
                     $query  = 'DELETE FROM ' . $xoopsDB->prefix('uhqiceauth_authtrail') . " WHERE server ='";
                     $query  .= $sane_REQUEST['server'] . "' AND port = '" . $sane_REQUEST['port'] . "' AND mount = '";
                     $query  .= $sane_REQUEST['mount'] . "';";
                     $result = $xoopsDB->queryF($query);
-                    if ($result === false) {
+                    if (false === $result) {
                         $headerinfo .= _AM_UHQICEAUTH_SQLERR . $query . '<br>';
                         $delok      = 0;
                     } else {
@@ -378,12 +378,12 @@ switch ($op) {
                 }
 
                 // Delete from mountlog
-                if (isset($_REQUEST['delhd']) && ($delok == 1)) {
+                if (isset($_REQUEST['delhd']) && (1 == $delok)) {
                     $query  = 'DELETE FROM ' . $xoopsDB->prefix('uhqiceauth_mountlog') . " WHERE server ='";
                     $query  .= $sane_REQUEST['server'] . "' AND port = '" . $sane_REQUEST['port'] . "' AND mount = '";
                     $query  .= $sane_REQUEST['mount'] . "';";
                     $result = $xoopsDB->queryF($query);
-                    if ($result === false) {
+                    if (false === $result) {
                         $headerinfo .= _AM_UHQICEAUTH_SQLERR . $query . '<br>' . $xoopsDB->error() . '<br>';
                         $delok      = 0;
                     } else {
@@ -393,11 +393,11 @@ switch ($op) {
                 }
 
                 // Delete from activemounts
-                if (isset($_REQUEST['delhd']) && ($delok == 1)) {
+                if (isset($_REQUEST['delhd']) && (1 == $delok)) {
                     $query = 'DELETE FROM ' . $xoopsDB->prefix('uhqiceauth_activemounts') . " WHERE server ='";
                     $query .= $sane_REQUEST['server'] . "' AND port = '" . $sane_REQUEST['port'] . "' AND mount = '";
                     $query .= $sane_REQUEST['mount'] . "';";
-                    if ($result === false) {
+                    if (false === $result) {
                         $headerinfo .= _AM_UHQICEAUTH_SQLERR . $query . '<br>' . $xoopsDB->error() . '<br>';
                         $delok      = 0;
                     } else {
@@ -440,7 +440,7 @@ switch ($op) {
             $query .= $sane_REQUEST['mount'] . "';";
 
             $result = $xoopsDB->queryF($query);
-            if ($result === false) {
+            if (false === $result) {
                 $headerinfo = _AM_UHQICEAUTH_SQLERR . $query . '<br>' . $xoopsDB->error();
             } else {
                 $headerinfo = _AM_UHQICEAUTH_RESET . $sane_REQUEST['server'] . ':' . $sane_REQUEST['port'] . $sane_REQUEST['mount'] . _AM_UHQICEAUTH_SUCCESSFULLY;
@@ -464,7 +464,7 @@ switch ($op) {
             // List Mount Points
             $query  = 'SELECT * FROM ' . $xoopsDB->prefix('uhqiceauth_servers') . ' ORDER BY server, port, mount';
             $result = $xoopsDB->queryF($query);
-            if ($result === false) {
+            if (false === $result) {
                 redirect_header('mountpoints.php', 10, _AM_UHQICEAUTH_SQLERR . $query);
                 break;
             } else {

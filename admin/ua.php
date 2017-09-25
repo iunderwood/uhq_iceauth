@@ -63,7 +63,7 @@ function uhqiceauth_ualist()
     $query = 'SELECT * FROM ' . $xoopsDB->prefix('uhqiceauth_uabans') . ' ORDER BY useragent';
 
     $result = $xoopsDB->queryF($query);
-    if ($result === false) {
+    if (false === $result) {
         // Return nothing on a DB error.
         return null;
     } else {
@@ -87,7 +87,7 @@ function uhqiceauth_uaauthbans($start, $limit = 10)
     $query .= ' WHERE authinfo = 301 ORDER BY logtime DESC LIMIT ' . $limit;
 
     $result = $xoopsDB->queryF($query);
-    if ($result === false) {
+    if (false === $result) {
         // Return nothing on a DB error.
         return null;
     } else {
@@ -109,7 +109,7 @@ switch ($op) {
             $query  .= " SET useragent = '" . $sane_REQUEST['useragent'] . "'";
             $result = $xoopsDB->queryF($query);
 
-            if ($result === false) {
+            if (false === $result) {
                 redirect_header('ua.php', 10, _AM_UHQICEAUTH_SQLERR . $query . '<br>' . $xoopsDB->error());
                 break;
             } else {
@@ -131,7 +131,7 @@ switch ($op) {
             // Delete Record
             $query  = 'DELETE FROM ' . $xoopsDB->prefix('uhqiceauth_uabans') . " WHERE sequence = '" . $sane_REQUEST['sequence'] . "'";
             $result = $xoopsDB->queryF($query);
-            if ($result === false) {
+            if (false === $result) {
                 $headerinfo = _AM_UHQICEAUTH_SQLERR . $query . '<br>' . $xoopsDB->error() . '<br>';
             } else {
                 $headerinfo = _AM_UHQICEAUTH_DELETED . $sane_REQUEST['sequence'] . _AM_UHQICEAUTH_SUCCESSFULLY . '<br><br>';

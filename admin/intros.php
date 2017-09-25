@@ -46,13 +46,13 @@ $sane_REQUEST = uhqiceauth_dosanity();
 
 function uhqiceauth_introform($title, $formdata = [], $op = null)
 {
-    if ($formdata == null) {
+    if (null == $formdata) {
         $formdata['codec'] = 'O';
     }
 
     $form = new XoopsThemeForm($title, 'introform', 'intros.php', 'post', true);
 
-    if ($op === 'edit') {
+    if ('edit' === $op) {
         $form->addElement(new XoopsFormFile(_AM_UHQICEAUTH_INTROS_EDITFILE, 'introfile', 1048576));
     } else {
         $form->addElement(new XoopsFormFile(_AM_UHQICEAUTH_INTROS_FILE, 'introfile', 1048576), true);
@@ -69,7 +69,7 @@ function uhqiceauth_introform($title, $formdata = [], $op = null)
 
     $form->addElement(new XoopsFormDhtmlTextArea(_AM_UHQICEAUTH_INTROS_DESC, 'description', $formdata['description'], 4, 60));
 
-    if ($op === 'edit') {
+    if ('edit' === $op) {
         $form->addElement(new XoopsFormHidden('op', 'edit'));
         $form->addElement(new XoopsFormHidden('intronum', $formdata['intronum']));
     } else {
@@ -111,7 +111,7 @@ switch ($op) {
                     $query .= " description='" . $sane_REQUEST['description'] . "'";
 
                     $result = $xoopsDB->queryF($query);
-                    if ($result === false) {
+                    if (false === $result) {
                         unlink(XOOPS_ROOT_PATH . '/modules/uhq_iceauth/intros/' . $filetarget);
                         redirect_header('intros.php', 10, _AM_UHQICEAUTH_SQLERR . $query);
                     } else {
@@ -138,7 +138,7 @@ switch ($op) {
             $query  = 'SELECT * FROM ' . $xoopsDB->prefix('uhqiceauth_intros');
             $query  .= " WHERE intronum = '" . $sane_REQUEST['intronum'] . "'";
             $result = $xoopsDB->queryF($query);
-            if ($result === false) {
+            if (false === $result) {
                 // Throw error if the query fails.
                 redirect_header('intros.php', 10, $xoopsDB->error());
                 break;
@@ -153,7 +153,7 @@ switch ($op) {
                 $query  = 'DELETE FROM ' . $xoopsDB->prefix('uhqiceauth_intros');
                 $query  .= " WHERE intronum = '" . $sane_REQUEST['intronum'] . "'";
                 $result = $xoopsDB->queryF($query);
-                if ($result === false) {
+                if (false === $result) {
                     // Throw error if the query fails.
                     redirect_header('intros.php', 10, $xoopsDB->error());
                     break;
@@ -163,7 +163,7 @@ switch ($op) {
                 $query  = 'DELETE FROM ' . $xoopsDB->prefix('uhqiceauth_intromap');
                 $query  .= " WHERE intronum = '" . $row['intronum'] . "'";
                 $result = $xoopsDB->queryF($query);
-                if ($result === false) {
+                if (false === $result) {
                     // Throw error if the query fails.
                     redirect_header('intros.php', 10, $xoopsDB->error());
                     break;
@@ -192,7 +192,7 @@ switch ($op) {
             $query  = 'SELECT * FROM ' . $xoopsDB->prefix('uhqiceauth_intros');
             $query  .= " WHERE intronum = '" . $sane_REQUEST['intronum'] . "'";
             $result = $xoopsDB->queryF($query);
-            if ($result === false) {
+            if (false === $result) {
                 // Throw error and break if the query fails.
                 redirect_header('intros.php', 10, $xoopsDB->error());
                 break;
@@ -205,7 +205,7 @@ switch ($op) {
             if (isset($_REQUEST['verify'])) {
                 // Process changes
 
-                if ($_FILES['introfile']['error'] != 4) {
+                if (4 != $_FILES['introfile']['error']) {
                     // Process file upload.  (Error 4 = file not uploaded)
                     $uploader = new XoopsMediaUploader(XOOPS_ROOT_PATH . '/modules/uhq_iceauth/intros', $uhqiceauth_intro_mimes, 1048576);
                     if ($uploader->fetchMedia($_POST['xoops_upload_file'][0])) {
@@ -235,7 +235,7 @@ switch ($op) {
                 $query .= " WHERE intronum='" . $sane_REQUEST['intronum'] . "'";
 
                 $result = $xoopsDB->queryF($query);
-                if ($result === false) {
+                if (false === $result) {
                     if ($filetarget != $row['filename']) {
                         // Delete the new file if the DB update fails.
                     }
@@ -271,7 +271,7 @@ switch ($op) {
             $query  = 'SELECT * FROM ' . $xoopsDB->prefix('uhqiceauth_intros');
             $query  .= " WHERE intronum = '" . $sane_REQUEST['intronum'] . "'";
             $result = $xoopsDB->queryF($query);
-            if ($result === false) {
+            if (false === $result) {
                 echo $xoopsDB->error();
             } else {
                 if ($row = $xoopsDB->fetchArray($result)) {
@@ -306,7 +306,7 @@ switch ($op) {
         if ($data['incount'] > 0) {
             $query  = 'SELECT * FROM ' . $xoopsDB->prefix('uhqiceauth_intros') . ' ORDER BY intronum';
             $result = $xoopsDB->queryF($query);
-            if ($result === false) {
+            if (false === $result) {
                 $xoospTpl->assign('error', $xoopsDB->error());
             } else {
                 $i = 1;

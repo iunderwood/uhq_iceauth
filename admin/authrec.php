@@ -40,7 +40,7 @@ function uhqiceauth_authlist($authtype, $start, $limit, $orderby)
 
     $result = $xoopsDB->queryF($query);
 
-    if ($result === false) {
+    if (false === $result) {
         $data['error'] = _AM_UHQICEAUTH_SQLERR . $query;
 
         return $data;
@@ -76,7 +76,7 @@ function uhqiceauth_authrecord($sequence)
         $query  = 'SELECT * FROM ' . $xoopsDB->prefix('uhqiceauth_authtrail') . " WHERE sequence = '" . $sequence . "'";
         $result = $xoopsDB->queryF($query);
 
-        if ($result === false) {
+        if (false === $result) {
             $data['error'] = _AM_UHQICEAUTH_SQLERR . $query;
         } else {
             if ($row = $xoopsDB->fetchArray($result)) {

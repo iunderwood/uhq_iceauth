@@ -53,7 +53,7 @@ switch ($op) {
             $query .= " WHERE un = '" . utf8_encode($saneREQ['user']) . "'";
 
             $result = $xoopsDB->queryF($query);
-            if ($result === false) {
+            if (false === $result) {
                 redirect_header('streampass.php', 10, _AM_UHQICEAUTH_SQLERR . $query . '<br>' . $xoopsDB->error());
             } else {
                 if ($row = $xoopsDB->fetchArray($result)) {
@@ -61,7 +61,7 @@ switch ($op) {
                     $query  .= " un = '" . utf8_encode($saneREQ['user']) . "'";
                     $result = $xoopsDB->queryF($query);
 
-                    if ($result === false) {
+                    if (false === $result) {
                         redirect_header('streampass.php', 10, _AM_UHQICEAUTH_SQLERR . $query . '<br>' . $xoopsDB->error());
                     } else {
                         redirect_header('streampass.php', 10, _AM_UHQICEAUTH_SP_DELOK . $saneREQ['user']);

@@ -57,7 +57,7 @@ if ($_REQUEST['action']) {
                 $query  = 'SELECT COUNT(*) FROM ' . $xoopsDB->prefix('uhqiceauth_servers') . ' WHERE ';
                 $query  .= "server = '" . $sane_REQUEST['server'] . "' AND port = '" . $sane_REQUEST['port'] . "' AND mount = '" . $sane_REQUEST['mount'] . "';";
                 $result = $xoopsDB->queryF($query);
-                if ($result === false) {
+                if (false === $result) {
                     uhqiceauth_header($xoopsModuleConfig['hdr_msg'] . _MD_UHQICEAUTH_ERROR_SQL);
                     echo '<b>' . _MD_UHQICEAUTH_ERROR_SQL . '</b> ' . $query;
                     break;
@@ -71,7 +71,7 @@ if ($_REQUEST['action']) {
                     $query  = 'SELECT * FROM ' . $xoopsDB->prefix('uhqiceauth_servers') . ' WHERE ';
                     $query  .= "server = '" . $sane_REQUEST['server'] . "' AND port = '" . $sane_REQUEST['port'] . "' AND mount = '" . $sane_REQUEST['mount'] . "';";
                     $result = $xoopsDB->queryF($query);
-                    if ($result === false) {
+                    if (false === $result) {
                         uhqiceauth_header($xoopsModuleConfig['hdr_msg'] . _MD_UHQICEAUTH_ERROR_SQL);
                         echo '<b>' . _MD_UHQICEAUTH_ERROR_SQL . '</b> ' . $query;
                         break;
@@ -81,10 +81,10 @@ if ($_REQUEST['action']) {
                     $row['lst_auth_grp'] = explode('|', $row['lst_auth_grp']);
                     $row['src_auth_grp'] = explode('|', $row['src_auth_grp']);
 
-                    if ($_REQUEST['action'] === 'listener_add') {
+                    if ('listener_add' === $_REQUEST['action']) {
 
                         // Check here to make sure the specified UA isn't banned.
-                        if (uhqiceauth_ua_verify($sane_REQUEST['agent']) === false) {
+                        if (false === uhqiceauth_ua_verify($sane_REQUEST['agent'])) {
                             uhqiceauth_header($xoopsModuleConfig['hdr_msg'] . _MD_UHQICEAUTH_ERROR_UABAN, 1);
                             uhqiceauth_authlog($sane_REQUEST, 'L', false, 301);
                             break;
@@ -185,7 +185,7 @@ if ($_REQUEST['action']) {
                         }
                     }
                 } else {            // If Mount not found ...
-                    if ($_REQUEST['action'] === 'listener_add') {
+                    if ('listener_add' === $_REQUEST['action']) {
                         switch ($xoopsModuleConfig['undef_action']) {
                             case 'D': // Check against DB and default groups
                                 // Make sure we have all the parameters we need
@@ -239,7 +239,7 @@ if ($_REQUEST['action']) {
                 $query  = 'SELECT COUNT(*) FROM ' . $xoopsDB->prefix('uhqiceauth_servers') . ' WHERE ';
                 $query  .= "server = '" . $sane_REQUEST['server'] . "' AND port = '" . $sane_REQUEST['port'] . "' AND mount = '" . $sane_REQUEST['mount'] . "';";
                 $result = $xoopsDB->queryF($query);
-                if ($result === false) {
+                if (false === $result) {
                     uhqiceauth_header($xoopsModuleConfig['hdr_msg'] . _MD_UHQICEAUTH_ERROR_SQL, 1);
                     echo '<b>' . _MD_UHQICEAUTH_ERROR_SQL . '</b> ' . $query;
                     break;
@@ -265,7 +265,7 @@ if ($_REQUEST['action']) {
                 $query  = 'SELECT COUNT(*) FROM ' . $xoopsDB->prefix('uhqiceauth_servers') . ' WHERE ';
                 $query  .= "server = '" . $sane_REQUEST['server'] . "' AND port = '" . $sane_REQUEST['port'] . "' AND mount = '" . $sane_REQUEST['mount'] . "';";
                 $result = $xoopsDB->queryF($query);
-                if ($result === false) {
+                if (false === $result) {
                     uhqiceauth_header($xoopsModuleConfig['hdr_msg'] . _MD_UHQICEAUTH_ERROR_SQL, 1);
                     echo '<b>' . _MD_UHQICEAUTH_ERROR_SQL . '</b> ' . $query;
                     break;

@@ -55,7 +55,7 @@ function uhqiceauth_raw_activemounts()
 
     $result = $xoopsDB->queryF($query);
 
-    if ($result === false) {
+    if (false === $result) {
         // return nothing on a DB error.  Error can be pulled later.
         return null;
     } else {
@@ -81,7 +81,7 @@ function uhqiceauth_raw_streampass($start = 0, $limit = 0)
 
     $result = $xoopsDB->queryF($query);
 
-    if ($result === false) {
+    if (false === $result) {
         // Return nothing on a DB Error.
         return null;
     } else {

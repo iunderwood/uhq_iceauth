@@ -152,7 +152,7 @@ function uhqiceauth_anoncheck()
     $query .= " AND gperm_groupid = '" . XOOPS_GROUP_ANONYMOUS . "'";
 
     $result = $xoopsDB->queryF($query);
-    if ($result === false) {
+    if (false === $result) {
         $status = _AM_UHQICEAUTH_SQLERR . $query . '<br>' . $xoopsDB->error();
     } else {
         list($anonok) = $xoopsDB->fetchRow($result);

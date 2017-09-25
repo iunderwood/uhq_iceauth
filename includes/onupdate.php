@@ -54,7 +54,7 @@ function xoops_module_update_uhq_iceauth(XoopsModule $module, $oldversion = null
 
     // Modify tables for v0.3
 
-    if ($oldversion == 21) {
+    if (21 == $oldversion) {
         $query  = 'ALTER TABLE ' . $xoopsDB->prefix('uhqiceauth_servers') . ' ADD src_hits_pass INT UNSIGNED NOT NULL AFTER hits_fail';
         $result = $xoopsDB->queryF($query);
         if (!$result) {
@@ -116,7 +116,7 @@ function xoops_module_update_uhq_iceauth(XoopsModule $module, $oldversion = null
 
     // Modify tables for v0.4
 
-    if ($oldversion == 30) {
+    if (30 == $oldversion) {
         $query  = 'ALTER TABLE ' . $xoopsDB->prefix('uhqiceauth_accounting') . ' ADD useragent CHAR(40) AFTER username';
         $result = $xoopsDB->queryF($query);
         if (!$result) {
@@ -174,7 +174,7 @@ function xoops_module_update_uhq_iceauth(XoopsModule $module, $oldversion = null
         $oldversion = 40;
     }
 
-    if ($oldversion == 40) {
+    if (40 == $oldversion) {
 
         // Set Main Menu to visibility of 0
 
@@ -189,7 +189,7 @@ function xoops_module_update_uhq_iceauth(XoopsModule $module, $oldversion = null
     }
     // Return true if we get this far!
 
-    if ($oldversion == 50) {
+    if (50 == $oldversion) {
 
         // Need a larger User Agent field
 
@@ -259,7 +259,7 @@ function xoops_module_update_uhq_iceauth(XoopsModule $module, $oldversion = null
         $oldversion = 60;
     }
 
-    if ($oldversion == 60) {
+    if (60 == $oldversion) {
 
         // Adding FQDN recording to the authentication log.
         $query  = 'ALTER TABLE ' . $xoopsDB->prefix('uhqiceauth_authtrail') . ' ADD userrdns VARCHAR(64) AFTER userip';
@@ -295,7 +295,7 @@ function xoops_module_update_uhq_iceauth(XoopsModule $module, $oldversion = null
         $oldversion = 70;
     }
 
-    if ($oldversion == 70) {
+    if (70 == $oldversion) {
 
         // Adding Geolocation Country Code to the authentication log
 
@@ -358,7 +358,7 @@ function xoops_module_update_uhq_iceauth(XoopsModule $module, $oldversion = null
         $oldversion = 80;
     }
 
-    if ($oldversion == 80) {
+    if (80 == $oldversion) {
         // Further modifications to the UA Ban Table.
 
         $query  = 'ALTER TABLE ' . $xoopsDB->prefix('uhqiceauth_uabans') . ' ADD matchtype CHAR(1) AFTER useragent';

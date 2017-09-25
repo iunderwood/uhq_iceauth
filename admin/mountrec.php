@@ -53,7 +53,7 @@ function uhqiceauth_mount($start, $limit, $orderby)
     $query .= ' ORDER BY sequence ' . $orderby . ' LIMIT ' . $start . ', ' . $limit;
 
     $result = $xoopsDB->queryF($query);
-    if ($result === false) {
+    if (false === $result) {
         // Return nothing on a DB error.
         return null;
     } else {
@@ -84,7 +84,7 @@ switch ($op) {
             $query .= " AND mount='" . $sane_REQUEST['mount'] . "'";
 
             $result = $xoopsDB->queryF($query);
-            if ($result === false) {
+            if (false === $result) {
                 $headerinfo = _AM_UHQICEAUTH_SQLERR . $query . '<br>' . $xoopsDB->error();
             } else {
                 $headerinfo = _AM_UHQICEAUTH_DELETEDMOUNT . $sane_REQUEST['server'] . ':' . $sane_REQUEST['port'] . $sane_REQUEST['mount'] . _AM_UHQICEAUTH_SUCCESSFULLY;

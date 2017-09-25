@@ -32,7 +32,7 @@ if (is_object($xoopsUser)) {
     $query .= " WHERE un = '" . utf8_encode($block['username']) . "'";
 
     $result = $xoopsDB->queryF($query);
-    if ($result === false) {
+    if (false === $result) {
         redirect_header($_SERVER['HTTP_REFERER'], 10, _MD_UHQICEAUTH_CSP_DBERR);
     } else {
         if ($row = $xoopsDB->fetchArray($result)) {
@@ -40,7 +40,7 @@ if (is_object($xoopsUser)) {
             $query  .= " un = '" . utf8_encode($block['username']) . "'";
             $result = $xoopsDB->queryF($query);
 
-            if ($result === false) {
+            if (false === $result) {
                 redirect_header($_SERVER['HTTP_REFERER'], 10, _MD_UHQICEAUTH_CSP_DBERR);
             } else {
                 redirect_header($_SERVER['HTTP_REFERER'], 10, _MD_UHQICEAUTH_CSP_RESETOK);
