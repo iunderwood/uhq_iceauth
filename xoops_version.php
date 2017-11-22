@@ -46,9 +46,7 @@ $modversion['helpsection'] = [
 ];
 
 // Administrative Defines
-//$modversion['dirmoduleadmin'] = '/Frameworks/moduleclasses/moduleadmin';
-//$modversion['icons16']        = '../../Frameworks/moduleclasses/icons/16';
-$modversion['icons32']    = 'images/';
+//$modversion['icons32']    = 'images/';
 $modversion['modicons16'] = 'assets/images/icons/16';
 $modversion['modicons32'] = 'assets/images/icons/32';
 
@@ -170,30 +168,20 @@ $modversion['adminmenu']  = 'admin/menu.php';
 $modversion['hasMain'] = 1;
 
 // Templates
-$modversion['templates'][1]['file']         = 'admin/uhqiceauth_intros.html';
-$modversion['templates'][1]['description']  = _MI_UHQICEAUTH_TEMPLATE_INTROS;
-$modversion['templates'][2]['file']         = 'admin/uhqiceauth_introplay.html';
-$modversion['templates'][2]['description']  = _MI_UHQICEAUTH_TEMPLATE_INTROPLAY;
-$modversion['templates'][3]['file']         = 'admin/uhqiceauth_mountpoints.html';
-$modversion['templates'][3]['description']  = _MI_UHQICEAUTH_TEMPLATE_MOUNTPOINTS;
-$modversion['templates'][4]['file']         = 'admin/uhqiceauth_authrec.html';
-$modversion['templates'][4]['description']  = _MI_UHQICEAUTH_TEMPLATE_AUTH;
-$modversion['templates'][5]['file']         = 'admin/uhqiceauth_acctrec.html';
-$modversion['templates'][5]['description']  = _MI_UHQICEAUTH_TEMPLATE_ACCT;
-$modversion['templates'][6]['file']         = 'admin/uhqiceauth_mountrec.html';
-$modversion['templates'][6]['description']  = _MI_UHQICEAUTH_TEMPLATE_MOUNT;
-$modversion['templates'][7]['file']         = 'admin/uhqiceauth_ua.html';
-$modversion['templates'][7]['description']  = _MI_UHQICEAUTH_TEMPLATE_UA;
-$modversion['templates'][8]['file']         = 'admin/uhqiceauth_authrec_detail.html';
-$modversion['templates'][8]['description']  = _MI_UHQICEAUTH_TEMPLATE_AUTH_DET;
-$modversion['templates'][9]['file']         = 'admin/uhqiceauth_streampass.html';
-$modversion['templates'][9]['description']  = _MI_UHQICEAUTH_TEMPLATE_STREAMPASS;
-$modversion['templates'][10]['file']        = 'admin/uhqiceauth_ipbans.html';
-$modversion['templates'][10]['description'] = _MI_UHQICEAUTH_TEMPLATE_IPBANS;
-$modversion['templates'][11]['file']        = 'admin/uhqiceauth_index.html';
-$modversion['templates'][11]['description'] = _MI_UHQICEAUTH_TEMPLATE_ADMINDEX;
-$modversion['templates'][12]['file']        = 'admin/uhqiceauth_mountpoints_del.html';
-$modversion['templates'][12]['description'] = _MI_UHQICEAUTH_TEMPLATE_MOUNTPOINT_DEL;
+$modversion['templates'] = [
+    ['file' => 'admin/uhqiceauth_intros.tpl', 'description' => _MI_UHQICEAUTH_TEMPLATE_INTROS],
+    ['file' => 'admin/uhqiceauth_introplay.tpl', 'description' => _MI_UHQICEAUTH_TEMPLATE_INTROPLAY],
+    ['file' => 'admin/uhqiceauth_mountpoints.tpl', 'description' => _MI_UHQICEAUTH_TEMPLATE_MOUNTPOINTS],
+    ['file' => 'admin/uhqiceauth_authrec.tpl', 'description' => _MI_UHQICEAUTH_TEMPLATE_AUTH],
+    ['file' => 'admin/uhqiceauth_acctrec.tpl', 'description' => _MI_UHQICEAUTH_TEMPLATE_ACCT],
+    ['file' => 'admin/uhqiceauth_mountrec.tpl', 'description' => _MI_UHQICEAUTH_TEMPLATE_MOUNT],
+    ['file' => 'admin/uhqiceauth_ua.tpl', 'description' => _MI_UHQICEAUTH_TEMPLATE_UA],
+    ['file' => 'admin/uhqiceauth_authrec_detail.tpl', 'description' => _MI_UHQICEAUTH_TEMPLATE_AUTH_DET],
+    ['file' => 'admin/uhqiceauth_streampass.tpl', 'description' => _MI_UHQICEAUTH_TEMPLATE_STREAMPASS],
+    ['file' => 'admin/uhqiceauth_ipbans.tpl', 'description' => _MI_UHQICEAUTH_TEMPLATE_IPBANS],
+    ['file' => 'admin/uhqiceauth_index.tpl', 'description' => _MI_UHQICEAUTH_TEMPLATE_ADMINDEX],
+    ['file' => 'admin/uhqiceauth_mountpoints_del.tpl', 'description' => _MI_UHQICEAUTH_TEMPLATE_MOUNTPOINT_DEL]
+];
 
 // Blocks
 $i                                       = 0;
@@ -202,12 +190,12 @@ $modversion['blocks'][$i]['name']        = _MI_UHQICEAUTH_BLOCK_ACTIVEMOUNTS_NAM
 $modversion['blocks'][$i]['description'] = _MI_UHQICEAUTH_BLOCK_ACTIVEMOUNTS_DESC;
 $modversion['blocks'][$i]['show_func']   = 'b_uhqiceauth_activemounts_show';
 $modversion['blocks'][$i]['edit_func']   = 'b_uhqiceauth_activemounts_edit';
-$modversion['blocks'][$i]['template']    = 'uhqiceauth_activemounts.html';
+$modversion['blocks'][$i]['template']    = 'uhqiceauth_activemounts.tpl';
 $modversion['blocks'][$i]['options']     = '';
 $i++;
 $modversion['blocks'][$i]['file']        = 'uhqiceauth_blocks.php';
 $modversion['blocks'][$i]['name']        = _MI_UHQICEAUTH_BLOCK_STREAMPASS_NAME;
 $modversion['blocks'][$i]['description'] = _MI_UHQICEAUTH_BLOCK_STREAMPASS_DESC;
 $modversion['blocks'][$i]['show_func']   = 'b_uhqiceauth_streampass_show';
-$modversion['blocks'][$i]['template']    = 'uhqiceauth_streampass.html';
+$modversion['blocks'][$i]['template']    = 'uhqiceauth_streampass.tpl';
 $modversion['blocks'][$i]['options']     = '';

@@ -19,87 +19,79 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-$moduleDirName = basename(dirname(__DIR__));
+use Xoopsmodules\uhqiceauth;
 
-if (false !== ($moduleHelper = Xmf\Module\Helper::getHelper($moduleDirName))) {
-} else {
-    $moduleHelper = Xmf\Module\Helper::getHelper('system');
-}
+require_once __DIR__ . '/../class/Helper.php';
+//require_once __DIR__ . '/../include/common.php';
+$helper = uhqiceauth\Helper::getInstance();
 
 $pathIcon32 = \Xmf\Module\Admin::menuIconPath('');
-//$pathModIcon32 = $moduleHelper->getModule()->getInfo('modicons32');
-
-$moduleHelper->loadLanguage('modinfo');
-
-// Assign goodies for Admin Menu
-
-global $adminObject;
+$pathModIcon32 = $helper->getModule()->getInfo('modicons32');
 
 // Assign goodies for Admin Menu
 
 $adminmenu[] = [
-    'title' => _AM_MODULEADMIN_HOME,
+    'title' => _MI_UHQICEAUTH_ADMENU_HOME,
     'link'  => 'admin/index.php',
-    'icon'  => '../../Frameworks/moduleclasses/icons/32/home.png',
+    'icon'  => $pathIcon32 . '/home.png',
 ];
 
 $adminmenu[] = [
     'title' => _MI_UHQICEAUTH_ADMENU_SUMMARY,
     'link'  => 'admin/summary.php',
-    'icon'  => $pathIcon32 . 'folder_blue.png',
+    'icon'  => $pathModIcon32 . '/folder_blue.png',
 ];
 
 $adminmenu[] = [
     'title' => _MI_UHQICEAUTH_ADMENU_MOUNTS,
     'link'  => 'admin/mountpoints.php',
-    'icon'  => $pathIcon32 . 'menu_srv.png',
+    'icon'  => $pathModIcon32 . '/menu_srv.png',
 ];
 
 $adminmenu[] = [
     'title' => _MI_UHQICEAUTH_ADMENU_INTRO,
     'link'  => 'admin/intros.php',
-    'icon'  => $pathIcon32 . 'menu_intro.png',
+    'icon'  => $pathModIcon32 . '/menu_intro.png',
 ];
 
 $adminmenu[] = [
     'title' => _MI_UHQICEAUTH_ADMENU_AUTHREC,
     'link'  => 'admin/authrec.php',
-    'icon'  => $pathIcon32 . 'menu_auth.png',
+    'icon'  => $pathModIcon32 . '/menu_auth.png',
 ];
 
 $adminmenu[] = [
     'title' => _MI_UHQICEAUTH_ADMENU_ACCTREC,
     'link'  => 'admin/acctrec.php',
-    'icon'  => $pathIcon32 . 'menu_acct.png',
+    'icon'  => $pathModIcon32 . '/menu_acct.png',
 ];
 
 $adminmenu[] = [
     'title' => _MI_UHQICEAUTH_ADMENU_MOUNTREC,
     'link'  => 'admin/mountrec.php',
-    'icon'  => $pathIcon32 . 'menu_mount.png',
+    'icon'  => $pathModIcon32 . '/menu_mount.png',
 ];
 
 $adminmenu[] = [
     'title' => _MI_UHQICEAUTH_ADMENU_STREAMPASS,
     'link'  => 'admin/streampass.php',
-    'icon'  => $pathIcon32 . 'menu_streampass.png',
+    'icon'  => $pathModIcon32 . '/menu_streampass.png',
 ];
 
 $adminmenu[] = [
     'title' => _MI_UHQICEAUTH_ADMENU_UA,
     'link'  => 'admin/ua.php',
-    'icon'  => $pathIcon32 . 'menu_ua.png',
+    'icon'  => $pathModIcon32 . '/menu_ua.png',
 ];
 
 $adminmenu[] = [
     'title' => _MI_UHQICEAUTH_ADMENU_IPBAN,
     'link'  => 'admin/ipbans.php',
-    'icon'  => $pathIcon32 . 'menu_ipban.png',
+    'icon'  => $pathModIcon32 . '/menu_ipban.png',
 ];
 
 $adminmenu[] = [
-    'title' => _AM_MODULEADMIN_ABOUT,
+    'title' => _MI_UHQICEAUTH_ADMENU_ABOUT,
     'link'  => 'admin/about.php',
-    'icon'  => '../../Frameworks/moduleclasses/icons/32/about.png',
+    'icon'  => $pathIcon32 . '/about.png',
 ];
-
