@@ -36,7 +36,7 @@ function uhqiceauth_srvform($title, $formdata, $op)
 {
 
     // Insert some detaults if the data is null
-    if (null == $formdata) {
+    if (null === $formdata) {
         $formdata['timelimit']    = 0;         // No time limits by default
         $formdata['lst_auth_typ'] = 'D';    // Verify Listener against DB
         $formdata['lst_auth_grp'] = '2';    // Listener must be registered

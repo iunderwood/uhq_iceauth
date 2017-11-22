@@ -33,7 +33,7 @@ if (is_object($xoopsUser)) {
 
     $result = $xoopsDB->queryF($query);
     if (false === $result) {
-        redirect_header($_SERVER['HTTP_REFERER'], 10, _MD_UHQICEAUTH_CSP_DBERR);
+        redirect_header(Request::getString('HTTP_REFERER', '', 'SERVER'), 10, _MD_UHQICEAUTH_CSP_DBERR);
     } else {
         if ($row = $xoopsDB->fetchArray($result)) {
             $query  = 'DELETE FROM ' . $xoopsDB->prefix('uhqiceauth_streampass') . ' WHERE';
@@ -41,14 +41,14 @@ if (is_object($xoopsUser)) {
             $result = $xoopsDB->queryF($query);
 
             if (false === $result) {
-                redirect_header($_SERVER['HTTP_REFERER'], 10, _MD_UHQICEAUTH_CSP_DBERR);
+                redirect_header(Request::getString('HTTP_REFERER', '', 'SERVER'), 10, _MD_UHQICEAUTH_CSP_DBERR);
             } else {
-                redirect_header($_SERVER['HTTP_REFERER'], 10, _MD_UHQICEAUTH_CSP_RESETOK);
+                redirect_header(Request::getString('HTTP_REFERER', '', 'SERVER'), 10, _MD_UHQICEAUTH_CSP_RESETOK);
             }
         } else {
-            redirect_header($_SERVER['HTTP_REFERER'], 10, _MD_UHQICEAUTH_CSP_NOPW);
+            redirect_header(Request::getString('HTTP_REFERER', '', 'SERVER'), 10, _MD_UHQICEAUTH_CSP_NOPW);
         }
     }
 } else {
-    redirect_header($_SERVER['HTTP_REFERER'], 10, _MD_UHQICEAUTH_CSP_LOGIN);
+    redirect_header(Request::getString('HTTP_REFERER', '', 'SERVER'), 10, _MD_UHQICEAUTH_CSP_LOGIN);
 }

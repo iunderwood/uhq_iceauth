@@ -46,7 +46,7 @@ $sane_REQUEST = uhqiceauth_dosanity();
 
 function uhqiceauth_introform($title, $formdata = [], $op = null)
 {
-    if (null == $formdata) {
+    if (null === $formdata) {
         $formdata['codec'] = 'O';
     }
 
@@ -275,7 +275,7 @@ switch ($op) {
                 echo $xoopsDB->error();
             } else {
                 if ($row = $xoopsDB->fetchArray($result)) {
-                    if (file_exists('../intros/' . $row['filename'])) {
+                    if (file_exists(__DIR__ . '/../intros/' . $row['filename'])) {
                         $data['playurl']  = '/modules/uhq_iceauth/intros/' . $row['filename'];
                         $data['filename'] = $row['filename'];
                         $xoopsTpl->assign('data', $data);
