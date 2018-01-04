@@ -91,3 +91,6 @@ define('_MI_UHQICEAUTH_DISCLAIMER', 'Disclaimer');
 define('_MI_UHQICEAUTH_LICENSE', 'License');
 define('_MI_UHQICEAUTH_SUPPORT', 'Support');
 define('_MI_UHQICEAUTH_MOUNT_POINTS', 'Mount Points');
+
+define('_MI_UHQICEAUTH_HOME', 'Home');
+define('_MI_UHQICEAUTH_ABOUT', 'About');

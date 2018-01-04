@@ -21,6 +21,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // Modular Definitions
 
+require_once __DIR__ . '/preloads/autoloader.php';
+
 $modversion['version']       = 0.93;
 $modversion['module_status'] = 'RC';
 $modversion['release_date']  = '2013/06/22';

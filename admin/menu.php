@@ -19,17 +19,15 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-$moduleDirName = basename(dirname(__DIR__));
+use XoopsModules\Uhqiceauth;
 
-if (false !== ($moduleHelper = Xmf\Module\Helper::getHelper($moduleDirName))) {
-} else {
-    $moduleHelper = Xmf\Module\Helper::getHelper('system');
-}
+require_once __DIR__ . '/../class/Helper.php';
+//require_once __DIR__ . '/../include/common.php';
+$helper = Uhqiceauth\Helper::getInstance();
 
 $pathIcon32 = \Xmf\Module\Admin::menuIconPath('');
-//$pathModIcon32 = $moduleHelper->getModule()->getInfo('modicons32');
+$pathModIcon32 = $helper->getModule()->getInfo('modicons32');
 
-$moduleHelper->loadLanguage('modinfo');
 
 // Assign goodies for Admin Menu
 
@@ -38,7 +36,7 @@ global $adminObject;
 // Assign goodies for Admin Menu
 
 $adminmenu[] = [
-    'title' => _AM_MODULEADMIN_HOME,
+    'title' => _MI_UHQICEAUTH_HOME,
     'link'  => 'admin/index.php',
     'icon'  => '../../Frameworks/moduleclasses/icons/32/home.png',
 ];
@@ -98,8 +96,7 @@ $adminmenu[] = [
 ];
 
 $adminmenu[] = [
-    'title' => _AM_MODULEADMIN_ABOUT,
+    'title' => _MI_UHQICEAUTH_ABOUT,
     'link'  => 'admin/about.php',
     'icon'  => '../../Frameworks/moduleclasses/icons/32/about.png',
 ];
-
