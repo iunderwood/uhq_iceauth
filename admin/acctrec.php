@@ -22,7 +22,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 require_once __DIR__ . '/admin_header.php';
 
 if (!isset($xoopsTpl)) {
-    $xoopsTpl = new XoopsTpl();
+    $xoopsTpl = new \XoopsTpl();
 }
 $xoopsTpl->caching = 0;
 
@@ -69,7 +69,7 @@ function uhqiceauth_acct_agentsumconn($limit = 10, $days = 0)
     $data['days']  = $days;
 
     $i = 0;
-    while ($row = $xoopsDB->fetchArray($result)) {
+    while (false !== ($row = $xoopsDB->fetchArray($result))) {
         $data['ua'][$i] = $row;
         $i++;
     }
@@ -105,7 +105,7 @@ function uhqiceauth_acct_agentsumtime($limit = 10, $days = 0)
 
     $i = 0;
 
-    while ($row = $xoopsDB->fetchArray($result)) {
+    while (false !== ($row = $xoopsDB->fetchArray($result))) {
         $data['ua'][$i]         = $row;
         $data['ua'][$i]['time'] = uhqiceauth_time($row['duration']);
         $i++;

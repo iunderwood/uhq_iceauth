@@ -22,7 +22,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 require_once __DIR__ . '/admin_header.php';
 
 if (!isset($xoopsTpl)) {
-    $xoopsTpl = new XoopsTpl();
+    $xoopsTpl = new \XoopsTpl();
 }
 $xoopsTpl->caching = 0;
 
@@ -50,16 +50,16 @@ function uhqiceauth_introform($title, $formdata = [], $op = null)
         $formdata['codec'] = 'O';
     }
 
-    $form = new XoopsThemeForm($title, 'introform', 'intros.php', 'post', true);
+    $form = new \XoopsThemeForm($title, 'introform', 'intros.php', 'post', true);
 
     if ('edit' === $op) {
-        $form->addElement(new XoopsFormFile(_AM_UHQICEAUTH_INTROS_EDITFILE, 'introfile', 1048576));
+        $form->addElement(new \XoopsFormFile(_AM_UHQICEAUTH_INTROS_EDITFILE, 'introfile', 1048576));
     } else {
-        $form->addElement(new XoopsFormFile(_AM_UHQICEAUTH_INTROS_FILE, 'introfile', 1048576), true);
+        $form->addElement(new \XoopsFormFile(_AM_UHQICEAUTH_INTROS_FILE, 'introfile', 1048576), true);
     }
     $form->setExtra('enctype="multipart/form-data"');
 
-    $form_c = new XoopsFormSelect(_AM_UHQICEAUTH_INTROS_CODEC, 'codec', $formdata['codec'], 1);
+    $form_c = new \XoopsFormSelect(_AM_UHQICEAUTH_INTROS_CODEC, 'codec', $formdata['codec'], 1);
     $form_c->addOption('A', _AM_UHQICEAUTH_AAC);
     $form_c->addOption('P', _AM_UHQICEAUTH_AACPLUS);
     $form_c->addOption('M', _AM_UHQICEAUTH_MP3);
@@ -67,30 +67,30 @@ function uhqiceauth_introform($title, $formdata = [], $op = null)
 
     $form->addElement($form_c, true);
 
-    $form->addElement(new XoopsFormDhtmlTextArea(_AM_UHQICEAUTH_INTROS_DESC, 'description', $formdata['description'], 4, 60));
+    $form->addElement(new \XoopsFormDhtmlTextArea(_AM_UHQICEAUTH_INTROS_DESC, 'description', $formdata['description'], 4, 60));
 
     if ('edit' === $op) {
-        $form->addElement(new XoopsFormHidden('op', 'edit'));
-        $form->addElement(new XoopsFormHidden('intronum', $formdata['intronum']));
+        $form->addElement(new \XoopsFormHidden('op', 'edit'));
+        $form->addElement(new \XoopsFormHidden('intronum', $formdata['intronum']));
     } else {
-        $form->addElement(new XoopsFormHidden('op', 'insert'));
+        $form->addElement(new \XoopsFormHidden('op', 'insert'));
     }
 
-    $form->addElement(new XoopsFormHidden('verify', '1'));
+    $form->addElement(new \XoopsFormHidden('verify', '1'));
 
-    $form->addElement(new XoopsFormButton('', 'post', $title, 'submit'));
+    $form->addElement(new \XoopsFormButton('', 'post', $title, 'submit'));
 
     $form->display();
 }
 
 function uhqiceauth_introdelform($title, $formdata)
 {
-    $form = new XoopsThemeForm($title, 'introdelform', 'intros.php', 'post', true);
+    $form = new \XoopsThemeForm($title, 'introdelform', 'intros.php', 'post', true);
 
-    $form->addElement(new XoopsFormHidden('intronum', $formdata['intronum']));
-    $form->addElement(new XoopsFormHidden('op', 'delete'));
-    $form->addElement(new XoopsFormHidden('verify', '1'));
-    $form->addElement(new XoopsFormButton($formdata['filename'], 'post', _AM_UHQICEAUTH_FORM_DELBUTTON, 'submit'));
+    $form->addElement(new \XoopsFormHidden('intronum', $formdata['intronum']));
+    $form->addElement(new \XoopsFormHidden('op', 'delete'));
+    $form->addElement(new \XoopsFormHidden('verify', '1'));
+    $form->addElement(new \XoopsFormButton($formdata['filename'], 'post', _AM_UHQICEAUTH_FORM_DELBUTTON, 'submit'));
 
     $form->display();
 }
@@ -99,7 +99,7 @@ switch ($op) {
     case 'insert':
         if (isset($_REQUEST['verify'])) {
             // If the upload is good, save the file and DB info.
-            $uploader = new XoopsMediaUploader(XOOPS_ROOT_PATH . '/modules/uhq_iceauth/intros', $uhqiceauth_intro_mimes, 1048576);
+            $uploader = new \XoopsMediaUploader(XOOPS_ROOT_PATH . '/modules/uhq_iceauth/intros', $uhqiceauth_intro_mimes, 1048576);
             if ($uploader->fetchMedia($_POST['xoops_upload_file'][0])) {
                 $uploader->setPrefix('intro-');
                 if ($uploader->upload()) {
@@ -207,7 +207,7 @@ switch ($op) {
 
                 if (4 != $_FILES['introfile']['error']) {
                     // Process file upload.  (Error 4 = file not uploaded)
-                    $uploader = new XoopsMediaUploader(XOOPS_ROOT_PATH . '/modules/uhq_iceauth/intros', $uhqiceauth_intro_mimes, 1048576);
+                    $uploader = new \XoopsMediaUploader(XOOPS_ROOT_PATH . '/modules/uhq_iceauth/intros', $uhqiceauth_intro_mimes, 1048576);
                     if ($uploader->fetchMedia($_POST['xoops_upload_file'][0])) {
                         $uploader->setPrefix('intro-');
                         if ($uploader->upload()) {
@@ -310,7 +310,7 @@ switch ($op) {
                 $xoospTpl->assign('error', $xoopsDB->error());
             } else {
                 $i = 1;
-                while ($row = $xoopsDB->fetchArray($result)) {
+                while (false !== ($row = $xoopsDB->fetchArray($result))) {
                     $data['intros'][$i]                = $row;
                     $data['intros'][$i]['description'] = $myts->displayTarea($row['description'], 1);
                     $i++;

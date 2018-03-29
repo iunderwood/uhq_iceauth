@@ -24,7 +24,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 require_once __DIR__ . '/admin_header.php';
 
 if (!isset($xoopsTpl)) {
-    $xoopsTpl = new XoopsTpl();
+    $xoopsTpl = new \XoopsTpl();
 }
 $xoopsTpl->caching = 0;
 
@@ -64,7 +64,7 @@ function uhqiceauth_mount($start, $limit, $orderby)
         $data['limit'] = $limit;
         $data['sort']  = $orderby;
 
-        while ($row = $xoopsDB->fetchArray($result)) {
+        while (false !== ($row = $xoopsDB->fetchArray($result))) {
             $data['list'][$i] = $row;
             $i++;
         }

@@ -22,7 +22,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 require_once __DIR__ . '/admin_header.php';
 
 if (!isset($xoopsTpl)) {
-    $xoopsTpl = new XoopsTpl();
+    $xoopsTpl = new \XoopsTpl();
 }
 $xoopsTpl->caching = 0;
 
@@ -43,14 +43,14 @@ $sane_REQUEST = uhqiceauth_dosanity();
 
 function uhqiceauth_uaform($title)
 {
-    $form = new XoopsThemeForm($title, 'uaform', 'ua.php', 'post', true);
+    $form = new \XoopsThemeForm($title, 'uaform', 'ua.php', 'post', true);
 
-    $form->addElement(new XoopsFormText(_AM_UHQICEAUTH_FORM_USERAGENT, 'useragent', 40, 50));
+    $form->addElement(new \XoopsFormText(_AM_UHQICEAUTH_FORM_USERAGENT, 'useragent', 40, 50));
 
-    $form->addElement(new XoopsFormHidden('op', 'insert'));
-    $form->addElement(new XoopsFormHidden('verify', '1'));
+    $form->addElement(new \XoopsFormHidden('op', 'insert'));
+    $form->addElement(new \XoopsFormHidden('verify', '1'));
 
-    $form->addElement(new XoopsFormButton('', 'post', $title, 'submit'));
+    $form->addElement(new \XoopsFormButton('', 'post', $title, 'submit'));
     $form->display();
 
     echo "<br><br><a href='ua.php'>" . _AM_UHQICEAUTH_RETUA . '</a>';
@@ -69,7 +69,7 @@ function uhqiceauth_ualist()
     } else {
         $i    = 0;
         $data = [];
-        while ($row = $xoopsDB->fetchArray($result)) {
+        while (false !== ($row = $xoopsDB->fetchArray($result))) {
             $data['list'][$i] = $row;
             $i++;
         }
@@ -93,7 +93,7 @@ function uhqiceauth_uaauthbans($start, $limit = 10)
     } else {
         $i    = 0;
         $data = [];
-        while ($row = $xoopsDB->fetchArray($result)) {
+        while (false !== ($row = $xoopsDB->fetchArray($result))) {
             $data['banlog'][$i] = $row;
             $i++;
         }

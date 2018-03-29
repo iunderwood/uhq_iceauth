@@ -24,7 +24,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 require_once __DIR__ . '/admin_header.php';
 
 if (!isset($xoopsTpl)) {
-    $xoopsTpl = new XoopsTpl();
+    $xoopsTpl = new \XoopsTpl();
 }
 $xoopsTpl->caching = 0;
 

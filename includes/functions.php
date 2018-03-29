@@ -61,7 +61,7 @@ function uhqiceauth_raw_activemounts()
     } else {
         $data = [];
         $i    = 0;
-        while ($row = $xoopsDB->fetchArray($result)) {
+        while (false !== ($row = $xoopsDB->fetchArray($result))) {
             $data['mount'][$i] = $row;
             $i++;
         }
@@ -86,7 +86,7 @@ function uhqiceauth_raw_streampass($start = 0, $limit = 0)
         return null;
     } else {
         $data = [];
-        while ($row = $xoopsDB->fetchArray($result)) {
+        while (false !== ($row = $xoopsDB->fetchArray($result))) {
             $data['list'][$i] = $row;
             $i++;
         }

@@ -26,7 +26,7 @@ require_once XOOPS_ROOT_PATH . '/modules/uhq_iceauth/admin/functions.inc.php';
 require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
 
 if (!isset($xoopsTpl)) {
-    $xoopsTpl = new XoopsTpl();
+    $xoopsTpl = new \XoopsTpl();
 }
 $xoopsTpl->caching = 0;
 
@@ -45,44 +45,44 @@ function uhqiceauth_srvform($title, $formdata, $op)
         $formdata['src_auth_un']  = 'source';    // Default source username
     }
 
-    $form = new XoopsThemeForm($title, 'srvform', 'mountpoints.php', 'post', true);
+    $form = new \XoopsThemeForm($title, 'srvform', 'mountpoints.php', 'post', true);
 
-    $form->addElement(new XoopsFormText(_AM_UHQICEAUTH_FORM_IPFQDN, 'server', 40, 50, $formdata['server']));
-    $form->addElement(new XoopsFormText(_AM_UHQICEAUTH_FORM_PORT, 'port', 5, 5, $formdata['port']));
-    $form->addElement(new XoopsFormText(_AM_UHQICEAUTH_FORM_MOUNT, 'mount', 20, 20, $formdata['mount']));
-    $form->addElement(new XoopsFormText(_AM_UHQICEAUTH_FORM_TIMEL, 'timelimit', 5, 5, $formdata['timelimit']));
+    $form->addElement(new \XoopsFormText(_AM_UHQICEAUTH_FORM_IPFQDN, 'server', 40, 50, $formdata['server']));
+    $form->addElement(new \XoopsFormText(_AM_UHQICEAUTH_FORM_PORT, 'port', 5, 5, $formdata['port']));
+    $form->addElement(new \XoopsFormText(_AM_UHQICEAUTH_FORM_MOUNT, 'mount', 20, 20, $formdata['mount']));
+    $form->addElement(new \XoopsFormText(_AM_UHQICEAUTH_FORM_TIMEL, 'timelimit', 5, 5, $formdata['timelimit']));
 
-    $form_l = new XoopsFormSelect(_AM_UHQICEAUTH_FORM_LAUTH, 'lst_auth_typ', $formdata['lst_auth_typ'], 1);
+    $form_l = new \XoopsFormSelect(_AM_UHQICEAUTH_FORM_LAUTH, 'lst_auth_typ', $formdata['lst_auth_typ'], 1);
     $form_l->addOption('D', _AM_UHQICEAUTH_FORM_AUTHD);
     $form_l->addOption('A', _AM_UHQICEAUTH_FORM_AUTHA);
     $form->addElement($form_l);
 
-    $form->addElement(new XoopsFormSelectGroup(_AM_UHQICEAUTH_FORM_LGRP, 'lst_auth_grp', true, $formdata['lst_auth_grp'], 3, true));
+    $form->addElement(new \XoopsFormSelectGroup(_AM_UHQICEAUTH_FORM_LGRP, 'lst_auth_grp', true, $formdata['lst_auth_grp'], 3, true));
 
-    $form_s = new XoopsFormSelect(_AM_UHQICEAUTH_FORM_SAUTH, 'src_auth_typ', $formdata['src_auth_typ'], 1);
+    $form_s = new \XoopsFormSelect(_AM_UHQICEAUTH_FORM_SAUTH, 'src_auth_typ', $formdata['src_auth_typ'], 1);
     $form_s->addOption('D', _AM_UHQICEAUTH_FORM_AUTHD);
     $form_s->addOption('S', _AM_UHQICEAUTH_FORM_AUTHS);
     $form_s->addOption('N', _AM_UHQICEAUTH_FORM_AUTHN);
     $form->addElement($form_s);
 
-    $form->addElement(new XoopsFormSelectGroup(_AM_UHQICEAUTH_FORM_SGRP, 'src_auth_grp', false, $formdata['src_auth_grp'], 3, true));
+    $form->addElement(new \XoopsFormSelectGroup(_AM_UHQICEAUTH_FORM_SGRP, 'src_auth_grp', false, $formdata['src_auth_grp'], 3, true));
 
-    $form->addElement(new XoopsFormText(_AM_UHQICEAUTH_FORM_SRCUN, 'src_auth_un', 20, 20, $formdata['src_auth_un']));
-    $form->addElement(new XoopsFormText(_AM_UHQICEAUTH_FORM_SRCPW, 'src_auth_pw', 20, 20, $formdata['src_auth_pw']));
+    $form->addElement(new \XoopsFormText(_AM_UHQICEAUTH_FORM_SRCUN, 'src_auth_un', 20, 20, $formdata['src_auth_un']));
+    $form->addElement(new \XoopsFormText(_AM_UHQICEAUTH_FORM_SRCPW, 'src_auth_pw', 20, 20, $formdata['src_auth_pw']));
 
-    if ('edit' == $op) {
+    if ('edit' === $op) {
         // Set query to get current info, in case we change the IP/Port/Mountpoint
-        $form->addElement(new XoopsFormHidden('o_server', $formdata['server']));
-        $form->addElement(new XoopsFormHidden('o_port', $formdata['port']));
-        $form->addElement(new XoopsFormHidden('o_mount', $formdata['mount']));
-        $form->addElement(new XoopsFormHidden('op', 'edit'));
+        $form->addElement(new \XoopsFormHidden('o_server', $formdata['server']));
+        $form->addElement(new \XoopsFormHidden('o_port', $formdata['port']));
+        $form->addElement(new \XoopsFormHidden('o_mount', $formdata['mount']));
+        $form->addElement(new \XoopsFormHidden('op', 'edit'));
     } else {
-        $form->addElement(new XoopsFormHidden('op', 'insert'));
+        $form->addElement(new \XoopsFormHidden('op', 'insert'));
     }
 
-    $form->addElement(new XoopsFormHidden('verify', '1'));
+    $form->addElement(new \XoopsFormHidden('verify', '1'));
 
-    $form->addElement(new XoopsFormButton('', 'post', $title, 'submit'));
+    $form->addElement(new \XoopsFormButton('', 'post', $title, 'submit'));
 
     $form->display();
 
@@ -91,19 +91,19 @@ function uhqiceauth_srvform($title, $formdata, $op)
 
 function uhqiceauth_srvdelform($mountdata)
 {
-    $form = new XoopsThemeForm(_AM_UHQICEAUTH_FORM_VDEL . '<br>' . $mountdata['server'] . ':' . $mountdata['port'] . $mountdata['mount'], 'srvdelform', 'mountpoints.php', POST);
+    $form = new \XoopsThemeForm(_AM_UHQICEAUTH_FORM_VDEL . '<br>' . $mountdata['server'] . ':' . $mountdata['port'] . $mountdata['mount'], 'srvdelform', 'mountpoints.php', POST);
 
-    $form_c = new XoopsFormCheckbox(_AM_UHQICEAUTH_FORM_DELHD, 'delhd', 'none');
+    $form_c = new \XoopsFormCheckbox(_AM_UHQICEAUTH_FORM_DELHD, 'delhd', 'none');
     $form_c->addOption(1, _AM_UHQICEAUTH_FORM_RD);
 
     $form->addElement($form_c);
 
-    $form->addElement(new XoopsFormHidden('server', $mountdata['server']));
-    $form->addElement(new XoopsFormHidden('port', $mountdata['port']));
-    $form->addElement(new XoopsFormHidden('mount', $mountdata['mount']));
-    $form->addElement(new XoopsFormHidden('op', 'delete'));
-    $form->addElement(new XoopsFormHidden('verify', '1'));
-    $form->addElement(new XoopsFormButton('', 'post', _AM_UHQICEAUTH_FORM_DELBUTTON, 'submit'));
+    $form->addElement(new \XoopsFormHidden('server', $mountdata['server']));
+    $form->addElement(new \XoopsFormHidden('port', $mountdata['port']));
+    $form->addElement(new \XoopsFormHidden('mount', $mountdata['mount']));
+    $form->addElement(new \XoopsFormHidden('op', 'delete'));
+    $form->addElement(new \XoopsFormHidden('verify', '1'));
+    $form->addElement(new \XoopsFormButton('', 'post', _AM_UHQICEAUTH_FORM_DELBUTTON, 'submit'));
     $form->display();
 }
 
@@ -112,11 +112,11 @@ function uhqiceauth_srvintroform($title)
     global $xoopsDB;
     global $sane_REQUEST;
 
-    $form = new XoopsThemeForm($title . ' - ' . $sane_REQUEST['server'] . ':' . $sane_REQUEST['port'] . $sane_REQUEST['mount'], 'intromapform', 'mountpoints.php', 'post', true);
+    $form = new \XoopsThemeForm($title . ' - ' . $sane_REQUEST['server'] . ':' . $sane_REQUEST['port'] . $sane_REQUEST['mount'], 'intromapform', 'mountpoints.php', 'post', true);
 
     // Selection of introduction
 
-    $form_c = new XoopsFormSelect(_AM_UHQICEAUTH_INTROS_FILE, 'intronum');
+    $form_c = new \XoopsFormSelect(_AM_UHQICEAUTH_INTROS_FILE, 'intronum');
 
     $query  = 'SELECT * FROM ' . $xoopsDB->prefix('uhqiceauth_intros');
     $result = $xoopsDB->queryF($query);
@@ -124,20 +124,20 @@ function uhqiceauth_srvintroform($title)
         // Do not add options.
     } else {
         // Load option from DB
-        while ($row = $xoopsDB->fetchArray($result)) {
+        while (false !== ($row = $xoopsDB->fetchArray($result))) {
             $form_c->addOption($row['intronum'], $row['filename'] . ' :: ' . $row['description']);
         }
     }
     $form->addElement($form_c);
 
-    $form->addElement(new XoopsFormText(_AM_UHQICEAUTH_INTROS_SEQ, 'sequence', 1, 1, '10'));
+    $form->addElement(new \XoopsFormText(_AM_UHQICEAUTH_INTROS_SEQ, 'sequence', 1, 1, '10'));
 
-    $form->addElement(new XoopsFormHidden('server', $sane_REQUEST['server']));
-    $form->addElement(new XoopsFormHidden('port', $sane_REQUEST['port']));
-    $form->addElement(new XoopsFormHidden('mount', $sane_REQUEST['mount']));
-    $form->addElement(new XoopsFormHidden('op', 'addintro'));
+    $form->addElement(new \XoopsFormHidden('server', $sane_REQUEST['server']));
+    $form->addElement(new \XoopsFormHidden('port', $sane_REQUEST['port']));
+    $form->addElement(new \XoopsFormHidden('mount', $sane_REQUEST['mount']));
+    $form->addElement(new \XoopsFormHidden('op', 'addintro'));
 
-    $form->addElement(new XoopsFormButton('', 'post', $title, 'submit'));
+    $form->addElement(new \XoopsFormButton('', 'post', $title, 'submit'));
 
     $form->display();
 }
@@ -469,7 +469,7 @@ switch ($op) {
                 break;
             } else {
                 $i = 0;
-                while ($row = $xoopsDB->fetchArray($result)) {
+                while (false !== ($row = $xoopsDB->fetchArray($result))) {
                     $data['mounts'][$i] = $row;
 
                     // Look for and list intros for each mount point.
@@ -483,7 +483,7 @@ switch ($op) {
                     $query2  .= ' ORDER BY sequence';
                     $result2 = $xoopsDB->queryF($query2);
                     $i2      = 0;
-                    while ($row2 = $xoopsDB->fetchArray($result2)) {
+                    while (false !== ($row2 = $xoopsDB->fetchArray($result2))) {
                         $data['mounts'][$i]['intro'][$i2] = $row2;
                         $i2++;
                     }

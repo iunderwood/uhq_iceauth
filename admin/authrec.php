@@ -22,7 +22,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 require_once __DIR__ . '/admin_header.php';
 
 if (!isset($xoopsTpl)) {
-    $xoopsTpl = new XoopsTpl();
+    $xoopsTpl = new \XoopsTpl();
 }
 $xoopsTpl->caching = 0;
 
@@ -50,7 +50,7 @@ function uhqiceauth_authlist($authtype, $start, $limit, $orderby)
         $data['type']  = $authtype;
 
         $i = 0;
-        while ($row = $xoopsDB->fetchArray($result)) {
+        while (false !== ($row = $xoopsDB->fetchArray($result))) {
             $data['record'][$i]         = $row;
             $data['record'][$i]['flag'] = strtolower($row['geocc']);
             if (file_exists(XOOPS_ROOT_PATH . '/modules/uhq_geolocate/includes/countryshort.php')) {

@@ -98,7 +98,7 @@ function uhqiceauth_checkrdns()
     $xoopsModuleConfig = $configHandler->getConfigsByCat(0, $xoopsModule->getVar('mid'));
 
     // Return true if reverse DNS is enabled in the configuration
-    if (1 == $xoopsModuleConfig['rdns']) {
+    if (1 == $helper->getConfig('rdns')) {
         return true;
     } else {
         return false;
@@ -115,7 +115,7 @@ function uhqiceauth_checklogadmin()
     $xoopsModuleConfig = $configHandler->getConfigsByCat(0, $xoopsModule->getVar('mid'));
 
     // Return true if module-wide administrative update logging is enabled in the configuration
-    if (1 == $xoopsModuleConfig['logadminupdate']) {
+    if (1 == $helper->getConfig('logadminupdate')) {
         return true;
     } else {
         return false;
@@ -177,7 +177,7 @@ function uhqiceauth_introdump($mountrow = [], $header)
         } else {
             uhqiceauth_header($header . ' withintro', 0);
         }
-        while ($row = $xoopsDB->fetchArray($result)) {
+        while (false !== ($row = $xoopsDB->fetchArray($result))) {
             $fn = XOOPS_ROOT_PATH . '/modules/uhq_iceauth/intros/' . $row['filename'];
             if ($fh = fopen($fn, 'r')) {
                 // Add MIME type
@@ -510,7 +510,7 @@ function uhqiceauth_ua_verify($testua)
         return true;
     }
 
-    while ($row = $xoopsDB->fetchArray($result)) {
+    while (false !== ($row = $xoopsDB->fetchArray($result))) {
         if (false === strpos($testua, $row['useragent'])) {
             // UA Pases.  Do nothing.
         } else {
