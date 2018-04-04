@@ -26,16 +26,16 @@ function uhqiceauth_randompw($length)
     $code = '';
 
     while ($i < $length) {
-        $type = rand(1, 3);
+        $type = mt_rand(1, 3);
         switch ($type) {
             case 1: // Numerics
-                $value = rand(48, 57);
+                $value = mt_rand(48, 57);
                 break;
             case 2: // Uppercase
-                $value = rand(65, 90);
+                $value = mt_rand(65, 90);
                 break;
             case 3: // Lowercase
-                $value = rand(97, 122);
+                $value = mt_rand(97, 122);
                 break;
         }
         $code .= chr($value);
