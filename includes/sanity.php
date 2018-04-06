@@ -30,8 +30,8 @@ function uhqiceauth_dosanity()
     if (isset($_REQUEST['server'])) {
         $sanerequest['server'] = $myts->addSlashes($_REQUEST['server']);
     }
-    if (isset($_REQUEST['port'])) {
-        $sanerequest['port'] = (int)$_REQUEST['port'];
+    if (\Xmf\Request::hasVar('port', 'REQUEST')) {
+        $sanerequest['port'] = \Xmf\Request::getInt('port', 0, 'REQUEST');
     }
     if (isset($_REQUEST['mount'])) {
         $sanerequest['mount'] = $myts->addSlashes($_REQUEST['mount']);
@@ -95,13 +95,13 @@ function uhqiceauth_dosanity()
     if (isset($_REQUEST['description'])) {
         $sanerequest['description'] = $myts->addSlashes($_REQUEST['description']);
     }
-    if (isset($_REQUEST['intronum'])) {
-        $sanerequest['intronum'] = (int)$_REQUEST['intronum'];
+    if (\Xmf\Request::hasVar('intronum', 'REQUEST')) {
+        $sanerequest['intronum'] = \Xmf\Request::getInt('intronum', 0, 'REQUEST');
     }
 
     // Administrative Fields
-    if (isset($_REQUEST['sequence'])) {
-        $sanerequest['sequence'] = (int)$_REQUEST['sequence'];
+    if (\Xmf\Request::hasVar('sequence', 'REQUEST')) {
+        $sanerequest['sequence'] = \Xmf\Request::getInt('sequence', 0, 'REQUEST');
     }
     if (isset($_REQUEST['testua'])) {
         $sanerequest['testua'] = $myts->addSlashes($_REQUEST['testua']);
