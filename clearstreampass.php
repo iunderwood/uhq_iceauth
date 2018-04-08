@@ -19,6 +19,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+use Xmf\Request;
+
 include __DIR__ . '/../../mainfile.php';
 
 // Simply clear out the temporary password in the stream table if the user requests it.  Redirect to page called from.
@@ -33,7 +35,7 @@ if (is_object($xoopsUser)) {
 
     $result = $xoopsDB->queryF($query);
     if (false === $result) {
-        redirect_header($_SERVER['HTTP_REFERER'], 10, _MD_UHQICEAUTH_CSP_DBERR);
+        redirect_header(Request::getString('HTTP_REFERER', '', 'SERVER'), 10, _MD_UHQICEAUTH_CSP_DBERR);
     } else {
         if ($row = $xoopsDB->fetchArray($result)) {
             $query  = 'DELETE FROM ' . $xoopsDB->prefix('uhqiceauth_streampass') . ' WHERE';
@@ -41,14 +43,14 @@ if (is_object($xoopsUser)) {
             $result = $xoopsDB->queryF($query);
 
             if (false === $result) {
-                redirect_header($_SERVER['HTTP_REFERER'], 10, _MD_UHQICEAUTH_CSP_DBERR);
+                redirect_header(Request::getString('HTTP_REFERER', '', 'SERVER'), 10, _MD_UHQICEAUTH_CSP_DBERR);
             } else {
-                redirect_header($_SERVER['HTTP_REFERER'], 10, _MD_UHQICEAUTH_CSP_RESETOK);
+                redirect_header(Request::getString('HTTP_REFERER', '', 'SERVER'), 10, _MD_UHQICEAUTH_CSP_RESETOK);
             }
         } else {
-            redirect_header($_SERVER['HTTP_REFERER'], 10, _MD_UHQICEAUTH_CSP_NOPW);
+            redirect_header(Request::getString('HTTP_REFERER', '', 'SERVER'), 10, _MD_UHQICEAUTH_CSP_NOPW);
         }
     }
 } else {
-    redirect_header($_SERVER['HTTP_REFERER'], 10, _MD_UHQICEAUTH_CSP_LOGIN);
+    redirect_header(Request::getString('HTTP_REFERER', '', 'SERVER'), 10, _MD_UHQICEAUTH_CSP_LOGIN);
 }

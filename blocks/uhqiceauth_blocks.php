@@ -31,7 +31,7 @@ function b_uhqiceauth_activemounts_show()
 
     $block = uhqiceauth_raw_activemounts();
 
-    if (null == $block) {
+    if (null === $block) {
         // DB error should be stored in the last DB call.
         $block['error'] = _MB_UHQICEAUTH_ACTIVE_DBERR . ' [' . $xoopsDB->error() . ']';
     }
