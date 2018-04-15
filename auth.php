@@ -20,14 +20,16 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 use XoopsModules\Uhqiceauth;
-/** @var Uhqiceauth\Helper $helper */
-$helper = Uhqiceauth\Helper::getInstance();
 
-include __DIR__ . '/../../mainfile.php';
+
+include  dirname(dirname(__DIR__)) . '/mainfile.php';
 
 // Functions stored externally
 require_once XOOPS_ROOT_PATH . '/modules/uhq_iceauth/includes/sanity.php';
 require_once XOOPS_ROOT_PATH . '/modules/uhq_iceauth/includes/auth.inc.php';
+
+/** @var Uhqiceauth\Helper $helper */
+$helper = Uhqiceauth\Helper::getInstance();
 
 // All logging functions should be turned off for this page.
 $xoopsLogger->activated = false;

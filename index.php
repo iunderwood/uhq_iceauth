@@ -1,6 +1,6 @@
 <?php
 
-include __DIR__ . '/../../mainfile.php';
+include  dirname(dirname(__DIR__)) . '/mainfile.php';
 
 include XOOPS_ROOT_PATH . '/header.php';
 

@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 use Xmf\Request;
 
-include __DIR__ . '/../../mainfile.php';
+include  dirname(dirname(__DIR__)) . '/mainfile.php';
 
 // Simply clear out the temporary password in the stream table if the user requests it.  Redirect to page called from.
 
