@@ -46,13 +46,13 @@ Fixes:
 Changes:
 * Module: XOOPS Frameworks are now required.
 * Module: Log reason for authentication failure in authtrail.  Reason code is numeric and is assigned as follows:
-	101: Listener UN/PW Mismatch
-	102: Listener Group Mismatch
-	201: Source UN/PW Mismatch
-	202: Source Group Mismatch
-	203: Source Undefined/Unused
-	301: Banned User Agent
-	302: Banned IP Address
+    101: Listener UN/PW Mismatch
+    102: Listener Group Mismatch
+    201: Source UN/PW Mismatch
+    202: Source Group Mismatch
+    203: Source Undefined/Unused
+    301: Banned User Agent
+    302: Banned IP Address
 * Module: Username in the authtrail is left null unless there is an actual username set.
 * Module: Collapsing a bit of redundant code.
 * Module: All admin tabs now template driven, finally.

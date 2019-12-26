@@ -10,34 +10,40 @@
  */
 
 /**
- * @copyright    The XOOPS Project http://sourceforge.net/projects/xoops/
+ * @copyright    XOOPS Project (https://xoops.org)
  * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
  * @package
  * @since
- * @author     XOOPS Development Team
- * @version    $Id $
+ * @author       XOOPS Development Team
  */
 
-$path = dirname(dirname(dirname(dirname(__FILE__))));
-include_once $path . '/mainfile.php';
-include_once $path . '/include/cp_functions.php';
+$path = dirname(dirname(dirname(__DIR__)));
+//require_once $path . '/mainfile.php';
+//require_once $path . '/include/cp_functions.php';
 require_once $path . '/include/cp_header.php';
 require_once $path . '/class/template.php';
+//require_once __DIR__ . '/../class/utility.php';
+//require_once __DIR__ . '/../include/common.php';
 
-global $xoopsModule;
+/** @var Xmf\Module\Admin $adminObject */
+$adminObject = \Xmf\Module\Admin::getInstance();
 
-$thisModuleDir = $GLOBALS['xoopsModule']->getVar('dirname');
+$moduleDirName = basename(dirname(__DIR__));
+$helper = \Xmf\Module\Helper::getHelper($moduleDirName);
+$adminObject = \Xmf\Module\Admin::getInstance();
 
-//if functions.php file exist
-//require_once dirname(dirname(__FILE__)) . '/include/functions.php';
+$pathIcon16    = \Xmf\Module\Admin::iconUrl('', 16);
+$pathIcon32    = \Xmf\Module\Admin::iconUrl('', 32);
+$pathModIcon32 = $helper->getModule()->getInfo('modicons32');
 
 // Load language files
-xoops_loadLanguage('admin', $thisModuleDir);
-xoops_loadLanguage('modinfo', $thisModuleDir);
-xoops_loadLanguage('main', $thisModuleDir);
+$helper->loadLanguage('admin');
+$helper->loadLanguage('modinfo');
+$helper->loadLanguage('main');
 
-$pathIcon16 = '../'.$xoopsModule->getInfo('icons16');
-$pathIcon32 = '../'.$xoopsModule->getInfo('icons32');
-$pathModuleAdmin = $xoopsModule->getInfo('dirmoduleadmin');
+$myts = MyTextSanitizer::getInstance();
 
-include_once $GLOBALS['xoops']->path($pathModuleAdmin.'/moduleadmin.php');
+if (!isset($GLOBALS['xoopsTpl']) || !($GLOBALS['xoopsTpl'] instanceof XoopsTpl)) {
+    require_once $GLOBALS['xoops']->path('class/template.php');
+    $xoopsTpl = new XoopsTpl();
+}

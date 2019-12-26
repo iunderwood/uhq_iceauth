@@ -51,7 +51,7 @@ In order to use the listener authentication, a given icecast mountpoint must be 
   <authentication type="url">
     <option name="listener_add" value="http://myserver/modules/uhq_iceauth/auth.php"/>
     <option name="listener_remove" value="http://myserver/modules/uhq_iceauth/auth.php"/>
-  
+
     <option name="user" value="user"/>
     <option pass="pass" value="pass"/>
     <option name="auth_header" value="icecast-auth-user: 1"/>
@@ -139,7 +139,7 @@ The following options dictate how to react to an authentication request for a mo
 
 * Default Time Limit
   This is the time limit that will be allowed if a user passes the credential and group check for undefined mount points.  Set this to 0 to allow for an unlimited stream time.
-  
+
 --[ Managing Mountpoints ]--
 
 There are no sample servers inserted into the database when the module is first installed.  Adding servers is not a mandatory exercise for the module, but if you are interested in setting permissions based on a given mountpoint, you will need to explicitly configure each mountpoint.
@@ -148,13 +148,13 @@ The fields are:
 
 * Server IP/FQDN:
   This is the IP address or domain name of the server in place.
-  
+
 * Port:
   This is the port that the server is running on.
-  
+
 * Mountpoint:
   This is the mountpoint that is being managed.  All IceCast mountpoints start with a trailing slash, e.g. /testing.ogg.
-  
+
 * Time Limit (sec):
   This is the number of seconds that a listener will be allowed to remain connected to a given stream.
 
