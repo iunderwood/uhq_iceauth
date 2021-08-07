@@ -51,9 +51,7 @@ $modversion['helpsection'] = [
 ];
 
 // Administrative Defines
-//$modversion['dirmoduleadmin'] = '/Frameworks/moduleclasses/moduleadmin';
-//$modversion['icons16']        = '../../Frameworks/moduleclasses/icons/16';
-$modversion['icons32']    = 'images/';
+//$modversion['icons32']    = 'images/';
 $modversion['modicons16'] = 'assets/images/icons/16';
 $modversion['modicons32'] = 'assets/images/icons/32';
 

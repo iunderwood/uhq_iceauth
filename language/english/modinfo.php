@@ -77,6 +77,10 @@ define('_MI_UHQICEAUTH_ADMENU_STREAMPASS', 'Stream Logins');
 define('_MI_UHQICEAUTH_ADMENU_UA', 'UA Bans');
 define('_MI_UHQICEAUTH_ADMENU_IPBAN', 'IP Bans');
 
+define('_MI_UHQICEAUTH_ADMENU_HOME', 'Home');
+define('_MI_UHQICEAUTH_ADMENU_ABOUT', 'About');
+define('_MI_UHQICEAUTH_ADMENU_INDEX', 'GeoLocator');
+
 //0.93
 //Help
 define('_MI_UHQICEAUTH_DIRNAME', basename(dirname(__DIR__, 2)));

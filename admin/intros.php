@@ -36,17 +36,17 @@ if (!isset($xoopsTpl)) {
 }
 $xoopsTpl->caching = 0;
 
-require_once $helper->path('includes/sanity.php');
-require_once $helper->path('admin/functions.inc.php');
+require $helper->path('includes/sanity.php');
+require $helper->path('admin/functions.inc.php');
 
-require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
-require_once XOOPS_ROOT_PATH . '/class/uploader.php';
+require XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
+require XOOPS_ROOT_PATH . '/class/uploader.php';
 
 $myts = \MyTextSanitizer::getInstance();
 
 // Now the fun begins!
 
-if (Request::hasVar('op', 'REQUEST')) {
+if (isset($_REQUEST['op'])) {
     $op = $_REQUEST['op'];
 } else {
     $op = 'none';
@@ -107,7 +107,7 @@ function uhqiceauth_introdelform($title, $formdata)
 
 switch ($op) {
     case 'insert':
-        if (Request::hasVar('verify', 'REQUEST')) {
+        if (isset($_REQUEST['verify'])) {
             // If the upload is good, save the file and DB info.
             $uploader = new \XoopsMediaUploader($helper->path('intros'), $uhqiceauth_intro_mimes, 1048576);
             if ($uploader->fetchMedia($_POST['xoops_upload_file'][0])) {
@@ -158,7 +158,7 @@ switch ($op) {
                 redirect_header('intros.php', 10, $xoopsDB->error());
                 break;
             }
-            if (Request::hasVar('verify', 'REQUEST')) {
+            if (isset($_REQUEST['verify'])) {
                 // Remove from intro map
                 $query  = 'DELETE FROM ' . $xoopsDB->prefix('uhqiceauth_intros');
                 $query  .= " WHERE intronum = '" . $sane_REQUEST['intronum'] . "'";
@@ -212,7 +212,7 @@ switch ($op) {
                 redirect_header('intros.php', 10, $xoopsDB->error());
                 break;
             }
-            if (Request::hasVar('verify', 'REQUEST')) {
+            if (isset($_REQUEST['verify'])) {
                 // Process changes
 
                 if (4 != $_FILES['introfile']['error']) {
