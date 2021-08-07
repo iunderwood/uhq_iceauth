@@ -79,8 +79,8 @@ define('_MI_UHQICEAUTH_ADMENU_IPBAN', 'IP Bans');
 
 //0.93
 //Help
-define('_MI_UHQICEAUTH_DIRNAME', basename(dirname(dirname(__DIR__))));
-define('_MI_UHQICEAUTH_HELP_HEADER', __DIR__.'/help/helpheader.tpl');
+define('_MI_UHQICEAUTH_DIRNAME', basename(dirname(__DIR__, 2)));
+define('_MI_UHQICEAUTH_HELP_HEADER', __DIR__ . '/help/helpheader.tpl');
 define('_MI_UHQICEAUTH_BACK_2_ADMIN', 'Back to Administration of ');
 define('_MI_UHQICEAUTH_OVERVIEW', 'Overview');
 

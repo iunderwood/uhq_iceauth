@@ -19,7 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-function xoops_module_update_uhq_iceauth(\XoopsModule $module, $oldversion = null)
+function xoops_module_update_uhqiceauth(\XoopsModule $module, $oldversion = null)
 {
     global $xoopsDB;
 
@@ -46,10 +46,9 @@ function xoops_module_update_uhq_iceauth(\XoopsModule $module, $oldversion = nul
             $module->setErrors('Error adding DB table uhqiceauth_servers');
 
             return false;
-        } else {
-            // Upgrade successful.  Do next revision.
-            $oldversion = 21;
         }
+        // Upgrade successful.  Do next revision.
+        $oldversion = 21;
     }
 
     // Modify tables for v0.3
@@ -175,10 +174,9 @@ function xoops_module_update_uhq_iceauth(\XoopsModule $module, $oldversion = nul
     }
 
     if (40 == $oldversion) {
-
         // Set Main Menu to visibility of 0
 
-        $sql = 'UPDATE ' . $xoopsDB->prefix('modules') . " SET weight = 0 WHERE dirname = 'uhq_iceauth'";
+        $sql = 'UPDATE ' . $xoopsDB->prefix('modules') . " SET weight = 0 WHERE dirname = 'uhqiceauth'";
         if ($xoopsDB->queryF($sql)) {
             echo _MI_UHQICEAUTH_WEIGHT_OK;
         } else {
@@ -190,7 +188,6 @@ function xoops_module_update_uhq_iceauth(\XoopsModule $module, $oldversion = nul
     // Return true if we get this far!
 
     if (50 == $oldversion) {
-
         // Need a larger User Agent field
 
         $query = 'ALTER TABLE ' . $xoopsDB->prefix('uhqiceauth_authtrail') . ' MODIFY useragent VARCHAR(96)';
@@ -260,7 +257,6 @@ function xoops_module_update_uhq_iceauth(\XoopsModule $module, $oldversion = nul
     }
 
     if (60 == $oldversion) {
-
         // Adding FQDN recording to the authentication log.
         $query  = 'ALTER TABLE ' . $xoopsDB->prefix('uhqiceauth_authtrail') . ' ADD userrdns VARCHAR(64) AFTER userip';
         $result = $xoopsDB->queryF($query);
@@ -296,7 +292,6 @@ function xoops_module_update_uhq_iceauth(\XoopsModule $module, $oldversion = nul
     }
 
     if (70 == $oldversion) {
-
         // Adding Geolocation Country Code to the authentication log
 
         $query  = 'ALTER TABLE ' . $xoopsDB->prefix('uhqiceauth_authtrail') . ' ADD geocc CHAR(2) AFTER stoptime';

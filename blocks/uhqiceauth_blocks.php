@@ -19,7 +19,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-require_once XOOPS_ROOT_PATH . '/modules/uhq_iceauth/includes/functions.php';
+use XoopsModules\Uhqiceauth\{
+    Helper
+};
+/** @var Admin $adminObject */
+/** @var Helper $helper */
+
+$helper      = Helper::getInstance();
+require_once $helper->path('includes/functions.php');
 
 function b_uhqiceauth_activemounts_show()
 {
@@ -60,30 +67,30 @@ function b_uhqiceauth_streampass_show()
         // Check DB for entry
 
         $query = 'SELECT * FROM ' . $xoopsDB->prefix('uhqiceauth_streampass');
-        $query .= " WHERE un = '" . utf8_encode(strtolower($block['username'])) . "'";
+        $query .= " WHERE un = '" . utf8_encode(mb_strtolower($block['username'])) . "'";
 
         $result = $xoopsDB->queryF($query);
         if (false === $result) {
             $block['error'] = $xoopsDB->error();
 
             return $block;
+        }
+        $row = $xoopsDB->fetchArray($result);
+        if ($row) {
+            $block['password'] = $row['pw'];
         } else {
-            if ($row = $xoopsDB->fetchArray($result)) {
-                $block['password'] = $row['pw'];
-            } else {
-                $block['password'] = uhqiceauth_randompw(8);
+            $block['password'] = uhqiceauth_randompw(8);
 
-                $query = 'INSERT INTO ' . $xoopsDB->prefix('uhqiceauth_streampass') . ' SET';
-                $query .= " pw = '" . $block['password'] . "',";
-                $query .= ' added = now(),';
-                $query .= " un = '" . utf8_encode(strtolower($block['username'])) . "'";
+            $query = 'INSERT INTO ' . $xoopsDB->prefix('uhqiceauth_streampass') . ' SET';
+            $query .= " pw = '" . $block['password'] . "',";
+            $query .= ' added = now(),';
+            $query .= " un = '" . utf8_encode(mb_strtolower($block['username'])) . "'";
 
-                $result = $xoopsDB->queryF($query);
-                if (false === $result) {
-                    $block['error'] = $xoopsDB->error();
+            $result = $xoopsDB->queryF($query);
+            if (false === $result) {
+                $block['error'] = $xoopsDB->error();
 
-                    return $block;
-                }
+                return $block;
             }
         }
     } else {

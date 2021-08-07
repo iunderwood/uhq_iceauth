@@ -12,11 +12,10 @@ use XoopsModules\Uhqiceauth;
 
 /**
  * Prepares system prior to attempting to uninstall module
- * @param XoopsModule $module {@link XoopsModule}
+ * @param \XoopsModule $module {@link XoopsModule}
  *
  * @return bool true if ready to uninstall, false if not
  */
-
 function xoops_module_pre_uninstall_uhqiceauth(\XoopsModule $module)
 {
     // Do some synchronization
@@ -24,9 +23,8 @@ function xoops_module_pre_uninstall_uhqiceauth(\XoopsModule $module)
 }
 
 /**
- *
  * Performs tasks required during uninstallation of the module
- * @param XoopsModule $module {@link XoopsModule}
+ * @param \XoopsModule $module {@link XoopsModule}
  *
  * @return bool true if uninstallation successful, false if not
  */
@@ -34,9 +32,10 @@ function xoops_module_uninstall_uhqiceauth(\XoopsModule $module)
 {
     //    return true;
 
-    $moduleDirName      = basename(dirname(__DIR__));
-    $moduleDirNameUpper = strtoupper($moduleDirName);
-    $helper             = Uhqiceauth\Helper::getInstance();
+    $moduleDirName      = \basename(\dirname(__DIR__));
+    $moduleDirNameUpper = mb_strtoupper($moduleDirName);
+    /** @var Uhqiceauth\Helper $helper */
+    $helper = Uhqiceauth\Helper::getInstance();
 
     /** @var Uhqiceauth\Utility $utility */
     $utility = new Uhqiceauth\Utility();

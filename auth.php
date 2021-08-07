@@ -19,14 +19,21 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-use XoopsModules\Uhqiceauth;
+use XoopsModules\Uhqiceauth\{
+    Helper
+};
+/** @var Admin $adminObject */
+/** @var Helper $helper */
 
+require_once __DIR__ . '/header.php';
 
-include  dirname(dirname(__DIR__)) . '/mainfile.php';
+$helper      = Helper::getInstance();
+
+require_once \dirname(__DIR__, 2) . '/mainfile.php';
 
 // Functions stored externally
-require_once XOOPS_ROOT_PATH . '/modules/uhq_iceauth/includes/sanity.php';
-require_once XOOPS_ROOT_PATH . '/modules/uhq_iceauth/includes/auth.inc.php';
+require_once $helper->path('includes/sanity.php');
+require_once $helper->path('includes/auth.inc.php');
 
 /** @var Uhqiceauth\Helper $helper */
 $helper = Uhqiceauth\Helper::getInstance();
@@ -42,15 +49,16 @@ $print_hdr      = 1;         // Show header array by default.
 
 // Okay, we need options!
 if ($_REQUEST['action']) {
-
     // Make requests sane.
     $sane_REQUEST = uhqiceauth_dosanity();
 
     // Load module configuration
-//    $moduleHandler     = xoops_getHandler('module');
-//    $xoopsModule       = $moduleHandler->getByDirname('uhq_iceauth');
-//    $configHandler     = xoops_getHandler('config');
-//    $xoopsModuleConfig = $configHandler->getConfigsByCat(0, $xoopsModule->getVar('mid'));
+    //    /** @var \XoopsModuleHandler $moduleHandler */
+    $moduleHandler = xoops_getHandler('module');
+    //    $xoopsModule       = $moduleHandler->getByDirname('uhqiceauth');
+    //    /** @var \XoopsConfigHandler $configHandler */
+    $configHandler = xoops_getHandler('config');
+    //    $xoopsModuleConfig = $configHandler->getConfigsByCat(0, $xoopsModule->getVar('mid'));
 
     /** @var Uhqiceauth\Helper $helper */
     $helper = Uhqiceauth\Helper::getInstance();
@@ -61,7 +69,6 @@ if ($_REQUEST['action']) {
         case 'listener_add':
             // Make sure we have the mount, server, port, and requesting IP.
             if ($sane_REQUEST['server'] && $sane_REQUEST['port'] && $sane_REQUEST['mount'] && $sane_REQUEST['ip']) {
-
                 // Try and locate mount in DB
                 $query  = 'SELECT COUNT(*) FROM ' . $xoopsDB->prefix('uhqiceauth_servers') . ' WHERE ';
                 $query  .= "server = '" . $sane_REQUEST['server'] . "' AND port = '" . $sane_REQUEST['port'] . "' AND mount = '" . $sane_REQUEST['mount'] . "';";
@@ -70,12 +77,10 @@ if ($_REQUEST['action']) {
                     uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_SQL);
                     echo '<b>' . _MD_UHQICEAUTH_ERROR_SQL . '</b> ' . $query;
                     break;
-                } else {
-                    list($svr_count) = $xoopsDB->fetchRow($result);
                 }
+                [$svr_count] = $xoopsDB->fetchRow($result);
 
                 if ($svr_count) {   // If Mount Found
-
                     // Load mount data, break if query fails.
                     $query  = 'SELECT * FROM ' . $xoopsDB->prefix('uhqiceauth_servers') . ' WHERE ';
                     $query  .= "server = '" . $sane_REQUEST['server'] . "' AND port = '" . $sane_REQUEST['port'] . "' AND mount = '" . $sane_REQUEST['mount'] . "';";
@@ -91,7 +96,6 @@ if ($_REQUEST['action']) {
                     $row['src_auth_grp'] = explode('|', $row['src_auth_grp']);
 
                     if ('listener_add' === $_REQUEST['action']) {
-
                         // Check here to make sure the specified UA isn't banned.
                         if (false === uhqiceauth_ua_verify($sane_REQUEST['agent'])) {
                             uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_UABAN, 1);
@@ -252,9 +256,8 @@ if ($_REQUEST['action']) {
                     uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_SQL, 1);
                     echo '<b>' . _MD_UHQICEAUTH_ERROR_SQL . '</b> ' . $query;
                     break;
-                } else {
-                    list($svr_count) = $xoopsDB->fetchRow($result);
                 }
+                [$svr_count] = $xoopsDB->fetchRow($result);
 
                 if ($svr_count) {   // If Mount Found
                     // Log only explicitly defined mounts.
@@ -278,9 +281,9 @@ if ($_REQUEST['action']) {
                     uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_SQL, 1);
                     echo '<b>' . _MD_UHQICEAUTH_ERROR_SQL . '</b> ' . $query;
                     break;
-                } else {
-                    list($svr_count) = $xoopsDB->fetchRow($result);
                 }
+                [$svr_count] = $xoopsDB->fetchRow($result);
+
                 if ($svr_count) {   // If Mount Found
                     // Log only explicitly defined mounts.
                     uhqiceauth_header($helper->getConfig('hdr_auth'), 1);

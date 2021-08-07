@@ -19,22 +19,32 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+use Xmf\Module\Admin;
+use Xmf\Request;
+use XoopsModules\Uhqiceauth\{
+    Helper
+};
+/** @var Admin $adminObject */
+/** @var Helper $helper */
+
 require_once __DIR__ . '/admin_header.php';
+
+$helper      = Helper::getInstance();
 
 if (!isset($xoopsTpl)) {
     $xoopsTpl = new \XoopsTpl();
 }
 $xoopsTpl->caching = 0;
 
-require_once XOOPS_ROOT_PATH . '/modules/uhq_iceauth/includes/sanity.php';
-require_once XOOPS_ROOT_PATH . '/modules/uhq_iceauth/includes/functions.php';
+require_once $helper->path('includes/sanity.php');
+require_once $helper->path('includes/functions.php');
 
 // Admin Requirements
-require_once XOOPS_ROOT_PATH . '/modules/uhq_iceauth/admin/functions.inc.php';
+require_once $helper->path('admin/functions.inc.php');
 
 // Assign default operator
 
-if (isset($_REQUEST['op'])) {
+if (Request::hasVar('op', 'REQUEST')) {
     $op = $_REQUEST['op'];
 } else {
     $op = 'none';
@@ -56,7 +66,8 @@ switch ($op) {
             if (false === $result) {
                 redirect_header('streampass.php', 10, _AM_UHQICEAUTH_SQLERR . $query . '<br>' . $xoopsDB->error());
             } else {
-                if ($row = $xoopsDB->fetchArray($result)) {
+                $row = $xoopsDB->fetchArray($result);
+                if ($row) {
                     $query  = 'DELETE FROM ' . $xoopsDB->prefix('uhqiceauth_streampass') . ' WHERE';
                     $query  .= " un = '" . utf8_encode($saneREQ['user']) . "'";
                     $result = $xoopsDB->queryF($query);
@@ -71,15 +82,15 @@ switch ($op) {
                 }
             }
             break;
-        } else {
-            redirect_header('streampass.php', 10, _AM_UHQICEAUTH_PARAMERR);
         }
+        redirect_header('streampass.php', 10, _AM_UHQICEAUTH_PARAMERR);
+
         break;
     case 'none':
     default:
         // Header
         xoops_cp_header();
-        $adminObject = \Xmf\Module\Admin::getInstance();
+        $adminObject = Admin::getInstance();
         $adminObject->displayNavigation(basename(__FILE__));
 
         // Stream Login Infos

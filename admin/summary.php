@@ -21,6 +21,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // Admin page setup.
 
+use Xmf\Module\Admin;
+
 require_once __DIR__ . '/admin_header.php';
 
 if (!isset($xoopsTpl)) {
@@ -31,7 +33,7 @@ $xoopsTpl->caching = 0;
 // Start Page Display
 
 xoops_cp_header();
-$adminObject = \Xmf\Module\Admin::getInstance();
+$adminObject = Admin::getInstance();
 $adminObject->displayNavigation(basename(__FILE__));
 
 // Load module functions

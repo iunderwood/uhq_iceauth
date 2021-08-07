@@ -19,6 +19,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+use Xmf\Module\Admin;
+use Xmf\Request;
+
 require_once __DIR__ . '/admin_header.php';
 
 if (!isset($xoopsTpl)) {
@@ -28,12 +31,12 @@ $xoopsTpl->caching = 0;
 
 // Load required includes
 
-require_once XOOPS_ROOT_PATH . '/modules/uhq_iceauth/includes/sanity.php';
+require_once $helper->path('includes/sanity.php');
 require_once __DIR__ . '/functions.inc.php';
 
 // Now the fun begins!
 
-if (isset($_REQUEST['op'])) {
+if (Request::hasVar('op', 'REQUEST')) {
     $op = $_REQUEST['op'];
 } else {
     $op = 'none';
@@ -149,7 +152,7 @@ function uhqiceauth_ttsl($interval = null)
 }
 
 xoops_cp_header();
-$adminObject = \Xmf\Module\Admin::getInstance();
+$adminObject = Admin::getInstance();
 $adminObject->displayNavigation(basename(__FILE__));
 
 $data = [];

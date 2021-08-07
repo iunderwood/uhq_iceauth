@@ -19,11 +19,21 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+use XoopsModules\Uhqgeolocate;
+use XoopsModules\Uhqiceauth\{
+    Helper
+};
+/** @var Admin $adminObject */
+/** @var Helper $helper */
+
+$helper      = Helper::getInstance();
+
 // Returns User ID if username and password authenticate successfully.
 function uhqiceauth_checkuser($un, $pw)
 {
     global $xoopsDB;
 
+    /** @var \XoopsMemberHandler $memberHandler */
     $memberHandler = xoops_getHandler('member');
 
     // Check PW against XOOPS DB First
@@ -31,38 +41,36 @@ function uhqiceauth_checkuser($un, $pw)
     $user = $memberHandler->loginUser($un, $pw);
 
     if (!$user) {
-
         // Check PW against stream auth database next.
 
         $query = 'SELECT COUNT(*) FROM ' . $xoopsDB->prefix('uhqiceauth_streampass');
-        $query .= " WHERE un='" . strtolower($un) . "' AND pw='" . $pw . "'";
+        $query .= " WHERE un='" . mb_strtolower($un) . "' AND pw='" . $pw . "'";
 
         $result = $xoopsDB->queryF($query);
         if (false === $result) {
             // Return false if DB query fails.
         } else {
             // Query passed.  Fetch result.
-            list($matches) = $xoopsDB->fetchRow($result);
+            [$matches] = $xoopsDB->fetchRow($result);
             if ($matches > 0) {
-
                 // If there's a match, attempt to update the match time.
                 $query = 'UPDATE ' . $xoopsDB->prefix('uhqiceauth_streampass');
-                $query .= " SET used=now() WHERE un='" . strtolower($un) . "' AND pw='" . $pw . "'";
+                $query .= " SET used=now() WHERE un='" . mb_strtolower($un) . "' AND pw='" . $pw . "'";
                 $xoopsDB->queryF($query);
 
                 // Get the user record by name and return a uid
-                $query  = 'SELECT uid FROM ' . $xoopsDB->prefix('users') . " WHERE uname LIKE '" . strtolower($un) . "'";
+                $query  = 'SELECT uid FROM ' . $xoopsDB->prefix('users') . " WHERE uname LIKE '" . mb_strtolower($un) . "'";
                 $result = $xoopsDB->queryF($query);
 
                 if ($result) {
-                    list($uid) = $xoopsDB->fetchRow($result);
+                    [$uid] = $xoopsDB->fetchRow($result);
 
                     return $uid;
                 }
             }
         }
     } else {
-        return $user->Uid();
+        return $user->uid();
     }
 
     return false;
@@ -71,8 +79,8 @@ function uhqiceauth_checkuser($un, $pw)
 // Returns true if the user's groups intersect with the groups passed.
 function uhqiceauth_checkgroup($uid, $grp)
 {
-
     // Get User
+    /** @var \XoopsMemberHandler $memberHandler */
     $memberHandler = xoops_getHandler('member');
     $user          = $memberHandler->getUser($uid);
 
@@ -90,36 +98,38 @@ function uhqiceauth_checkgroup($uid, $grp)
 // The following functions check on variables in the module configuration.
 function uhqiceauth_checkrdns()
 {
-
     // Load module options
-    $moduleHandler     = xoops_getHandler('module');
-    $xoopsModule       = $moduleHandler->getByDirname('uhq_iceauth');
+    /** @var \XoopsModuleHandler $moduleHandler */
+    $moduleHandler = xoops_getHandler('module');
+    $xoopsModule   = $moduleHandler->getByDirname('uhqiceauth');
+    /** @var \XoopsConfigHandler $configHandler */
     $configHandler     = xoops_getHandler('config');
     $xoopsModuleConfig = $configHandler->getConfigsByCat(0, $xoopsModule->getVar('mid'));
 
     // Return true if reverse DNS is enabled in the configuration
     if (1 == $helper->getConfig('rdns')) {
         return true;
-    } else {
-        return false;
     }
+
+    return false;
 }
 
 function uhqiceauth_checklogadmin()
 {
-
     // Load module options
-    $moduleHandler     = xoops_getHandler('module');
-    $xoopsModule       = $moduleHandler->getByDirname('uhq_iceauth');
+    /** @var \XoopsModuleHandler $moduleHandler */
+    $moduleHandler = xoops_getHandler('module');
+    $xoopsModule   = $moduleHandler->getByDirname('uhqiceauth');
+    /** @var \XoopsConfigHandler $configHandler */
     $configHandler     = xoops_getHandler('config');
     $xoopsModuleConfig = $configHandler->getConfigsByCat(0, $xoopsModule->getVar('mid'));
 
     // Return true if module-wide administrative update logging is enabled in the configuration
     if (1 == $helper->getConfig('logadminupdate')) {
         return true;
-    } else {
-        return false;
     }
+
+    return false;
 }
 
 // Puts the header in the HTTP header, and echoes it on a line of its own, if requested.
@@ -137,7 +147,7 @@ function uhqiceauth_header($hdr_txt)
 }
 
 // Dumps the intro file if we've got one.
-function uhqiceauth_introdump($mountrow = [], $header)
+function uhqiceauth_introdump($mountrow, $header)
 {
     global $xoopsDB;
 
@@ -151,7 +161,7 @@ function uhqiceauth_introdump($mountrow = [], $header)
     if (false === $result) {
         $intros = 0;
     } else {
-        list($intros) = $xoopsDB->fetchRow($result);
+        [$intros] = $xoopsDB->fetchRow($result);
     }
 
     // Set header
@@ -159,56 +169,56 @@ function uhqiceauth_introdump($mountrow = [], $header)
         uhqiceauth_header($header, 1);
 
         return false;
-    } else {
-        // Dump intros.
-        $query  = 'SELECT y.filename AS filename, y.codec AS codec FROM ' . $xoopsDB->prefix('uhqiceauth_intromap') . ' x,';
-        $query  .= $xoopsDB->prefix('uhqiceauth_intros') . ' y ';
-        $query  .= " WHERE x.server='" . $mountrow['server'] . "'";
-        $query  .= " AND x.port='" . $mountrow['port'] . "'";
-        $query  .= " AND x.mount='" . $mountrow['mount'] . "'";
-        $query  .= ' AND x.intronum=y.intronum';
-        $query  .= ' ORDER BY x.sequence';
-        $result = $xoopsDB->queryF($query);
-        if (false === $result) {
-            // Base authentication if query fails.
-            uhqiceauth_header($header, 1);
-
-            return false;
-        } else {
-            uhqiceauth_header($header . ' withintro', 0);
-        }
-        while (false !== ($row = $xoopsDB->fetchArray($result))) {
-            $fn = XOOPS_ROOT_PATH . '/modules/uhq_iceauth/intros/' . $row['filename'];
-            if ($fh = fopen($fn, 'r')) {
-                // Add MIME type
-                switch ($row['codec']) {
-                    case 'O':
-                        uhqiceauth_header('Content-type: application/ogg', 0);
-                        break;
-                    case 'M':
-                        uhqiceauth_header('Content-type: audio/mpeg', 0);
-                        break;
-                    case 'A':
-                        uhqiceauth_header('Content-type: audio/aac', 0);
-                        break;
-                    case 'P':
-                        uhqiceauth_header('Content-type: audio/aacp', 0);
-                        break;
-                    default:
-                        uhqiceauth_header('Content-type: application/octet-stream', 0);
-                        break;
-                }
-                // Copy file out
-                while (!feof($fh)) {
-                    $buffer = fread($fh, 2048);
-                    print $buffer;
-                }
-            }
-            fclose($fh);
-        }
-
-        return true;
     }
+    // Dump intros.
+    $query  = 'SELECT y.filename AS filename, y.codec AS codec FROM ' . $xoopsDB->prefix('uhqiceauth_intromap') . ' x,';
+    $query  .= $xoopsDB->prefix('uhqiceauth_intros') . ' y ';
+    $query  .= " WHERE x.server='" . $mountrow['server'] . "'";
+    $query  .= " AND x.port='" . $mountrow['port'] . "'";
+    $query  .= " AND x.mount='" . $mountrow['mount'] . "'";
+    $query  .= ' AND x.intronum=y.intronum';
+    $query  .= ' ORDER BY x.sequence';
+    $result = $xoopsDB->queryF($query);
+    if (false === $result) {
+        // Base authentication if query fails.
+        uhqiceauth_header($header, 1);
+
+        return false;
+    }
+    uhqiceauth_header($header . ' withintro', 0);
+
+    while (false !== ($row = $xoopsDB->fetchArray($result))) {
+        $fn = $helper->path('intros/') . $row['filename'];
+        $fh = fopen($fn, 'r');
+        if ($fh) {
+            // Add MIME type
+            switch ($row['codec']) {
+                case 'O':
+                    uhqiceauth_header('Content-type: application/ogg', 0);
+                    break;
+                case 'M':
+                    uhqiceauth_header('Content-type: audio/mpeg', 0);
+                    break;
+                case 'A':
+                    uhqiceauth_header('Content-type: audio/aac', 0);
+                    break;
+                case 'P':
+                    uhqiceauth_header('Content-type: audio/aacp', 0);
+                    break;
+                default:
+                    uhqiceauth_header('Content-type: application/octet-stream', 0);
+                    break;
+            }
+            // Copy file out
+            while (!feof($fh)) {
+                $buffer = fread($fh, 2048);
+                print $buffer;
+            }
+        }
+        fclose($fh);
+    }
+
+    return true;
 }
 
 // Increments the hits for the listener counters.
@@ -252,14 +262,12 @@ function uhqiceauth_srcaddhit($server, $port, $mount, $hit = false)
 // Plug-in for Geolocation
 function uhqiceauth_geolocate($ip)
 {
-    /** @var XoopsModuleHandler $moduleHandler */
+    /** @var \XoopsModuleHandler $moduleHandler */
     $moduleHandler = xoops_getHandler('module');
-    $geolocate     = $moduleHandler->getByDirname('uhq_geolocate');
+    $geolocate     = $moduleHandler->getByDirname('uhqgeolocate');
     if (is_object($geolocate)) {
         if ($geolocate->getVar('isactive')) {
-            require_once XOOPS_ROOT_PATH . '/modules/uhq_geolocate/class/geolocate.class.php';
-
-            $geoloc       = new geolocate;
+            $geoloc       = new geolocate();
             $geoloc->ipin = $ip;
 
             $location = $geoloc->locate();
@@ -303,7 +311,7 @@ function uhqiceauth_authlog($sane_REQUEST, $authtype, $authstat, $authinfo = nul
     }
 
     // Add any comment codes if they were passed.
-    if (null != $authinfo) {
+    if (null !== $authinfo) {
         $query .= "authinfo = '" . trim($authinfo) . "', ";
     }
 
@@ -321,13 +329,13 @@ function uhqiceauth_authlog($sane_REQUEST, $authtype, $authstat, $authinfo = nul
     $location = uhqiceauth_geolocate($sane_REQUEST['ip']);
 
     if (is_object($location)) {
-        if (null != $location->country) {
+        if (null !== $location->country) {
             $query .= ", geocc = '" . $location->country . "' ";
         }
-        if (null != $location->region) {
+        if (null !== $location->region) {
             $query .= ", georegion = '" . $location->region . "' ";
         }
-        if (null != $location->city) {
+        if (null !== $location->city) {
             $query .= ", geocity = '" . $location->city . "'";
         }
     }
@@ -411,13 +419,13 @@ function uhqiceauth_acctlog($sane_REQUEST)
         $location = uhqiceauth_geolocate($sane_REQUEST['ip']);
 
         if (is_object($location)) {
-            if (null != $location->country) {
+            if (null !== $location->country) {
                 $query .= "geocc = '" . $location->country . "', ";
             }
-            if (null != $location->region) {
+            if (null !== $location->region) {
                 $query .= "georegion = '" . $location->region . "', ";
             }
-            if (null != $location->city) {
+            if (null !== $location->city) {
                 $query .= "geocity = '" . $location->city . "', ";
             }
         }
@@ -511,7 +519,7 @@ function uhqiceauth_ua_verify($testua)
     }
 
     while (false !== ($row = $xoopsDB->fetchArray($result))) {
-        if (false === strpos($testua, $row['useragent'])) {
+        if (false === mb_strpos($testua, $row['useragent'])) {
             // UA Pases.  Do nothing.
         } else {
             // UA Fails

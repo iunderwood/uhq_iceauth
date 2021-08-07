@@ -19,24 +19,34 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+use Xmf\Module\Admin;
+use Xmf\Request;
+use XoopsModules\Uhqiceauth\{
+    Helper
+};
+/** @var Admin $adminObject */
+/** @var Helper $helper */
+
 require_once __DIR__ . '/admin_header.php';
+
+$helper      = Helper::getInstance();
 
 if (!isset($xoopsTpl)) {
     $xoopsTpl = new \XoopsTpl();
 }
 $xoopsTpl->caching = 0;
 
-include XOOPS_ROOT_PATH . '/modules/uhq_iceauth/includes/sanity.php';
-include XOOPS_ROOT_PATH . '/modules/uhq_iceauth/admin/functions.inc.php';
+require_once $helper->path('includes/sanity.php');
+require_once $helper->path('admin/functions.inc.php');
 
-include XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
-include XOOPS_ROOT_PATH . '/class/uploader.php';
+require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
+require_once XOOPS_ROOT_PATH . '/class/uploader.php';
 
 $myts = \MyTextSanitizer::getInstance();
 
 // Now the fun begins!
 
-if (isset($_REQUEST['op'])) {
+if (Request::hasVar('op', 'REQUEST')) {
     $op = $_REQUEST['op'];
 } else {
     $op = 'none';
@@ -97,9 +107,9 @@ function uhqiceauth_introdelform($title, $formdata)
 
 switch ($op) {
     case 'insert':
-        if (isset($_REQUEST['verify'])) {
+        if (Request::hasVar('verify', 'REQUEST')) {
             // If the upload is good, save the file and DB info.
-            $uploader = new \XoopsMediaUploader(XOOPS_ROOT_PATH . '/modules/uhq_iceauth/intros', $uhqiceauth_intro_mimes, 1048576);
+            $uploader = new \XoopsMediaUploader($helper->path('intros'), $uhqiceauth_intro_mimes, 1048576);
             if ($uploader->fetchMedia($_POST['xoops_upload_file'][0])) {
                 $uploader->setPrefix('intro-');
                 if ($uploader->upload()) {
@@ -112,7 +122,7 @@ switch ($op) {
 
                     $result = $xoopsDB->queryF($query);
                     if (false === $result) {
-                        unlink(XOOPS_ROOT_PATH . '/modules/uhq_iceauth/intros/' . $filetarget);
+                        unlink($helper->path('intros/') . $filetarget);
                         redirect_header('intros.php', 10, _AM_UHQICEAUTH_SQLERR . $query);
                     } else {
                         redirect_header('intros.php', 10, _AM_UHQICEAUTH_INTROS_ULOK . ' (' . $filetarget . ')');
@@ -126,7 +136,7 @@ switch ($op) {
         } else {
             // Display page w/ form.
             xoops_cp_header();
-            $adminObject = \Xmf\Module\Admin::getInstance();
+            $adminObject = Admin::getInstance();
             $adminObject->displayNavigation(basename(__FILE__));
             uhqiceauth_introform(_AM_UHQICEAUTH_INTROS_ADD);
             require_once __DIR__ . '/admin_footer.php';
@@ -148,7 +158,7 @@ switch ($op) {
                 redirect_header('intros.php', 10, $xoopsDB->error());
                 break;
             }
-            if (isset($_REQUEST['verify'])) {
+            if (Request::hasVar('verify', 'REQUEST')) {
                 // Remove from intro map
                 $query  = 'DELETE FROM ' . $xoopsDB->prefix('uhqiceauth_intros');
                 $query  .= " WHERE intronum = '" . $sane_REQUEST['intronum'] . "'";
@@ -170,12 +180,12 @@ switch ($op) {
                 }
 
                 // Delete file
-                unlink(XOOPS_ROOT_PATH . '/modules/uhq_iceauth/intros/' . $row['filename']);
+                unlink($helper->path('intros/') . $row['filename']);
                 redirect_header('intros.php', 10, _AM_UHQICEAUTH_DELETED . ' ' . $row['filename']);
             } else {
                 // Display page w/ basic form.
                 xoops_cp_header();
-                $adminObject = \Xmf\Module\Admin::getInstance();
+                $adminObject = Admin::getInstance();
                 $adminObject->displayNavigation(basename(__FILE__));
                 uhqiceauth_introdelform(_AM_UHQICEAUTH_INTROS_DELETE, $row);
                 require_once __DIR__ . '/admin_footer.php';
@@ -202,12 +212,12 @@ switch ($op) {
                 redirect_header('intros.php', 10, $xoopsDB->error());
                 break;
             }
-            if (isset($_REQUEST['verify'])) {
+            if (Request::hasVar('verify', 'REQUEST')) {
                 // Process changes
 
                 if (4 != $_FILES['introfile']['error']) {
                     // Process file upload.  (Error 4 = file not uploaded)
-                    $uploader = new \XoopsMediaUploader(XOOPS_ROOT_PATH . '/modules/uhq_iceauth/intros', $uhqiceauth_intro_mimes, 1048576);
+                    $uploader = new \XoopsMediaUploader($helper->path('intros'), $uhqiceauth_intro_mimes, 1048576);
                     if ($uploader->fetchMedia($_POST['xoops_upload_file'][0])) {
                         $uploader->setPrefix('intro-');
                         if ($uploader->upload()) {
@@ -243,7 +253,7 @@ switch ($op) {
                 } else {
                     if ($filetarget != $row['filename']) {
                         // Delete the old file if the update passes.
-                        unlink(XOOPS_ROOT_PATH . '/modules/uhq_iceauth/intros/' . $row['filename']);
+                        unlink($helper->path('intros/') . $row['filename']);
                         redirect_header('intros.php', 10, _AM_UHQICEAUTH_INTROS_UPDOK . $sane_REQUEST['intronum'] . '  (' . $filetarget . ')');
                     } else {
                         redirect_header('intros.php', 10, _AM_UHQICEAUTH_INTROS_UPDOK . $sane_REQUEST['intronum']);
@@ -252,7 +262,7 @@ switch ($op) {
             } else {
                 // Display page w/ form
                 xoops_cp_header();
-                $adminObject = \Xmf\Module\Admin::getInstance();
+                $adminObject = Admin::getInstance();
                 $adminObject->displayNavigation(basename(__FILE__));
                 uhqiceauth_introform(_AM_UHQICEAUTH_INTROS_EDIT, $row, $op);
                 require_once __DIR__ . '/admin_footer.php';
@@ -274,9 +284,10 @@ switch ($op) {
             if (false === $result) {
                 echo $xoopsDB->error();
             } else {
-                if ($row = $xoopsDB->fetchArray($result)) {
+                $row = $xoopsDB->fetchArray($result);
+                if ($row) {
                     if (file_exists(__DIR__ . '/../intros/' . $row['filename'])) {
-                        $data['playurl']  = '/modules/uhq_iceauth/intros/' . $row['filename'];
+                        $data['playurl']  = '/modules/uhqiceauth/intros/' . $row['filename'];
                         $data['filename'] = $row['filename'];
                         $xoopsTpl->assign('data', $data);
                     } else {
@@ -295,7 +306,7 @@ switch ($op) {
     default:
         // Print Header
         xoops_cp_header();
-        $adminObject = \Xmf\Module\Admin::getInstance();
+        $adminObject = Admin::getInstance();
         $adminObject->displayNavigation(basename(__FILE__));
         $adminObject->addItemButton(_AM_UHQICEAUTH_INTROS_ADD, 'intros.php?op=insert', 'add');
         $adminObject->displayButton('left'); // �right� is default

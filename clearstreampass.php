@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 use Xmf\Request;
 
-include  dirname(dirname(__DIR__)) . '/mainfile.php';
+require_once \dirname(__DIR__, 2) . '/mainfile.php';
 
 // Simply clear out the temporary password in the stream table if the user requests it.  Redirect to page called from.
 
@@ -37,7 +37,8 @@ if (is_object($xoopsUser)) {
     if (false === $result) {
         redirect_header(Request::getString('HTTP_REFERER', '', 'SERVER'), 10, _MD_UHQICEAUTH_CSP_DBERR);
     } else {
-        if ($row = $xoopsDB->fetchArray($result)) {
+        $row = $xoopsDB->fetchArray($result);
+        if ($row) {
             $query  = 'DELETE FROM ' . $xoopsDB->prefix('uhqiceauth_streampass') . ' WHERE';
             $query  .= " un = '" . utf8_encode($block['username']) . "'";
             $result = $xoopsDB->queryF($query);

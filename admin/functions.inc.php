@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // Function to return summary counts.  Null for DB error, otherwise returns an integer.
 
-defined('XOOPS_ROOT_PATH') || die('XOOPS root path not defined');
+defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
 
 function uhqiceauth_summarycount($sumtype, $mountdata = null)
 {
@@ -63,7 +63,7 @@ function uhqiceauth_summarycount($sumtype, $mountdata = null)
 
     // Append mount point query if all required data is supplied.  Does not apply to all summary count types.
 
-    if ($mountdata['server'] && $mountdata['port'] && $mountdata['mount']) {
+    if ($mountdata && $mountdata['server'] && $mountdata['port'] && $mountdata['mount']) {
         $query .= " WHERE server = '" . $mountdata['server'] . "'";
         $query .= " AND port = '" . $mountdata['port'] . "'";
         $query .= " AND mount = '" . $mountdata['mount'] . "'";
@@ -74,22 +74,21 @@ function uhqiceauth_summarycount($sumtype, $mountdata = null)
     $result = $xoopsDB->queryF($query);
 
     if ($result) {
-        list($count) = $xoopsDB->fetchRow($result);
+        [$count] = $xoopsDB->fetchRow($result);
 
         return $count;
-    } else {
-        return null;
     }
+
+    return null;
 }
 
 // Take time in seconds, return friendly time in string.
 function uhqiceauth_time($duration)
 {
-
     // Hours
     $hours = (int)($duration / 3600);
     // Minutes
-    $minutes = (int)($hours * 3600);
+    $minutes = ($hours * 3600);
     // Seconds
     $seconds = (int)$duration % 60;
 
@@ -124,9 +123,9 @@ function uhqiceauth_geocheck()
 {
     global $xoops_getHandler;
 
-    /** @var XoopsModuleHandler $moduleHandler */
+    /** @var \XoopsModuleHandler $moduleHandler */
     $moduleHandler = xoops_getHandler('module');
-    $geolocate     = $moduleHandler->getByDirname('uhq_geolocate');
+    $geolocate     = $moduleHandler->getByDirname('uhqgeolocate');
 
     if (is_object($geolocate)) {
         $isok = $geolocate->getVar('isactive');
@@ -143,8 +142,9 @@ function uhqiceauth_anoncheck()
 {
     global $xoopsDB;
 
+    /** @var \XoopsModuleHandler $moduleHandler */
     $moduleHandler = xoops_getHandler('module');
-    $module        = $moduleHandler->getByDirname('uhq_iceauth');
+    $module        = $moduleHandler->getByDirname('uhqiceauth');
 
     $query = 'SELECT COUNT(*) FROM ' . $xoopsDB->prefix('group_permission');
     $query .= " WHERE gperm_itemid = '" . $module->getVar('mid') . "'";
@@ -155,7 +155,7 @@ function uhqiceauth_anoncheck()
     if (false === $result) {
         $status = _AM_UHQICEAUTH_SQLERR . $query . '<br>' . $xoopsDB->error();
     } else {
-        list($anonok) = $xoopsDB->fetchRow($result);
+        [$anonok] = $xoopsDB->fetchRow($result);
     }
 
     if ($anonok) {
@@ -195,9 +195,9 @@ function uhqiceauth_mimecheck()
     }
     $i = 0;
 
-    foreach ($uhqiceauth_intro_mimes as &$type) {
+    foreach ($uhqiceauth_intro_mimes as $type) {
         $data['list'][$i]['type'] = $type;
-        if (strpos($mimefile, $type)) {
+        if (mb_strpos($mimefile, $type)) {
             $data['list'][$i]['status'] = _AM_UHQICEAUTH_CODEC_FOUND;
         } else {
             $data['list'][$i]['status'] = _AM_UHQICEAUTH_CODEC_NFOUND;

@@ -19,7 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-function xoops_module_install_uhq_iceauth(\XoopsModule $module)
+function xoops_module_install_uhqiceauth(\XoopsModule $module)
 {
     global $xoopsDB;
 
@@ -34,7 +34,7 @@ function xoops_module_install_uhq_iceauth(\XoopsModule $module)
 
     // Set Main Menu to visibility of 0
 
-    $sql = 'UPDATE ' . $xoopsDB->prefix('modules') . " SET weight = 0 WHERE dirname = 'uhq_iceauth'";
+    $sql = 'UPDATE ' . $xoopsDB->prefix('modules') . " SET weight = 0 WHERE dirname = 'uhqiceauth'";
     if ($xoopsDB->queryF($sql)) {
         echo _MI_UHQICEAUTH_WEIGHT_OK;
     } else {

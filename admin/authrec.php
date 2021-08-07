@@ -19,16 +19,26 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+use Xmf\Module\Admin;
+use Xmf\Request;
+use XoopsModules\Uhqiceauth\{
+    Helper
+};
+/** @var Admin $adminObject */
+/** @var Helper $helper */
+
 require_once __DIR__ . '/admin_header.php';
+
+$helper      = Helper::getInstance();
 
 if (!isset($xoopsTpl)) {
     $xoopsTpl = new \XoopsTpl();
 }
 $xoopsTpl->caching = 0;
 
-include XOOPS_ROOT_PATH . '/modules/uhq_iceauth/includes/sanity.php';
-include XOOPS_ROOT_PATH . '/modules/uhq_iceauth/admin/functions.inc.php';
-include XOOPS_ROOT_PATH . '/modules/uhq_iceauth/includes/auth.inc.php';
+require_once $helper->path('includes/sanity.php');
+require_once $helper->path('admin/functions.inc.php');
+require_once $helper->path('includes/auth.inc.php');
 
 function uhqiceauth_authlist($authtype, $start, $limit, $orderby)
 {
@@ -44,27 +54,26 @@ function uhqiceauth_authlist($authtype, $start, $limit, $orderby)
         $data['error'] = _AM_UHQICEAUTH_SQLERR . $query;
 
         return $data;
-    } else {
-        $data['order'] = $orderby;
-        $data['limit'] = $limit;
-        $data['type']  = $authtype;
-
-        $i = 0;
-        while (false !== ($row = $xoopsDB->fetchArray($result))) {
-            $data['record'][$i]         = $row;
-            $data['record'][$i]['flag'] = strtolower($row['geocc']);
-            if (file_exists(XOOPS_ROOT_PATH . '/modules/uhq_geolocate/includes/countryshort.php')) {
-                require_once XOOPS_ROOT_PATH . '/modules/uhq_geolocate/includes/countryshort.php';
-                if ($row['geocc']) {
-                    $data['record'][$i]['ccname'] = $_UHQGEO_CC[$row['geocc']];
-                }
-            }
-            $i++;
-        }
-        $data['count'] = $i;
-
-        return $data;
     }
+    $data['order'] = $orderby;
+    $data['limit'] = $limit;
+    $data['type']  = $authtype;
+
+    $i = 0;
+    while (false !== ($row = $xoopsDB->fetchArray($result))) {
+        $data['record'][$i]         = $row;
+        $data['record'][$i]['flag'] = mb_strtolower($row['geocc']);
+        if (is_file(XOOPS_ROOT_PATH . '/modules/uhqgeolocate/includes/countryshort.php')) {
+            require_once XOOPS_ROOT_PATH . '/modules/uhqgeolocate/includes/countryshort.php';
+            if ($row['geocc']) {
+                $data['record'][$i]['ccname'] = $_UHQGEO_CC[$row['geocc']];
+            }
+        }
+        $i++;
+    }
+    $data['count'] = $i;
+
+    return $data;
 }
 
 function uhqiceauth_authrecord($sequence)
@@ -79,7 +88,8 @@ function uhqiceauth_authrecord($sequence)
         if (false === $result) {
             $data['error'] = _AM_UHQICEAUTH_SQLERR . $query;
         } else {
-            if ($row = $xoopsDB->fetchArray($result)) {
+            $row = $xoopsDB->fetchArray($result);
+            if ($row) {
                 $data = $row;
                 if (uhqiceauth_checkrdns()) {
                     $data['checkdns']    = true;
@@ -98,7 +108,7 @@ function uhqiceauth_authrecord($sequence)
 
 // Now the fun begins!
 
-if (isset($_REQUEST['op'])) {
+if (Request::hasVar('op', 'REQUEST')) {
     $op = $_REQUEST['op'];
 } else {
     $op = 'none';
@@ -110,12 +120,11 @@ switch ($op) {
     case 'deleteall':
         // Verify we have minimum parameters.
         if ($sane_REQUEST['server'] && $sane_REQUEST['port'] && $sane_REQUEST['mount']) {
-            if (isset($_REQUEST['verify'])) {
+            if (Request::hasVar('verify', 'REQUEST')) {
                 // Set up query and remove all records.
                 $query = '';
-            } else {
-                // Verify we really want to delete all records.
             }
+            // Verify we really want to delete all records.
         } else {
             redirect_header('authrec.php', 10, _AM_UHQICEAUTH_PARAMERR);
         }
@@ -126,7 +135,7 @@ switch ($op) {
         break;
     case 'authrecord':
         xoops_cp_header();
-        $adminObject = \Xmf\Module\Admin::getInstance();
+        $adminObject = Admin::getInstance();
         $adminObject->displayNavigation(basename(__FILE__));
 
         $data = [];
@@ -142,7 +151,7 @@ switch ($op) {
     default:
         xoops_cp_header();
 
-        $adminObject = \Xmf\Module\Admin::getInstance();
+        $adminObject = Admin::getInstance();
         $adminObject->displayNavigation(basename(__FILE__));
 
         $data = [];

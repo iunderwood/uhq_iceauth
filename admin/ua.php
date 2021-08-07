@@ -19,21 +19,31 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+use Xmf\Module\Admin;
+use Xmf\Request;
+use XoopsModules\Uhqiceauth\{
+    Helper
+};
+/** @var Admin $adminObject */
+/** @var Helper $helper */
+
 require_once __DIR__ . '/admin_header.php';
+
+$helper      = Helper::getInstance();
 
 if (!isset($xoopsTpl)) {
     $xoopsTpl = new \XoopsTpl();
 }
 $xoopsTpl->caching = 0;
 
-include XOOPS_ROOT_PATH . '/modules/uhq_iceauth/includes/sanity.php';
-include XOOPS_ROOT_PATH . '/modules/uhq_iceauth/admin/functions.inc.php';
-include XOOPS_ROOT_PATH . '/modules/uhq_iceauth/includes/auth.inc.php';
+require_once $helper->path('includes/sanity.php');
+require_once $helper->path('admin/functions.inc.php');
+require_once $helper->path('includes/auth.inc.php');
 
-include XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
+require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
 
 // Assign default operator
-if (isset($_REQUEST['op'])) {
+if (Request::hasVar('op', 'REQUEST')) {
     $op = $_REQUEST['op'];
 } else {
     $op = 'none';
@@ -66,16 +76,15 @@ function uhqiceauth_ualist()
     if (false === $result) {
         // Return nothing on a DB error.
         return null;
-    } else {
-        $i    = 0;
-        $data = [];
-        while (false !== ($row = $xoopsDB->fetchArray($result))) {
-            $data['list'][$i] = $row;
-            $i++;
-        }
-
-        return $data;
     }
+    $i    = 0;
+    $data = [];
+    while (false !== ($row = $xoopsDB->fetchArray($result))) {
+        $data['list'][$i] = $row;
+        $i++;
+    }
+
+    return $data;
 }
 
 // Return the last 10 log entries where a UA ban has been observed
@@ -90,21 +99,20 @@ function uhqiceauth_uaauthbans($start, $limit = 10)
     if (false === $result) {
         // Return nothing on a DB error.
         return null;
-    } else {
-        $i    = 0;
-        $data = [];
-        while (false !== ($row = $xoopsDB->fetchArray($result))) {
-            $data['banlog'][$i] = $row;
-            $i++;
-        }
-
-        return $data;
     }
+    $i    = 0;
+    $data = [];
+    while (false !== ($row = $xoopsDB->fetchArray($result))) {
+        $data['banlog'][$i] = $row;
+        $i++;
+    }
+
+    return $data;
 }
 
 switch ($op) {
     case 'insert':
-        if (isset($_REQUEST['verify'])) {
+        if (Request::hasVar('verify', 'REQUEST')) {
             $query  = 'INSERT INTO ' . $xoopsDB->prefix('uhqiceauth_uabans');
             $query  .= " SET useragent = '" . $sane_REQUEST['useragent'] . "'";
             $result = $xoopsDB->queryF($query);
@@ -112,22 +120,20 @@ switch ($op) {
             if (false === $result) {
                 redirect_header('ua.php', 10, _AM_UHQICEAUTH_SQLERR . $query . '<br>' . $xoopsDB->error());
                 break;
-            } else {
-                redirect_header('ua.php', 10, _AM_UHQICEAUTH_ADDED . $sane_REQUEST['useragent'] . _AM_UHQICEAUTH_SUCCESSFULLY);
-                break;
             }
-        } else {
-            xoops_cp_header();
-            $adminObject = \Xmf\Module\Admin::getInstance();
-            $adminObject->displayNavigation(basename(__FILE__));
-            uhqiceauth_uaform(_AM_UHQICEAUTH_ADDUA);
-            require_once __DIR__ . '/admin_footer.php';
+            redirect_header('ua.php', 10, _AM_UHQICEAUTH_ADDED . $sane_REQUEST['useragent'] . _AM_UHQICEAUTH_SUCCESSFULLY);
+            break;
         }
+        xoops_cp_header();
+        $adminObject = Admin::getInstance();
+        $adminObject->displayNavigation(basename(__FILE__));
+        uhqiceauth_uaform(_AM_UHQICEAUTH_ADDUA);
+        require_once __DIR__ . '/admin_footer.php';
+
         break;
     case 'delete':
         // Verify we have minimum parameters
         if ($sane_REQUEST['sequence']) {
-
             // Delete Record
             $query  = 'DELETE FROM ' . $xoopsDB->prefix('uhqiceauth_uabans') . " WHERE sequence = '" . $sane_REQUEST['sequence'] . "'";
             $result = $xoopsDB->queryF($query);
@@ -151,7 +157,7 @@ switch ($op) {
         break;
     default:
         xoops_cp_header();
-        $adminObject = \Xmf\Module\Admin::getInstance();
+        $adminObject = Admin::getInstance();
         $adminObject->displayNavigation(basename(__FILE__));
 
         // See if we have anything first.

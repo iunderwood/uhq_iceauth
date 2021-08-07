@@ -1,6 +1,6 @@
 <div id="help-template" class="outer">
     <h1 class="head">Help:
-        <a class="ui-corner-all tooltip" href="<{$xoops_url}>/modules/uhq_iceauth/admin/index.php"
+        <a class="ui-corner-all tooltip" href="<{$xoops_url}>/modules/uhqiceauth/admin/index.php"
            title="UHQ_IceAuth Administration"> UHQ_IceAuth
             <img src="<{xoAdminIcons home.png}>"
                  alt="UHQ_IceAuth Administration">

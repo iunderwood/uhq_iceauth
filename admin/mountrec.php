@@ -21,7 +21,17 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // Admin page setup.
 
+use Xmf\Module\Admin;
+use Xmf\Request;
+use XoopsModules\Uhqiceauth\{
+    Helper
+};
+/** @var Admin $adminObject */
+/** @var Helper $helper */
+
 require_once __DIR__ . '/admin_header.php';
+
+$helper      = Helper::getInstance();
 
 if (!isset($xoopsTpl)) {
     $xoopsTpl = new \XoopsTpl();
@@ -32,12 +42,12 @@ $xoopsTpl->caching = 0;
 
 require_once __DIR__ . '/functions.inc.php';
 
-require_once XOOPS_ROOT_PATH . '/modules/uhq_iceauth/includes/sanity.php';
-require_once XOOPS_ROOT_PATH . '/modules/uhq_iceauth/includes/functions.php';
+require_once $helper->path('includes/sanity.php');
+require_once $helper->path('includes/functions.php');
 
 // Assign default operator
 
-if (isset($_REQUEST['op'])) {
+if (Request::hasVar('op', 'REQUEST')) {
     $op = $_REQUEST['op'];
 } else {
     $op = 'none';
@@ -56,21 +66,20 @@ function uhqiceauth_mount($start, $limit, $orderby)
     if (false === $result) {
         // Return nothing on a DB error.
         return null;
-    } else {
-        $i    = 0;
-        $data = [];
-
-        $data['start'] = $start;
-        $data['limit'] = $limit;
-        $data['sort']  = $orderby;
-
-        while (false !== ($row = $xoopsDB->fetchArray($result))) {
-            $data['list'][$i] = $row;
-            $i++;
-        }
-
-        return $data;
     }
+    $i    = 0;
+    $data = [];
+
+    $data['start'] = $start;
+    $data['limit'] = $limit;
+    $data['sort']  = $orderby;
+
+    while (false !== ($row = $xoopsDB->fetchArray($result))) {
+        $data['list'][$i] = $row;
+        $i++;
+    }
+
+    return $data;
 }
 
 switch ($op) {
@@ -97,11 +106,10 @@ switch ($op) {
 
         redirect_header('mountrec.php', 10, $headerinfo);
         break;
-
     case 'none':
     default:
         xoops_cp_header();
-        $adminObject = \Xmf\Module\Admin::getInstance();
+        $adminObject = Admin::getInstance();
         $adminObject->displayNavigation(basename(__FILE__));
 
         // Mountpoint Record Info

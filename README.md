@@ -1,4 +1,4 @@
-uhq_iceauth :: readme.txt
+uhqiceauth :: readme.txt
 
 This document is up-to-date for UHQ-IceAuth v0.6
 
@@ -49,8 +49,8 @@ In order to use the listener authentication, a given icecast mountpoint must be 
 <mount>
   <mount-name>/test.ogg</mount-name>
   <authentication type="url">
-    <option name="listener_add" value="http://myserver/modules/uhq_iceauth/auth.php"/>
-    <option name="listener_remove" value="http://myserver/modules/uhq_iceauth/auth.php"/>
+    <option name="listener_add" value="http://myserver/modules/uhqiceauth/auth.php"/>
+    <option name="listener_remove" value="http://myserver/modules/uhqiceauth/auth.php"/>
   
     <option name="user" value="user"/>
     <option pass="pass" value="pass"/>
@@ -65,7 +65,7 @@ If a website outage could be distressful for your operations, or if you have no 
   <mount-name>/test.ogg</mount-name>
   <authentication type="url">
     <option name="listener_add" value="http://127.0.0.1:8000/status.xsl"/>
-    <option name="listener_remove" value="http://myserver/modules/uhq_iceauth/auth.php"/>
+    <option name="listener_remove" value="http://myserver/modules/uhqiceauth/auth.php"/>
     <option name="user" value="user"/>
     <option pass="pass" value="pass"/>
     <option name="auth_header" value="HTTP/1.0"/>
@@ -77,7 +77,7 @@ Starting with IceCast 2.3.2-kh2, this can be reduced to the following:
 <mount>
   <mount-name>/test.ogg</mount-name>
   <authentication type="url">
-    <option name="listener_remove" value="http://myserver/modules/uhq_iceauth/auth.php"/>
+    <option name="listener_remove" value="http://myserver/modules/uhqiceauth/auth.php"/>
   </authentication>
 </mount>
 
@@ -92,8 +92,8 @@ The module is also capable of recording mountpoint logging information from IceC
 They are configured per-mountpoint as follows.  You may omit the <authentication> tag if you are already using it:
 
   <authentication type="url">
-    <option name="mount_add" value="http://myserver/modules/uhq_iceauth/auth.php"/>
-    <option name="mount_remove" value="http://myserver/modules/uhq_iceauth/auth.php"/>
+    <option name="mount_add" value="http://myserver/modules/uhqiceauth/auth.php"/>
+    <option name="mount_remove" value="http://myserver/modules/uhqiceauth/auth.php"/>
   </authentication>
 
 Additionally, the module stores a list of known active mounts in the database.  Do note that the list may not be accurate if a mount goes out of service and the module does not receive the message.
@@ -107,7 +107,7 @@ http://www.icecast.pwp.blueyonder.co.uk/
 Additionally, you need to configure the following option under the mount.  You do not need to specify the <authentication/> tag if you have already done so:
 
   <authentication type="url">
-    <option name="stream_auth" value="http://myserver/modules/uhq_iceauth/auth.php"/>
+    <option name="stream_auth" value="http://myserver/modules/uhqiceauth/auth.php"/>
   </authentication>
 
 ==[ Module Setup ]==

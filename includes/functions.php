@@ -58,17 +58,16 @@ function uhqiceauth_raw_activemounts()
     if (false === $result) {
         // return nothing on a DB error.  Error can be pulled later.
         return null;
-    } else {
-        $data = [];
-        $i    = 0;
-        while (false !== ($row = $xoopsDB->fetchArray($result))) {
-            $data['mount'][$i] = $row;
-            $i++;
-        }
-        $data['mounts'] = $i;
-
-        return $data;
     }
+    $data = [];
+    $i    = 0;
+    while (false !== ($row = $xoopsDB->fetchArray($result))) {
+        $data['mount'][$i] = $row;
+        $i++;
+    }
+    $data['mounts'] = $i;
+
+    return $data;
 }
 
 // Return list of stream logins.
@@ -84,14 +83,13 @@ function uhqiceauth_raw_streampass($start = 0, $limit = 0)
     if (false === $result) {
         // Return nothing on a DB Error.
         return null;
-    } else {
-        $data = [];
-        while (false !== ($row = $xoopsDB->fetchArray($result))) {
-            $data['list'][$i] = $row;
-            $i++;
-        }
-        $data['total'] = $i;
-
-        return $data;
     }
+    $data = [];
+    while (false !== ($row = $xoopsDB->fetchArray($result))) {
+        $data['list'][$i] = $row;
+        $i++;
+    }
+    $data['total'] = $i;
+
+    return $data;
 }
