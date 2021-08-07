@@ -3,7 +3,7 @@
 [![XOOPS CMS Module](https://img.shields.io/badge/XOOPS%20CMS-Module-blue.svg)](https://xoops.org)
 [![Software License](https://img.shields.io/badge/license-GPL-brightgreen.svg?style=flat)](https://www.gnu.org/licenses/gpl-2.0.html)
 
-[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/XoopsModules25x/uhqiceauth.svg?style=flat)](https://scrutinizer-ci.com/g/XoopsModules25x/uhqiceauth/?branch=master)
+[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/XoopsModules25x/uhqiceauth.svg?style=flat)](https://scrutinizer-ci.com/g/mambax7/uhqiceauth/?branch=master)
 [![Latest Pre-Release](https://img.shields.io/github/tag/XoopsModules25x/uhqiceauth.svg?style=flat)](https://github.com/XoopsModules25x/uhqiceauth/tags/)
 [![Latest Version](https://img.shields.io/github/release/XoopsModules25x/uhqiceauth.svg?style=flat)](https://github.com/XoopsModules25x/uhqiceauth/releases/)
 
