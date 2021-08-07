@@ -102,6 +102,21 @@ $adminmenu[] = [
     'icon'  => $pathModIcon32 . 'menu_ipban.png',
 ];
 
+// Blocks Admin
+$adminmenu[] = [
+    'title' => constant('CO_' . $moduleDirNameUpper . '_' . 'BLOCKS'),
+    'link' => 'admin/blocksadmin.php',
+    'icon' => $pathIcon32 . '/block.png',
+];
+
+if (is_object($helper->getModule()) && $helper->getConfig('displayDeveloperTools')) {
+    $adminmenu[] = [
+        'title' => constant('CO_' . $moduleDirNameUpper . '_' . 'ADMENU_MIGRATE'),
+        'link' => 'admin/migrate.php',
+        'icon' => $pathIcon32 . '/database_go.png',
+    ];
+}
+
 $adminmenu[] = [
     'title' => _MI_UHQICEAUTH_ABOUT,
     'link'  => 'admin/about.php',
