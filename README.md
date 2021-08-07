@@ -226,7 +226,7 @@ You may drop me bug reports or feature requests: xoops@underwood-hq.org.
 
 If there is a specific bug you are experiencing, the more information I have the better.
 
-++I;
+---
 
 Please visit us on https://xoops.org
 
