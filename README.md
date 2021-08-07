@@ -1,8 +1,16 @@
-uhqiceauth :: readme.txt
+![alt XOOPS CMS](https://xoops.org/images/logoXoopsPhp8.png)
+## uhqiceauth module for  [XOOPS CMS 2.5.10+](https://xoops.org)
+[![XOOPS CMS Module](https://img.shields.io/badge/XOOPS%20CMS-Module-blue.svg)](https://xoops.org)
+[![Software License](https://img.shields.io/badge/license-GPL-brightgreen.svg?style=flat)](https://www.gnu.org/licenses/gpl-2.0.html)
+
+[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/XoopsModules25x/uhqiceauth.svg?style=flat)](https://scrutinizer-ci.com/g/XoopsModules25x/uhqiceauth/?branch=master)
+[![Latest Pre-Release](https://img.shields.io/github/tag/XoopsModules25x/uhqiceauth.svg?style=flat)](https://github.com/XoopsModules25x/uhqiceauth/tags/)
+[![Latest Version](https://img.shields.io/github/release/XoopsModules25x/uhqiceauth.svg?style=flat)](https://github.com/XoopsModules25x/uhqiceauth/releases/)
+
 
 This document is up-to-date for UHQ-IceAuth v0.6
 
-==[ Credits ]==
+## [ Credits ]
 
 Module created and maintained by Ian A. Underwood (iunderwood).
 
@@ -11,7 +19,7 @@ Framework-free admin header as implemented by Zoullou.
 Admin EXM Icons from the Crystal Project (http://www.everaldo.com/crystal/).
 Thanks to Karl Hayes of Xiph.org for his assistance.
 
-==[ Description ]==
+## [ Description ]
 
 This module provides a mechanism by which Icecast can authenticate a listener request against your XOOPS database.
 
@@ -22,7 +30,7 @@ The IceCast KH branch is required for source authentication and intro file dispe
 
 See changelog.txt for details, and readme.txt for configuration information.
 
-==[ License ]==
+## [ License ]
 
 All source code for this module is licensed under the Creative Commons GNU General Public license.  All code is copyright 2008-2009 by Ian Underwood.  For more information, visit the following URL:
 
@@ -30,7 +38,7 @@ http://creativecommons.org/licenses/GPL/2.0/
 
 The full text of the GPL is included in license.txt.
 
-==[ The Story ]==
+## [ The Story ]
 
 While working on a demo site for an online radio station, I was doing some searches for XOOPS and Icecast and came across the "ice" module which was written for an earlier version of XOOPS sometime back in 2006 by Mark McRitchie.  I was quite giddy at the thought of be able to authenticate a test-stream for the radio station's staff.
 
@@ -38,11 +46,11 @@ To my dismay, I found that the module failed to work under XOOPS 2.3 RC, and tha
 
 As a result, I decided to make a quick rewrite of the module while recycling some of the code (and learning a couple of neat techniques in the process!).  The current version of the end product is almost completely different than the original base!  The database has been completely revamped and now can store servers, authentication, and accounting records.  Additionally, error conditions are reported back to the requesting Icecast server, making the error.log useful again.
 
-==[ IceCast Setup ]==
+## [ IceCast Setup ]
 
 The module needs to be setup on the website, and on any IceCast server you wish to configure authentication on.
 
---[ Mountpoint Configuration ]--
+### [ Mountpoint Configuration ]
 
 In order to use the listener authentication, a given icecast mountpoint must be configured to authenticate externally.  For example, the mountpoint test.ogg would use the following configuration:
 
@@ -85,7 +93,7 @@ Additionally, if you want to use authentication with relayed mountpoints (e.g. f
 
 Do note that with the current version of IceCast, using the above accounting-only option does not have any IP or User Agent information.
 
---[ Mountpoint Logging ]--
+### [ Mountpoint Logging ]
 
 The module is also capable of recording mountpoint logging information from IceCast.  The logs are simple records which only include the server, port, and mountpoint and if the mountpoint is being added or removed.  These are informational messages only, and can be useful when gauging the usage of on-demand relays.
 
@@ -98,7 +106,7 @@ They are configured per-mountpoint as follows.  You may omit the <authentication
 
 Additionally, the module stores a list of known active mounts in the database.  Do note that the list may not be accurate if a mount goes out of service and the module does not receive the message.
 
---[ Source Authentication ]--
+### [ Source Authentication ]
 
 In order to use source authentication, you need to be running an IceCast server in the KH development branch which can be found here:
 
@@ -110,9 +118,9 @@ Additionally, you need to configure the following option under the mount.  You d
     <option name="stream_auth" value="http://myserver/modules/uhqiceauth/auth.php"/>
   </authentication>
 
-==[ Module Setup ]==
+## [ Module Setup ]
 
---[ General Module Configuration ]--
+### [ General Module Configuration ]
 
 The module supports a few global options which apply to all Icecast authentication options:
 
@@ -140,7 +148,7 @@ The following options dictate how to react to an authentication request for a mo
 * Default Time Limit
   This is the time limit that will be allowed if a user passes the credential and group check for undefined mount points.  Set this to 0 to allow for an unlimited stream time.
   
---[ Managing Mountpoints ]--
+### [ Managing Mountpoints ]
 
 There are no sample servers inserted into the database when the module is first installed.  Adding servers is not a mandatory exercise for the module, but if you are interested in setting permissions based on a given mountpoint, you will need to explicitly configure each mountpoint.
 
@@ -180,7 +188,7 @@ The last four options are required for source authentication only:
 
 Editing mountpoints uses the same form.
 
---[ Managing Introductions ]--
+### [ Managing Introductions ]
 
 You may use the "Intros" tab to upload and configure introductions for use on your streams, so long as you are using an Icecast version that supports "withintro", introduced in Icecast 2.3.2-KH16.
 
@@ -190,17 +198,17 @@ Additionally, the introductions will be sent out with each successful authentica
 
 In order to upload introductions, you will need to modify the default MIME types which XOOPS understands.  This file is /class/mimetypes.inc.php, in XOOPS version < 2.4, and /include/mimetypes.inc.php in latest releases.
 
---[ Availablity Notice ]--
+### [ Availablity Notice ]
 
 Be aware, that if your XOOPS site is unavailable for any reason, you may not be able to authenticate either sources or listeners that depend on it.
 
---[ Logging ]--
+### [ Logging ]
 
 Logging functions in the module are limited to explicitly defined server/ip/mountpoint combinations only.  I did this to prevent logging data from unexpected hosts from taking up SQL space, which could introduce a denial-of-service condition.
 
 Please be sure to have adequate SQL database space in the event your station receives a lot of hits.  I have not devised a method to boil down statistics yet, but may do so if there is enough interest and I can get a good enough data set to work with.
 
---[ Statistics ]--
+### [ Statistics ]
 
 A very rudimentary set of statistics on the IceAuth data has been included since v0.3.  At some point, the statistic info developed for use with the module will be moved to another module entirely as to not clutter-up the codebase.
 
@@ -212,10 +220,14 @@ This module will also allow certain servers to be grouped together or excluded .
 
 However, if you have external access to your SQL database, you can run whatever queries you please.
 
-==[ Bug Reports ]==
+## [ Bug Reports ]
 
 You may drop me bug reports or feature requests: xoops@underwood-hq.org.
 
 If there is a specific bug you are experiencing, the more information I have the better.
 
 ++I;
+
+Please visit us on https://xoops.org
+
+Current and upcoming "next generation" versions of XOOPS CMS are crafted on GitHub at: https://github.com/XOOPS
