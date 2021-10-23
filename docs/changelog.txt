@@ -1,3 +1,12 @@
+<h5>1.00 Alpha 1   [WORK IN PROGRESS - NOT RELEASED]</h5>  Dev: XOOPS 2.5.11, PHP 7.4.22, PHP 8.0.9
+<hr>
+- namespaces (mamba)
+- class autoloading (mamba)
+- renamed 'PHP_SELF' to 'SCRIPT_NAME' (mamba)
+- Yoda
+- PHP7, PHP8 adjustments (mamba)
+- renamed .html to .tpl (mamba)
+
 ====[ v0.93 -- 2013-06-xx ]====
 
 Feature Adds
@@ -46,13 +55,13 @@ Fixes:
 Changes:
 * Module: XOOPS Frameworks are now required.
 * Module: Log reason for authentication failure in authtrail.  Reason code is numeric and is assigned as follows:
-	101: Listener UN/PW Mismatch
-	102: Listener Group Mismatch
-	201: Source UN/PW Mismatch
-	202: Source Group Mismatch
-	203: Source Undefined/Unused
-	301: Banned User Agent
-	302: Banned IP Address
+    101: Listener UN/PW Mismatch
+    102: Listener Group Mismatch
+    201: Source UN/PW Mismatch
+    202: Source Group Mismatch
+    203: Source Undefined/Unused
+    301: Banned User Agent
+    302: Banned IP Address
 * Module: Username in the authtrail is left null unless there is an actual username set.
 * Module: Collapsing a bit of redundant code.
 * Module: All admin tabs now template driven, finally.

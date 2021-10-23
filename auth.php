@@ -19,285 +19,296 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-include '../../mainfile.php';
+use XoopsModules\Uhqiceauth\{
+    Helper
+};
+/** @var Admin $adminObject */
+/** @var Helper $helper */
+
+require_once __DIR__ . '/header.php';
+
+$helper      = Helper::getInstance();
+
+require_once \dirname(__DIR__, 2) . '/mainfile.php';
 
 // Functions stored externally
-require_once XOOPS_ROOT_PATH . '/modules/uhq_iceauth/includes/sanity.php';
-require_once XOOPS_ROOT_PATH . '/modules/uhq_iceauth/includes/auth.inc.php';
+require_once $helper->path('includes/sanity.php');
+require_once $helper->path('includes/auth.inc.php');
+
+/** @var Uhqiceauth\Helper $helper */
+$helper = Uhqiceauth\Helper::getInstance();
 
 // All logging functions should be turned off for this page.
 $xoopsLogger->activated = false;
 
 // Set our global variables
 
-$iceheaders = array();	// Array which stores all the headers auth adds
-$iceheadercount = 0;	// Incrementing count of all headers
-$print_hdr = 1;			// Show header array by default.
+$iceheaders     = [];  // Array which stores all the headers auth adds
+$iceheadercount = 0;    // Incrementing count of all headers
+$print_hdr      = 1;         // Show header array by default.
 
 // Okay, we need options!
 if ($_REQUEST['action']) {
+    // Make requests sane.
+    $sane_REQUEST = uhqiceauth_dosanity();
 
-	// Make requests sane.
-	$sane_REQUEST = uhqiceauth_dosanity();
+    // Load module configuration
+    //    /** @var \XoopsModuleHandler $moduleHandler */
+    $moduleHandler = xoops_getHandler('module');
+    //    $xoopsModule       = $moduleHandler->getByDirname('uhqiceauth');
+    //    /** @var \XoopsConfigHandler $configHandler */
+    $configHandler = xoops_getHandler('config');
+    //    $xoopsModuleConfig = $configHandler->getConfigsByCat(0, $xoopsModule->getVar('mid'));
 
-	// Load module configuration
-	$modhandler			=& xoops_gethandler('module');
-	$xoopsModule		=& $modhandler->getByDirname('uhq_iceauth');
-	$config_handler		=& xoops_gethandler('config');
-	$xoopsModuleConfig	=& $config_handler->getConfigsByCat(0,$xoopsModule->getVar('mid'));
+    /** @var Uhqiceauth\Helper $helper */
+    $helper = Uhqiceauth\Helper::getInstance();
 
-	// Process Actions
-	switch ( $_REQUEST['action'] ) {
-		case "stream_auth":		// Too much common code
-		case "listener_add":
-			// Make sure we have the mount, server, port, and requesting IP.
-			if ( $sane_REQUEST['server'] && $sane_REQUEST['port'] && $sane_REQUEST['mount'] && $sane_REQUEST['ip'] ) {
+    // Process Actions
+    switch ($_REQUEST['action']) {
+        case 'stream_auth':     // Too much common code
+        case 'listener_add':
+            // Make sure we have the mount, server, port, and requesting IP.
+            if ($sane_REQUEST['server'] && $sane_REQUEST['port'] && $sane_REQUEST['mount'] && $sane_REQUEST['ip']) {
+                // Try and locate mount in DB
+                $query  = 'SELECT COUNT(*) FROM ' . $xoopsDB->prefix('uhqiceauth_servers') . ' WHERE ';
+                $query  .= "server = '" . $sane_REQUEST['server'] . "' AND port = '" . $sane_REQUEST['port'] . "' AND mount = '" . $sane_REQUEST['mount'] . "';";
+                $result = $xoopsDB->queryF($query);
+                if (false === $result) {
+                    uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_SQL);
+                    echo '<b>' . _MD_UHQICEAUTH_ERROR_SQL . '</b> ' . $query;
+                    break;
+                }
+                [$svr_count] = $xoopsDB->fetchRow($result);
 
-				// Try and locate mount in DB
-				$query = "SELECT COUNT(*) FROM ".$xoopsDB->prefix("uhqiceauth_servers")." WHERE ";
-				$query .= "server = '".$sane_REQUEST['server']."' AND port = '".$sane_REQUEST['port']."' AND mount = '".$sane_REQUEST['mount']."';";
-				$result = $xoopsDB->queryF($query);
-				if ($result == false) {
-					uhqiceauth_header ($xoopsModuleConfig['hdr_msg']._MD_UHQICEAUTH_ERROR_SQL);
-					echo "<b>"._MD_UHQICEAUTH_ERROR_SQL."</b> ".$query;
-					break;
-				} else {
-					list($svr_count) = $xoopsDB->fetchRow($result);
-				}
+                if ($svr_count) {   // If Mount Found
+                    // Load mount data, break if query fails.
+                    $query  = 'SELECT * FROM ' . $xoopsDB->prefix('uhqiceauth_servers') . ' WHERE ';
+                    $query  .= "server = '" . $sane_REQUEST['server'] . "' AND port = '" . $sane_REQUEST['port'] . "' AND mount = '" . $sane_REQUEST['mount'] . "';";
+                    $result = $xoopsDB->queryF($query);
+                    if (false === $result) {
+                        uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_SQL);
+                        echo '<b>' . _MD_UHQICEAUTH_ERROR_SQL . '</b> ' . $query;
+                        break;
+                    }
 
-				if ($svr_count) {	// If Mount Found
+                    $row                 = $xoopsDB->fetchArray($result);
+                    $row['lst_auth_grp'] = explode('|', $row['lst_auth_grp']);
+                    $row['src_auth_grp'] = explode('|', $row['src_auth_grp']);
 
-					// Load mount data, break if query fails.
-					$query = "SELECT * FROM ".$xoopsDB->prefix("uhqiceauth_servers")." WHERE ";
-					$query .= "server = '".$sane_REQUEST['server']."' AND port = '".$sane_REQUEST['port']."' AND mount = '".$sane_REQUEST['mount']."';";
-					$result = $xoopsDB->queryF($query);
-					if ($result == false) {
-						uhqiceauth_header ($xoopsModuleConfig['hdr_msg']._MD_UHQICEAUTH_ERROR_SQL);
-						echo "<b>"._MD_UHQICEAUTH_ERROR_SQL."</b> ".$query;
-						break;
-					}
+                    if ('listener_add' === $_REQUEST['action']) {
+                        // Check here to make sure the specified UA isn't banned.
+                        if (false === uhqiceauth_ua_verify($sane_REQUEST['agent'])) {
+                            uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_UABAN, 1);
+                            uhqiceauth_authlog($sane_REQUEST, 'L', false, 301);
+                            break;
+                        }
 
-					$row = $xoopsDB->fetchArray($result);
-					$row['lst_auth_grp'] = explode("|",$row['lst_auth_grp']);
-					$row['src_auth_grp'] = explode("|",$row['src_auth_grp']);
+                        // Check against username/pw.  Handling is based on mount type.
+                        $user = uhqiceauth_checkuser($sane_REQUEST['user'], $sane_REQUEST['pass']);
 
-					if ( $_REQUEST['action'] == "listener_add") {
+                        switch ($row['lst_auth_typ']) {
+                            case 'A':  // Anonymous
+                                // Reset user if auth failed.  Anonymous moutpoints don't care if the auth is correct.
+                                if (!$user) {
+                                    unset($sane_REQUEST['user']);
+                                }
+                                // Check UA Bans
+                                // Check IP Bans
 
-						// Check here to make sure the specified UA isn't banned.
-						if (uhqiceauth_ua_verify($sane_REQUEST['agent']) == false) {
-							uhqiceauth_header($xoopsModuleConfig['hdr_msg']._MD_UHQICEAUTH_ERROR_UABAN,1);
-							uhqiceauth_authlog($sane_REQUEST,'L',false,301);
-							break;
-						}
+                                // User is good if we've got no bans to consider.
 
-						// Check against username/pw.  Handling is based on mount type.
-						$user = uhqiceauth_checkuser($sane_REQUEST['user'], $sane_REQUEST['pass']);
+                                // Enforce a time limit.
+                                if ($row['timelimit'] > 0) {
+                                    uhqiceauth_header($helper->getConfig('hdr_time') . ' ' . $row['timelimit']);
+                                }
 
-						switch ($row['lst_auth_typ']) {
-							case "A" :	// Anonymous
-								// Reset user if auth failed.  Anonymous moutpoints don't care if the auth is correct.
-								if (!$user) {
-									unset ($sane_REQUEST['user']);
-								}
-								// Check UA Bans
-								// Check IP Bans
+                                // Intro Dump is last.
+                                uhqiceauth_authlog($sane_REQUEST, 'L', true);
+                                if (uhqiceauth_introdump($row, $helper->getConfig('hdr_auth'))) {
+                                    $print_hdr = 0;     // Intro dump good, supress printed header info.
+                                }
+                                break;
+                            case 'D':  // Check User
+                                if (!$user) {
+                                    uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_CRED, 1);
+                                    uhqiceauth_authlog($sane_REQUEST, 'L', false, 101);
+                                    break;
+                                }
+                                // Make sure mount groups are acceptable
+                                if (!uhqiceauth_checkgroup($user, $row['lst_auth_grp'])) {
+                                    uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_GRP, 1);
+                                    uhqiceauth_authlog($sane_REQUEST, 'L', false, 102);
+                                    break;
+                                }
+                                // Check UA Bans
+                                // Check IP Bans
 
-								// User is good if we've got no bans to consider.
+                                // Enforce Time Limit
+                                if ($row['timelimit'] > 0) {
+                                    uhqiceauth_header($helper->getConfig('hdr_time') . ' ' . $row['timelimit']);
+                                }
 
-								// Enforce a time limit.
-				  				if ($row['timelimit'] > 0) {
-				  					uhqiceauth_header($xoopsModuleConfig['hdr_time']." ".$row['timelimit']);
-				  				}
+                                // Check for and dump any intros.
+                                uhqiceauth_authlog($sane_REQUEST, 'L', true);
+                                if (uhqiceauth_introdump($row, $helper->getConfig('hdr_auth'))) {
+                                    $print_hdr = 0;     // Intro dump good, supress printed header info.
+                                }
+                                break;
+                            default:   // Error if Default
+                                uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_LSTUNDEF . $row['lst_auth_typ'], 1);
+                                break;
+                        }
+                    } else {
+                        switch ($row['src_auth_typ']) {
+                            case 'D':  // Check Database
+                                $user = uhqiceauth_checkuser($sane_REQUEST['user'], $sane_REQUEST['pass']);
+                                if (!$user) {
+                                    uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_SRCCRED, 1);
+                                    uhqiceauth_authlog($sane_REQUEST, 'S', false, 201);
+                                    break;
+                                }
+                                // Make sure mount groups are acceptable
+                                if (!uhqiceauth_checkgroup($user->Uid(), $row['src_auth_grp'])) {
+                                    uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_GRP, 1);
+                                    uhqiceauth_authlog($sane_REQUEST, 'S', false, 202);
+                                    break;
+                                }
+                                // Report good if we've gotten this far.
+                                uhqiceauth_header($helper->getConfig('hdr_auth'), 1);
+                                uhqiceauth_authlog($sane_REQUEST, 'S', true);
+                                break;
+                            case 'S':  // Static Definition
+                                if (($row['src_auth_un'] == $sane_REQUEST['user'])
+                                    && ($row['src_auth_pw'] == $sane_REQUEST['pass'])) {
+                                    uhqiceauth_header($helper->getConfig('hdr_auth'), 1);
+                                    uhqiceauth_authlog($sane_REQUEST, 'S', true);
+                                } else {
+                                    uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_SRCCRED, 1);
+                                    uhqiceauth_authlog($sane_REQUEST, 'S', false, 201);
+                                }
+                                break;
+                            case 'N':  // Not Used
+                                uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_SRCNOAUTH . $row['src_auth_typ'], 1);
+                                uhqiceauth_authlog($sane_REQUEST, 'S', false, 203);
+                                break;
+                            default:
+                                uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_SRCUNDEF . $row['src_auth_typ'], 1);
+                                uhqiceauth_authlog($sane_REQUEST, 'S', false, 203);
+                                break;
+                        }
+                    }
+                } else {            // If Mount not found ...
+                    if ('listener_add' === $_REQUEST['action']) {
+                        switch ($helper->getConfig('undef_action')) {
+                            case 'D': // Check against DB and default groups
+                                // Make sure we have all the parameters we need
+                                if ($sane_REQUEST['user'] && $sane_REQUEST['pass']) {
+                                    // Make sure user is okay
+                                    $user = uhqiceauth_checkuser($sane_REQUEST['user'], $sane_REQUEST['pass']);
+                                    if (!$user) {
+                                        uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_CRED, 1);
+                                        break;
+                                    }
+                                    // Make sure mount groups are acceptable
+                                    if (!uhqiceauth_checkgroup($user->Uid(), $helper->getConfig('undef_group'))) {
+                                        uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_GRP, 1);
+                                        break;
+                                    }
+                                    // Report good if we've gotten this far.
+                                    uhqiceauth_header($helper->getConfig('hdr_auth'), 1);
 
-								// Intro Dump is last.
-								uhqiceauth_authlog($sane_REQUEST,'L',true);
-								if (uhqiceauth_introdump($row,$xoopsModuleConfig['hdr_auth'])) {
-									$print_hdr = 0;		// Intro dump good, supress printed header info.
-								}
-								break;
-							case "D" :	// Check User
-								if ( !$user ) {
-									uhqiceauth_header ($xoopsModuleConfig['hdr_msg']._MD_UHQICEAUTH_ERROR_CRED,1);
-					  				uhqiceauth_authlog($sane_REQUEST,'L',false,101);
-									break;
-								}
-								// Make sure mount groups are acceptable
-				  				if (! uhqiceauth_checkgroup($user,$row['lst_auth_grp']) ) {
-				  					uhqiceauth_header ($xoopsModuleConfig['hdr_msg']._MD_UHQICEAUTH_ERROR_GRP,1);
-						  			uhqiceauth_authlog($sane_REQUEST,'L',false,102);
-			  						break;
-			  					}
-								// Check UA Bans
-								// Check IP Bans
+                                    // Add time limit if we're using it
+                                    if ($helper->getConfig('undef_time') > 0) {
+                                        uhqiceauth_header($helper->getConfig('hdr_time') . ' ' . $helper->getConfig('undef_time'), 1);
+                                    }
+                                } else {
+                                    uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_UNPW, 1);
+                                }
+                                break;
+                            case 'A': // Always Allow
+                                uhqiceauth_header($helper->getConfig('hdr_auth'), 1);
 
-					  			// Enforce Time Limit
-				  				if ($row['timelimit'] > 0) {
-				  					uhqiceauth_header($xoopsModuleConfig['hdr_time']." ".$row['timelimit']);
-				  				}
+                                // Add time limit if we're using it
+                                if ($helper->getConfig('undef_time') > 0) {
+                                    uhqiceauth_header($helper->getConfig('hdr_time') . ' ' . $helper->getConfig('undef_time'), 1);
+                                }
+                                break;
+                            default: // Never Allow
+                                uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_UNDEF . ' ' . $sane_REQUEST['mount'], 1);
+                                break;
+                        }
+                    } else {
+                        uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_SRCREQ . $sane_REQUEST['mount'], 1);
+                    }
+                }
+            } else {
+                uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_PARAM, 1);
+            }
+            break;
+        case 'listener_remove':
+            if ($sane_REQUEST['server'] && $sane_REQUEST['port'] && $sane_REQUEST['mount']
+                && $sane_REQUEST['duration']) {
+                // Locate Mount in DB
+                $query  = 'SELECT COUNT(*) FROM ' . $xoopsDB->prefix('uhqiceauth_servers') . ' WHERE ';
+                $query  .= "server = '" . $sane_REQUEST['server'] . "' AND port = '" . $sane_REQUEST['port'] . "' AND mount = '" . $sane_REQUEST['mount'] . "';";
+                $result = $xoopsDB->queryF($query);
+                if (false === $result) {
+                    uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_SQL, 1);
+                    echo '<b>' . _MD_UHQICEAUTH_ERROR_SQL . '</b> ' . $query;
+                    break;
+                }
+                [$svr_count] = $xoopsDB->fetchRow($result);
 
-								// Check for and dump any intros.
-								uhqiceauth_authlog($sane_REQUEST,'L',true);
-								if (uhqiceauth_introdump($row,$xoopsModuleConfig['hdr_auth'])) {
-									$print_hdr = 0;		// Intro dump good, supress printed header info.
-								}
-								break;
-							default :	// Error if Default
-								uhqiceauth_header($xoopsModuleConfig['hdr_msg']._MD_UHQICEAUTH_ERROR_LSTUNDEF.$row['lst_auth_typ'],1);
-								break;
-						}
-					} else {
-						switch ($row['src_auth_typ']) {
-							case "D" :	// Check Database
-								$user = uhqiceauth_checkuser($sane_REQUEST['user'], $sane_REQUEST['pass']);
-								if ( !$user ) {
-									uhqiceauth_header ($xoopsModuleConfig['hdr_msg']._MD_UHQICEAUTH_ERROR_SRCCRED,1);
-									uhqiceauth_authlog($sane_REQUEST,'S',false,201);
-									break;
-								}
-				  				// Make sure mount groups are acceptable
-				  				if (! uhqiceauth_checkgroup($user->Uid(),$row['src_auth_grp']) ) {
-				  					uhqiceauth_header ($xoopsModuleConfig['hdr_msg']._MD_UHQICEAUTH_ERROR_GRP,1);
-									uhqiceauth_authlog($sane_REQUEST,'S',false,202);
-			  						break;
-			  					}
-					  			// Report good if we've gotten this far.
-					  			uhqiceauth_header($xoopsModuleConfig['hdr_auth'],1);
-								uhqiceauth_authlog($sane_REQUEST,'S',true);
-								break;
-							case "S" :	// Static Definition
-								if ( ($row['src_auth_un'] == $sane_REQUEST['user'] ) && ($row['src_auth_pw'] == $sane_REQUEST['pass']) ) {
-									uhqiceauth_header($xoopsModuleConfig['hdr_auth'],1);
-									uhqiceauth_authlog($sane_REQUEST,'S',true);
-								} else {
-									uhqiceauth_header($xoopsModuleConfig['hdr_msg']._MD_UHQICEAUTH_ERROR_SRCCRED,1);
-									uhqiceauth_authlog($sane_REQUEST,'S',false,201);
-								}
-								break;
-							case "N" :  // Not Used
-								uhqiceauth_header($xoopsModuleConfig['hdr_msg']._MD_UHQICEAUTH_ERROR_SRCNOAUTH.$row['src_auth_typ'],1);
-								uhqiceauth_authlog($sane_REQUEST,'S',false,203);
-								break;
-							default:
-								uhqiceauth_header($xoopsModuleConfig['hdr_msg']._MD_UHQICEAUTH_ERROR_SRCUNDEF.$row['src_auth_typ'],1);
-								uhqiceauth_authlog($sane_REQUEST,'S',false,203);
-								break;
-						}
-					}
-				} else {			// If Mount not found ...
-					if ( $_REQUEST['action'] == "listener_add") {
-						switch ($xoopsModuleConfig['undef_action'] ) {
-							case "D" : // Check against DB and default groups
-								// Make sure we have all the parameters we need
-							  	if ( $sane_REQUEST['user'] && $sane_REQUEST['pass'] ) {
-									// Make sure user is okay
-									$user = uhqiceauth_checkuser($sane_REQUEST['user'], $sane_REQUEST['pass']);
-									if ( !$user ) {
-										uhqiceauth_header ($xoopsModuleConfig['hdr_msg']._MD_UHQICEAUTH_ERROR_CRED,1);
-										break;
-									}
-				  					// Make sure mount groups are acceptable
-				  					if (! uhqiceauth_checkgroup($user->Uid(),$xoopsModuleConfig['undef_group']) ) {
-				  						uhqiceauth_header ($xoopsModuleConfig['hdr_msg']._MD_UHQICEAUTH_ERROR_GRP,1);
-				  						break;
-		  							}
-				  					// Report good if we've gotten this far.
-				  					uhqiceauth_header($xoopsModuleConfig['hdr_auth'],1);
+                if ($svr_count) {   // If Mount Found
+                    // Log only explicitly defined mounts.
+                    uhqiceauth_header($helper->getConfig('hdr_auth'), 1);
+                    uhqiceauth_acctlog($sane_REQUEST);
+                } else {
+                    uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_UNDEF . $sane_REQUEST['mount'], 1);
+                }
+            } else {
+                uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_PARAM, 1);
+            }
+            break;
+        case 'mount_add':
+        case 'mount_remove':
+            if ($sane_REQUEST['server'] && $sane_REQUEST['port'] && $sane_REQUEST['mount']) {
+                // Locate Mount in DB
+                $query  = 'SELECT COUNT(*) FROM ' . $xoopsDB->prefix('uhqiceauth_servers') . ' WHERE ';
+                $query  .= "server = '" . $sane_REQUEST['server'] . "' AND port = '" . $sane_REQUEST['port'] . "' AND mount = '" . $sane_REQUEST['mount'] . "';";
+                $result = $xoopsDB->queryF($query);
+                if (false === $result) {
+                    uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_SQL, 1);
+                    echo '<b>' . _MD_UHQICEAUTH_ERROR_SQL . '</b> ' . $query;
+                    break;
+                }
+                [$svr_count] = $xoopsDB->fetchRow($result);
 
-				  					// Add time limit if we're using it
-		  							if ($xoopsModuleConfig['undef_time'] > 0 ) {
-		  								uhqiceauth_header($xoopsModuleConfig['hdr_time']." ".$xoopsModuleConfig['undef_time'],1);
-			  						}
-			  	  				} else {
-				  					uhqiceauth_header ($xoopsModuleConfig['hdr_msg']._MD_UHQICEAUTH_ERROR_UNPW,1);
-					  			}
-						  		break;
-				  			case "A" : // Always Allow
-								uhqiceauth_header ($xoopsModuleConfig['hdr_auth'],1);
+                if ($svr_count) {   // If Mount Found
+                    // Log only explicitly defined mounts.
+                    uhqiceauth_header($helper->getConfig('hdr_auth'), 1);
+                    uhqiceauth_mountlog($sane_REQUEST);
+                } else {
+                    uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_UNDEF . $sane_REQUEST['mount'], 1);
+                }
+            } else {
+                uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_PARAM, 1);
+            }
+            break;
+        case 'test':
+            uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_TEST, 1);
+            break;
+        default:
+            uhqiceauth_header($helper->getConfig('hdr_msg') . _MD_UHQICEAUTH_ERROR_ACTU, 1);
+            break;
+    }
 
-			  					// Add time limit if we're using it
-	  							if ($xoopsModuleConfig['undef_time'] > 0 ) {
-	  								uhqiceauth_header($xoopsModuleConfig['hdr_time']." ".$xoopsModuleConfig['undef_time'],1);
-		  						}
-								break;
-							default: // Never Allow
-								uhqiceauth_header ($xoopsModuleConfig['hdr_msg']._MD_UHQICEAUTH_ERROR_UNDEF." ".$sane_REQUEST['mount'],1);
-								break;
-			  			}
-			  		} else {
-			  			uhqiceauth_header($xoopsModuleConfig['hdr_msg']._MD_UHQICEAUTH_ERROR_SRCREQ.$sane_REQUEST['mount'],1);
-			  		}
-				}
-			} else {
-				uhqiceauth_header($xoopsModuleConfig['hdr_msg']._MD_UHQICEAUTH_ERROR_PARAM,1);
-			}
-			break;
-		case "listener_remove":
-			if ( $sane_REQUEST['server'] && $sane_REQUEST['port'] && $sane_REQUEST['mount'] && $sane_REQUEST['duration'] ) {
-				// Locate Mount in DB
-				$query = "SELECT COUNT(*) FROM ".$xoopsDB->prefix("uhqiceauth_servers")." WHERE ";
-				$query .= "server = '".$sane_REQUEST['server']."' AND port = '".$sane_REQUEST['port']."' AND mount = '".$sane_REQUEST['mount']."';";
-				$result = $xoopsDB->queryF($query);
-				if ($result == false) {
-					uhqiceauth_header ($xoopsModuleConfig['hdr_msg']._MD_UHQICEAUTH_ERROR_SQL,1);
-					echo "<b>"._MD_UHQICEAUTH_ERROR_SQL."</b> ".$query;
-					break;
-				} else {
-					list($svr_count) = $xoopsDB->fetchRow($result);
-				}
-
-				if ($svr_count) {	// If Mount Found
-					// Log only explicitly defined mounts.
-					uhqiceauth_header($xoopsModuleConfig['hdr_auth'],1);
-					uhqiceauth_acctlog($sane_REQUEST);
-				} else {
-					uhqiceauth_header($xoopsModuleConfig['hdr_msg']._MD_UHQICEAUTH_ERROR_UNDEF.$sane_REQUEST['mount'],1);
-				}
-			} else {
-				uhqiceauth_header($xoopsModuleConfig['hdr_msg']._MD_UHQICEAUTH_ERROR_PARAM,1);
-			}
-			break;
-		case "mount_add":
-		case "mount_remove":
-			if ( $sane_REQUEST['server'] && $sane_REQUEST['port'] && $sane_REQUEST['mount'] ) {
-				// Locate Mount in DB
-				$query = "SELECT COUNT(*) FROM ".$xoopsDB->prefix("uhqiceauth_servers")." WHERE ";
-				$query .= "server = '".$sane_REQUEST['server']."' AND port = '".$sane_REQUEST['port']."' AND mount = '".$sane_REQUEST['mount']."';";
-				$result = $xoopsDB->queryF($query);
-				if ($result == false) {
-					uhqiceauth_header ($xoopsModuleConfig['hdr_msg']._MD_UHQICEAUTH_ERROR_SQL,1);
-					echo "<b>"._MD_UHQICEAUTH_ERROR_SQL."</b> ".$query;
-					break;
-				} else {
-					list($svr_count) = $xoopsDB->fetchRow($result);
-				}
-				if ($svr_count) {	// If Mount Found
-					// Log only explicitly defined mounts.
-					uhqiceauth_header($xoopsModuleConfig['hdr_auth'],1);
-					uhqiceauth_mountlog($sane_REQUEST);
-				} else {
-					uhqiceauth_header($xoopsModuleConfig['hdr_msg']._MD_UHQICEAUTH_ERROR_UNDEF.$sane_REQUEST['mount'],1);
-				}
-			} else {
-				uhqiceauth_header($xoopsModuleConfig['hdr_msg']._MD_UHQICEAUTH_ERROR_PARAM,1);
-			}
-			break;
-		case "test":
-			uhqiceauth_header($xoopsModuleConfig['hdr_msg']._MD_UHQICEAUTH_ERROR_TEST,1);
-			break;
-		default:
-			uhqiceauth_header($xoopsModuleConfig['hdr_msg']._MD_UHQICEAUTH_ERROR_ACTU,1);
-			break;
-	}
-
-	if ($print_hdr) {
-		echo "<pre>";
-		echo"IceAuth Header ";
-		print_r($iceheaders);
-		echo "</pre>";
-	}
-
+    if ($print_hdr) {
+        echo '<pre>';
+        echo 'IceAuth Header ';
+        print_r($iceheaders);
+        echo '</pre>';
+    }
 } else {
-
-  echo ("This file is not meant to be called directly.");
-
+    echo('This file is not meant to be called directly.');
 }

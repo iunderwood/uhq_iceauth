@@ -19,21 +19,30 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-include_once dirname(__FILE__) . '/admin_header.php';
+use Xmf\Module\Admin;
+use XoopsModules\Uhqiceauth\{
+    Helper
+};
+/** @var Admin $adminObject */
+/** @var Helper $helper */
+
+require_once __DIR__ . '/admin_header.php';
+
+$helper      = Helper::getInstance();
 
 if (!isset($xoopsTpl)) {
-	$xoopsTpl = new XoopsTpl();
+    $xoopsTpl = new \XoopsTpl();
 }
-$xoopsTpl->caching=0;
+$xoopsTpl->caching = 0;
 
-include XOOPS_ROOT_PATH . "/modules/uhq_iceauth/includes/sanity.php";
-include XOOPS_ROOT_PATH . "/modules/uhq_iceauth/admin/functions.inc.php";
-include XOOPS_ROOT_PATH . "/class/xoopsformloader.php";
+require_once $helper->path('includes/sanity.php');
+require_once $helper->path('admin/functions.inc.php');
+require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
 
 xoops_cp_header();
-$mainAdmin = new ModuleAdmin();
-echo $mainAdmin->addNavigation('ipbans.php');
+$adminObject = Admin::getInstance();
+$adminObject->displayNavigation(basename(__FILE__));
 
-echo "Nothing here ... yet.";
+echo 'Nothing here ... yet.';
 
-include_once dirname(__FILE__) . '/admin_footer.php';
+require_once __DIR__ . '/admin_footer.php';

@@ -10,21 +10,48 @@
  */
 
 /**
- * @copyright    The XOOPS Project http://sourceforge.net/projects/xoops/
- * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
- * @package
- * @since
- * @author     XOOPS Development Team
- * @version    $Id $
+ * @copyright    XOOPS Project (https://xoops.org)
+ * @license      GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
+ * @author      XOOPS Development Team
  */
 
-require_once dirname(dirname(dirname(dirname(__FILE__)))) . '/include/cp_header.php';
-include_once dirname(__FILE__) . '/admin_header.php';
+use Xmf\Module\Admin;
+use Xmf\Request;
+use Xmf\Yaml;
+use XoopsModules\Uhqiceauth\{
+    Common,
+    Common\TestdataButtons,
+    Forms,
+    Helper,
+    Utility
+};
+
+/** @var Admin $adminObject */
+/** @var Helper $helper */
+/** @var Utility $utility */
+
+require_once __DIR__ . '/admin_header.php';
 
 xoops_cp_header();
-$indexAdmin = new ModuleAdmin();
-echo $indexAdmin->addNavigation('index.php');
+$adminObject = Admin::getInstance();
+$adminObject->displayNavigation(basename(__FILE__));
 
-echo $indexAdmin->renderIndex();
+//------------- Test Data Buttons ----------------------------
+if ($helper->getConfig('displaySampleButton')) {
+    TestdataButtons::loadButtonConfig($adminObject);
+    $adminObject->displayButton('left', '');
+}
+$op = Request::getString('op', 0, 'GET');
+switch ($op) {
+    case 'hide_buttons':
+        TestdataButtons::hideButtons();
+        break;
+    case 'show_buttons':
+        TestdataButtons::showButtons();
+        break;
+}
+//------------- End Test Data Buttons ----------------------------
 
-include_once dirname(__FILE__) . '/admin_footer.php';
+$adminObject->displayIndex();
+
+require_once __DIR__ . '/admin_footer.php';

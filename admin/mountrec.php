@@ -21,102 +21,112 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // Admin page setup.
 
-include_once dirname(__FILE__) . '/admin_header.php';
+use Xmf\Module\Admin;
+use Xmf\Request;
+use XoopsModules\Uhqiceauth\{
+    Helper
+};
+/** @var Admin $adminObject */
+/** @var Helper $helper */
+
+require_once __DIR__ . '/admin_header.php';
+
+$helper      = Helper::getInstance();
 
 if (!isset($xoopsTpl)) {
-	$xoopsTpl = new XoopsTpl();
+    $xoopsTpl = new \XoopsTpl();
 }
-$xoopsTpl->caching=0;
+$xoopsTpl->caching = 0;
 
 // Load Admin Includes
 
-require_once dirname(__FILE__) . "/functions.inc.php";
+require_once __DIR__ . '/functions.inc.php';
 
-require_once XOOPS_ROOT_PATH . "/modules/uhq_iceauth/includes/sanity.php";
-require_once XOOPS_ROOT_PATH . "/modules/uhq_iceauth/includes/functions.php";
+require_once $helper->path('includes/sanity.php');
+require_once $helper->path('includes/functions.php');
 
 // Assign default operator
 
-if ( isset($_REQUEST['op']) ) {
-	$op = $_REQUEST['op'];
+if (Request::hasVar('op', 'REQUEST')) {
+    $op = $_REQUEST['op'];
 } else {
-	$op = "none";
+    $op = 'none';
 }
 
 $sane_REQUEST = uhqiceauth_dosanity();
 
-function uhqiceauth_mount($start, $limit, $orderby) {
-	global $xoopsDB;
+function uhqiceauth_mount($start, $limit, $orderby)
+{
+    global $xoopsDB;
 
-	$query = "SELECT * FROM ".$xoopsDB->prefix('uhqiceauth_mountlog');
-	$query .= " ORDER BY sequence ".$orderby." LIMIT ".$start.", ".$limit;
+    $query = 'SELECT * FROM ' . $xoopsDB->prefix('uhqiceauth_mountlog');
+    $query .= ' ORDER BY sequence ' . $orderby . ' LIMIT ' . $start . ', ' . $limit;
 
-	$result = $xoopsDB->queryF($query);
-	if ($result == false) {
-		// Return nothing on a DB error.
-		return;
-	} else {
-		$i=0;
-		$data = array();
+    $result = $xoopsDB->queryF($query);
+    if (false === $result) {
+        // Return nothing on a DB error.
+        return null;
+    }
+    $i    = 0;
+    $data = [];
 
-		$data['start'] = $start;
-		$data['limit'] = $limit;
-		$data['sort'] = $orderby;
+    $data['start'] = $start;
+    $data['limit'] = $limit;
+    $data['sort']  = $orderby;
 
-		while ($row = $xoopsDB->fetchArray($result) ) {
-			$data['list'][$i] = $row;
-			$i++;
-		}
-		return $data;
-	}
+    while (false !== ($row = $xoopsDB->fetchArray($result))) {
+        $data['list'][$i] = $row;
+        $i++;
+    }
+
+    return $data;
 }
 
 switch ($op) {
-	case "clearmount":
-		if ( isset($sane_REQUEST['server']) && isset($sane_REQUEST['port']) && isset ($sane_REQUEST['mount']) ) {
-			global $xoopsDB;
+    case 'clearmount':
+        if (isset($sane_REQUEST['server']) && isset($sane_REQUEST['port']) && isset($sane_REQUEST['mount'])) {
+            global $xoopsDB;
 
-			$query = "DELETE FROM ".$xoopsDB->prefix('uhqiceauth_activemounts');
-			$query .= " WHERE server='".$sane_REQUEST['server']."'";
-			$query .= " AND port='".$sane_REQUEST['port']."'";
-			$query .= " AND mount='".$sane_REQUEST['mount']."'";
+            $query = 'DELETE FROM ' . $xoopsDB->prefix('uhqiceauth_activemounts');
+            $query .= " WHERE server='" . $sane_REQUEST['server'] . "'";
+            $query .= " AND port='" . $sane_REQUEST['port'] . "'";
+            $query .= " AND mount='" . $sane_REQUEST['mount'] . "'";
 
-			$result = $xoopsDB->queryF($query);
-			if ($result == false) {
-				$headerinfo = _AM_UHQICEAUTH_SQLERR.$query."<br/>".$xoopsDB->error();
-			} else {
-				$headerinfo = _AM_UHQICEAUTH_DELETEDMOUNT.$sane_REQUEST['server'].":".$sane_REQUEST['port'].$sane_REQUEST['mount']._AM_UHQICEAUTH_SUCCESSFULLY;
-			}
-		} else {
-			$headerinfo = _AM_UHQICEAUTH_PARAMERR;
-		}
+            $result = $xoopsDB->queryF($query);
+            if (false === $result) {
+                $headerinfo = _AM_UHQICEAUTH_SQLERR . $query . '<br>' . $xoopsDB->error();
+            } else {
+                $headerinfo = _AM_UHQICEAUTH_DELETEDMOUNT . $sane_REQUEST['server'] . ':' . $sane_REQUEST['port'] . $sane_REQUEST['mount'] . _AM_UHQICEAUTH_SUCCESSFULLY;
+            }
+        } else {
+            $headerinfo = _AM_UHQICEAUTH_PARAMERR;
+        }
 
-		// Redirect to main page when delete is done.
+        // Redirect to main page when delete is done.
 
-		redirect_header("mountrec.php",10,$headerinfo);
-		break;
+        redirect_header('mountrec.php', 10, $headerinfo);
+        break;
+    case 'none':
+    default:
+        xoops_cp_header();
+        $adminObject = Admin::getInstance();
+        $adminObject->displayNavigation(basename(__FILE__));
 
-	case "none":
-	default:
-		xoops_cp_header();
-		$mainAdmin = new ModuleAdmin();
-		echo $mainAdmin->addNavigation('mountrec.php');
+        // Mountpoint Record Info
+        $data['mlcount'] = uhqiceauth_summarycount('ML');
+        if ($data['mlcount'] > 0) {
+            $data['mldata'] = uhqiceauth_mount(0, 10, 'DESC');
+        }
 
-		// Mountpoint Record Info
-		$data['mlcount'] = uhqiceauth_summarycount("ML");
-		if ( $data['mlcount'] > 0 ) {
-			$data['mldata'] = uhqiceauth_mount(0,10,"DESC");
-		}
+        // Active Mountpoint infos
+        $data['amcount'] = uhqiceauth_summarycount('AM');
+        if ($data['amcount'] > 0) {
+            $data['amdata'] = uhqiceauth_raw_activemounts();
+        }
 
-		// Active Mountpoint infos
-		$data['amcount'] = uhqiceauth_summarycount("AM");
-		if ( $data['amcount'] > 0 ) {
-			$data['amdata'] = uhqiceauth_raw_activemounts();
-		}
+        // Assign & Render Template
+        $xoopsTpl->assign('data', $data);
+        $xoopsTpl->display('db:admin/uhqiceauth_mountrec.tpl');
 
-		// Assign & Render Template
-		$xoopsTpl->assign('data',$data);
-		$xoopsTpl->display("db:admin/uhqiceauth_mountrec.html");
-
-		include_once dirname(__FILE__) . '/admin_footer.php';
+        require_once __DIR__ . '/admin_footer.php';
 }

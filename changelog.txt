@@ -1,4 +1,4 @@
-uhq_iceauth :: changelog.txt
+uhqiceauth :: changelog.txt
 
 ==[ Known Issues ]==
 

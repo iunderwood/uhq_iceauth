@@ -19,157 +19,165 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-include_once dirname(__FILE__) . '/admin_header.php';
+use Xmf\Module\Admin;
+use Xmf\Request;
+
+require_once __DIR__ . '/admin_header.php';
 
 if (!isset($xoopsTpl)) {
-	$xoopsTpl = new XoopsTpl();
+    $xoopsTpl = new \XoopsTpl();
 }
-$xoopsTpl->caching=0;
+$xoopsTpl->caching = 0;
 
 // Load required includes
 
-require_once XOOPS_ROOT_PATH . "/modules/uhq_iceauth/includes/sanity.php";
-include_once dirname(__FILE__) . '/functions.inc.php';
+require_once $helper->path('includes/sanity.php');
+require_once __DIR__ . '/functions.inc.php';
 
 // Now the fun begins!
 
-if ( isset($_REQUEST['op']) ) {
-	$op = $_REQUEST['op'];
+if (Request::hasVar('op', 'REQUEST')) {
+    $op = $_REQUEST['op'];
 } else {
-	$op = "none";
+    $op = 'none';
 }
 
 $sane_REQUEST = uhqiceauth_dosanity();
 
-function uhqiceauth_acct_agentsumconn($limit=10,$days=0) {
-	global $xoopsDB;
+function uhqiceauth_acct_agentsumconn($limit = 10, $days = 0)
+{
+    global $xoopsDB;
 
-	$data = array();
+    $data = [];
 
-	// Summary List
-	$query = "SELECT useragent, COUNT(useragent) AS total FROM ".$xoopsDB->prefix('uhqiceauth_authtrail');
-	$query .= " WHERE authtype = 'L' ";
-	if ($days) {
-		$query .= " AND logtime > SUBDATE( NOW(), INTERVAL ".$days." DAY)";
-	}
-	$query .= " GROUP BY useragent ORDER BY total DESC";
-	if ($limit) {
-		$query .= " LIMIT ".$limit;
-	}
-	$result = $xoopsDB->queryF($query);
+    // Summary List
+    $query = 'SELECT useragent, COUNT(useragent) AS total FROM ' . $xoopsDB->prefix('uhqiceauth_authtrail');
+    $query .= " WHERE authtype = 'L' ";
+    if ($days) {
+        $query .= ' AND logtime > SUBDATE( NOW(), INTERVAL ' . $days . ' DAY)';
+    }
+    $query .= ' GROUP BY useragent ORDER BY total DESC';
+    if ($limit) {
+        $query .= ' LIMIT ' . $limit;
+    }
+    $result = $xoopsDB->queryF($query);
 
-	if (!$result) {
-		$data['error'] = _AM_UHQICEAUTH_SQLERR.$query." [".$xoopsDB->error()."]";
-		return $data;
-	}
+    if (!$result) {
+        $data['error'] = _AM_UHQICEAUTH_SQLERR . $query . ' [' . $xoopsDB->error() . ']';
 
-	$data['limit'] = $limit;
-	$data['days'] = $days;
+        return $data;
+    }
 
-	$i=0;
-	while ($row = $xoopsDB->fetchArray($result) ) {
-		$data['ua'][$i] = $row;
-		$i++;
-	}
+    $data['limit'] = $limit;
+    $data['days']  = $days;
 
-	return $data;
+    $i = 0;
+    while (false !== ($row = $xoopsDB->fetchArray($result))) {
+        $data['ua'][$i] = $row;
+        $i++;
+    }
+
+    return $data;
 }
 
-function uhqiceauth_acct_agentsumtime($limit=10, $days=0) {
-	global $xoopsDB;
+function uhqiceauth_acct_agentsumtime($limit = 10, $days = 0)
+{
+    global $xoopsDB;
 
-	// Summary List
-	$query = "SELECT useragent, SUM(duration) AS duration FROM ".$xoopsDB->prefix('uhqiceauth_authtrail');
-	$query .= " WHERE authtype = 'L' AND duration > 0 ";
-	if ($days) {
-		$query .= " AND logtime > SUBDATE( NOW(), INTERVAL ".$days." DAY)";
-	}
-	$query .= " GROUP BY useragent ORDER BY duration DESC";
-	if ($limit) {
-		$query .= " LIMIT ".$limit;
-	}
+    // Summary List
+    $query = 'SELECT useragent, SUM(duration) AS duration FROM ' . $xoopsDB->prefix('uhqiceauth_authtrail');
+    $query .= " WHERE authtype = 'L' AND duration > 0 ";
+    if ($days) {
+        $query .= ' AND logtime > SUBDATE( NOW(), INTERVAL ' . $days . ' DAY)';
+    }
+    $query .= ' GROUP BY useragent ORDER BY duration DESC';
+    if ($limit) {
+        $query .= ' LIMIT ' . $limit;
+    }
 
-	$result = $xoopsDB->queryF($query);
+    $result = $xoopsDB->queryF($query);
 
-	if (!$result) {
-		$data['error'] = _AM_UHQICEAUTH_SQLERR.$query." [".$xoopDB->error()."]";
-		return;
-	}
+    if (!$result) {
+        $data['error'] = _AM_UHQICEAUTH_SQLERR . $query . ' [' . $xoopDB->error() . ']';
 
-	$data['limit'] = $limit;
-	$data['days'] = $days;
+        return null;
+    }
 
-	$i=0;
+    $data['limit'] = $limit;
+    $data['days']  = $days;
 
-	while ($row = $xoopsDB->fetchArray($result) ) {
-		$data['ua'][$i] = $row;
-		$data['ua'][$i]['time'] = uhqiceauth_time($row['duration']);
-		$i++;
-	}
+    $i = 0;
 
-	return $data;
+    while (false !== ($row = $xoopsDB->fetchArray($result))) {
+        $data['ua'][$i]         = $row;
+        $data['ua'][$i]['time'] = uhqiceauth_time($row['duration']);
+        $i++;
+    }
+
+    return $data;
 }
 
 // Return connections, ttsl, and average connect time in a specific interval.
 
-function uhqiceauth_ttsl($interval = null) {
-	global $xoopsDB;
+function uhqiceauth_ttsl($interval = null)
+{
+    global $xoopsDB;
 
-	// Construct query
+    // Construct query
 
-	$query = "SELECT SUM(duration) AS total, AVG(duration) AS average, COUNT(duration) AS count ";
-	$query .= "FROM ( ";
- 	$query .= "SELECT duration FROM ".$xoopsDB->prefix('uhqiceauth_authtrail')." y WHERE ";
+    $query = 'SELECT SUM(duration) AS total, AVG(duration) AS average, COUNT(duration) AS count ';
+    $query .= 'FROM ( ';
+    $query .= 'SELECT duration FROM ' . $xoopsDB->prefix('uhqiceauth_authtrail') . ' y WHERE ';
 
-	if ($interval) {
-		$query .= "logtime > SUBDATE( NOW(), INTERVAL ".$interval.") ";
-	} else {
-		$query .= "DATE(logtime) = DATE( NOW() ) ";
-	}
+    if ($interval) {
+        $query .= 'logtime > SUBDATE( NOW(), INTERVAL ' . $interval . ') ';
+    } else {
+        $query .= 'DATE(logtime) = DATE( NOW() ) ';
+    }
 
- 	$query .= ") z";
+    $query .= ') z';
 
-	// Get Result
+    // Get Result
 
-	$result = $xoopsDB->queryF($query);
- 	if (!$result) {
-		return null;
-	}
-	$row = $xoopsDB->fetchArray($result);
+    $result = $xoopsDB->queryF($query);
+    if (!$result) {
+        return null;
+    }
+    $row = $xoopsDB->fetchArray($result);
 
-	$row['ttsl'] = uhqiceauth_time( intval($row['total']));
-	$row['avg'] = uhqiceauth_time( intval($row['average']));
+    $row['ttsl'] = uhqiceauth_time((int)$row['total']);
+    $row['avg']  = uhqiceauth_time((int)$row['average']);
 
-	return $row;
+    return $row;
 }
 
 xoops_cp_header();
-$mainAdmin = new ModuleAdmin();
-echo $mainAdmin->addNavigation('acctrec.php');
+$adminObject = Admin::getInstance();
+$adminObject->displayNavigation(basename(__FILE__));
 
-$data = array();
+$data = [];
 
-$data['duacount'] = uhqiceauth_summarycount("DUA");
+$data['duacount'] = uhqiceauth_summarycount('DUA');
 
 if ($data['duacount']) {
-	$data['listbyconn'] = uhqiceauth_acct_agentsumconn(10,90);
-	$data['listbytime'] = uhqiceauth_acct_agentsumtime(10,90);
+    $data['listbyconn'] = uhqiceauth_acct_agentsumconn(10, 90);
+    $data['listbytime'] = uhqiceauth_acct_agentsumtime(10, 90);
 }
 
-$data['ttsl'][0] = uhqiceauth_ttsl();
-$data['ttsl'][0]['name'] = _AM_UHQICEAUTH_STATS_TTSL_TODAY.date("Y-m-d, H:i:s");
+$data['ttsl'][0]         = uhqiceauth_ttsl();
+$data['ttsl'][0]['name'] = _AM_UHQICEAUTH_STATS_TTSL_TODAY . date('Y-m-d, H:i:s');
 
-$data['ttsl'][1] = uhqiceauth_ttsl("1 DAY");
+$data['ttsl'][1]         = uhqiceauth_ttsl('1 DAY');
 $data['ttsl'][1]['name'] = _AM_UHQICEAUTH_STATS_TTSL_24H;
 
-$data['ttsl'][2] = uhqiceauth_ttsl("7 DAY");
+$data['ttsl'][2]         = uhqiceauth_ttsl('7 DAY');
 $data['ttsl'][2]['name'] = _AM_UHQICEAUTH_STATS_TTSL_7D;
 
-$data['ttsl'][3] = uhqiceauth_ttsl("30 DAY");
+$data['ttsl'][3]         = uhqiceauth_ttsl('30 DAY');
 $data['ttsl'][3]['name'] = _AM_UHQICEAUTH_STATS_TTSL_30D;
 
 // Assign & Render Template
-$xoopsTpl->assign('data',$data);
-$xoopsTpl->display("db:admin/uhqiceauth_acctrec.html");
+$xoopsTpl->assign('data', $data);
+$xoopsTpl->display('db:admin/uhqiceauth_acctrec.tpl');
 
-include_once dirname(__FILE__) . '/admin_footer.php';
+require_once __DIR__ . '/admin_footer.php';

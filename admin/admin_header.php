@@ -10,34 +10,44 @@
  */
 
 /**
- * @copyright    The XOOPS Project http://sourceforge.net/projects/xoops/
- * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
- * @package
- * @since
- * @author     XOOPS Development Team
- * @version    $Id $
+ * @copyright    XOOPS Project (https://xoops.org)
+ * @license      GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
+ * @author       XOOPS Development Team
  */
 
-$path = dirname(dirname(dirname(dirname(__FILE__))));
-include_once $path . '/mainfile.php';
-include_once $path . '/include/cp_functions.php';
+use Xmf\Module\Admin;
+use XoopsModules\Uhqiceauth\{
+    Helper
+};
+/** @var Admin $adminObject */
+/** @var Helper $helper */
+
+require dirname(__DIR__) . '/preloads/autoloader.php';
+
+$path = \dirname(__DIR__, 3);
+require_once $path . '/mainfile.php';
+//require_once $path . '/include/cp_functions.php';
 require_once $path . '/include/cp_header.php';
 require_once $path . '/class/template.php';
+// require_once  \dirname(__DIR__) . '/class/Utility.php';
+//require_once  \dirname(__DIR__) . '/include/common.php';
 
-global $xoopsModule;
+$moduleDirName = \basename(\dirname(__DIR__));
+$helper      = Helper::getInstance();
+$adminObject = Admin::getInstance();
 
-$thisModuleDir = $GLOBALS['xoopsModule']->getVar('dirname');
-
-//if functions.php file exist
-//require_once dirname(dirname(__FILE__)) . '/include/functions.php';
+$pathIcon16    = Admin::iconUrl('', 16);
+$pathIcon32    = Admin::iconUrl('', 32);
+$pathModIcon32 = $helper->getModule()->getInfo('modicons32');
 
 // Load language files
-xoops_loadLanguage('admin', $thisModuleDir);
-xoops_loadLanguage('modinfo', $thisModuleDir);
-xoops_loadLanguage('main', $thisModuleDir);
+$helper->loadLanguage('admin');
+$helper->loadLanguage('modinfo');
+$helper->loadLanguage('main');
 
-$pathIcon16 = '../'.$xoopsModule->getInfo('icons16');
-$pathIcon32 = '../'.$xoopsModule->getInfo('icons32');
-$pathModuleAdmin = $xoopsModule->getInfo('dirmoduleadmin');
+$myts = \MyTextSanitizer::getInstance();
 
-include_once $GLOBALS['xoops']->path($pathModuleAdmin.'/moduleadmin.php');
+if (!isset($GLOBALS['xoopsTpl']) || !($GLOBALS['xoopsTpl'] instanceof \XoopsTpl)) {
+    require_once $GLOBALS['xoops']->path('class/template.php');
+    $xoopsTpl = new \XoopsTpl();
+}

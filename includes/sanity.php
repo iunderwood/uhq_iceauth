@@ -21,94 +21,96 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // Sanitize variables we expect for this module in $_REQUEST, that are put into queries.
 
-function uhqiceauth_dosanity() {
+use Xmf\Request;
 
-	$sanerequest = array();
-	$myts =& MyTextsanitizer::getInstance();
+function uhqiceauth_dosanity()
+{
+    $sanerequest = [];
+    $myts        = \MyTextSanitizer::getInstance();
 
-	// IceCast Variables
-	if ( isset($_REQUEST['server']) ) {
-		$sanerequest['server'] = $myts->addSlashes($_REQUEST['server']);
-	}
-	if ( isset($_REQUEST['port']) ) {
-		$sanerequest['port'] = intval($_REQUEST['port']);
-	}
-	if ( isset($_REQUEST['mount']) ) {
-		$sanerequest['mount'] = $myts->addSlashes($_REQUEST['mount']);
-	}
-	if ( isset($_REQUEST['user']) ) {
-		$sanerequest['user'] = $myts->addSlashes($_REQUEST['user']);
-	}
-	if ( isset($_REQUEST['pass']) ) {
-		$sanerequest['pass'] = $myts->addSlashes($_REQUEST['pass']);
-	}
-	if ( isset($_REQUEST['client']) ) {
-		$sanerequest['client'] = $myts->addSlashes($_REQUEST['client']);
-	}
-	if ( isset($_REQUEST['ip']) ) {
-		$sanerequest['ip'] = $myts->addSlashes($_REQUEST['ip']);
-	}
-	if ( isset($_REQUEST['agent']) ) {
-		$sanerequest['agent'] = $myts->addSlashes($_REQUEST['agent']);
-	}
-	if ( isset($_REQUEST['duration']) ) {
-		$sanerequest['duration'] = $myts->addSlashes($_REQUEST['duration']);
-	}
-	if ( isset($_REQUEST['referer']) ) {
-		$sanerequest['referer'] = $myts->addSlashes($_REQUEST['referer']);
-	}
+    // IceCast Variables
+    if (Request::hasVar('server', 'REQUEST')) {
+        $sanerequest['server'] = $myts->addSlashes($_REQUEST['server']);
+    }
+    if (Request::hasVar('port', 'REQUEST')) {
+        $sanerequest['port'] = Request::getInt('port', 0, 'REQUEST');
+    }
+    if (Request::hasVar('mount', 'REQUEST')) {
+        $sanerequest['mount'] = $myts->addSlashes($_REQUEST['mount']);
+    }
+    if (Request::hasVar('user', 'REQUEST')) {
+        $sanerequest['user'] = $myts->addSlashes($_REQUEST['user']);
+    }
+    if (Request::hasVar('pass', 'REQUEST')) {
+        $sanerequest['pass'] = $myts->addSlashes($_REQUEST['pass']);
+    }
+    if (Request::hasVar('client', 'REQUEST')) {
+        $sanerequest['client'] = $myts->addSlashes($_REQUEST['client']);
+    }
+    if (Request::hasVar('ip', 'REQUEST')) {
+        $sanerequest['ip'] = $myts->addSlashes($_REQUEST['ip']);
+    }
+    if (Request::hasVar('agent', 'REQUEST')) {
+        $sanerequest['agent'] = $myts->addSlashes($_REQUEST['agent']);
+    }
+    if (Request::hasVar('duration', 'REQUEST')) {
+        $sanerequest['duration'] = $myts->addSlashes($_REQUEST['duration']);
+    }
+    if (Request::hasVar('referer', 'REQUEST')) {
+        $sanerequest['referer'] = $myts->addSlashes($_REQUEST['referer']);
+    }
 
-	// Module Variables
-	if ( isset($_REQUEST['timelimit']) ) {
-		$sanerequest['timelimit'] = $myts->addSlashes($_REQUEST['timelimit']);
-	}
-	if ( isset($_REQUEST['lst_auth_typ']) ) {
-		$sanerequest['lst_auth_typ'] = $myts->addSlashes($_REQUEST['lst_auth_typ']);
-	}
-	if ( isset($_REQUEST['lst_auth_grp']) ) {
-		$sanerequest['lst_auth_grp'] = $myts->addSlashes($_REQUEST['lst_auth_grp']);
-	}
-	if ( isset($_REQUEST['src_auth_typ']) ) {
-		$sanerequest['src_auth_typ'] = $myts->addSlashes($_REQUEST['src_auth_typ']);
-	}
-	if ( isset($_REQUEST['src_auth_grp']) ) {
-		$sanerequest['src_auth_grp'] = $myts->addSlashes($_REQUEST['src_auth_grp']);
-	}
-	if ( isset($_REQUEST['src_auth_un']) ) {
-		$sanerequest['src_auth_un'] = $myts->addSlashes($_REQUEST['src_auth_un']);
-	}
-	if ( isset($_REQUEST['src_auth_pw']) ) {
-		$sanerequest['src_auth_pw'] = $myts->addSlashes($_REQUEST['src_auth_pw']);
-	}
-	if ( isset($_REQUEST['o_server']) ) {
-		$sanerequest['o_server'] = $myts->addSlashes($_REQUEST['o_server']);
-	}
-	if ( isset($_REQUEST['o_port']) ) {
-		$sanerequest['o_port'] = $myts->addSlashes($_REQUEST['o_port']);
-	}
-	if ( isset($_REQUEST['o_mount']) ) {
-		$sanerequest['o_mount'] = $myts->addSlashes($_REQUEST['o_mount']);
-	}
-	if ( isset($_REQUEST['codec']) ) {
-		$sanerequest['codec'] = $myts->addSlashes($_REQUEST['codec']);
-	}
-	if ( isset($_REQUEST['description']) ) {
-		$sanerequest['description'] = $myts->addSlashes($_REQUEST['description']);
-	}
-	if ( isset($_REQUEST['intronum']) ) {
-		$sanerequest['intronum'] = intval($_REQUEST['intronum']);
-	}
+    // Module Variables
+    if (Request::hasVar('timelimit', 'REQUEST')) {
+        $sanerequest['timelimit'] = $myts->addSlashes($_REQUEST['timelimit']);
+    }
+    if (Request::hasVar('lst_auth_typ', 'REQUEST')) {
+        $sanerequest['lst_auth_typ'] = $myts->addSlashes($_REQUEST['lst_auth_typ']);
+    }
+    if (Request::hasVar('lst_auth_grp', 'REQUEST')) {
+        $sanerequest['lst_auth_grp'] = $myts->addSlashes($_REQUEST['lst_auth_grp']);
+    }
+    if (Request::hasVar('src_auth_typ', 'REQUEST')) {
+        $sanerequest['src_auth_typ'] = $myts->addSlashes($_REQUEST['src_auth_typ']);
+    }
+    if (Request::hasVar('src_auth_grp', 'REQUEST')) {
+        $sanerequest['src_auth_grp'] = $myts->addSlashes($_REQUEST['src_auth_grp']);
+    }
+    if (Request::hasVar('src_auth_un', 'REQUEST')) {
+        $sanerequest['src_auth_un'] = $myts->addSlashes($_REQUEST['src_auth_un']);
+    }
+    if (Request::hasVar('src_auth_pw', 'REQUEST')) {
+        $sanerequest['src_auth_pw'] = $myts->addSlashes($_REQUEST['src_auth_pw']);
+    }
+    if (Request::hasVar('o_server', 'REQUEST')) {
+        $sanerequest['o_server'] = $myts->addSlashes($_REQUEST['o_server']);
+    }
+    if (Request::hasVar('o_port', 'REQUEST')) {
+        $sanerequest['o_port'] = $myts->addSlashes($_REQUEST['o_port']);
+    }
+    if (Request::hasVar('o_mount', 'REQUEST')) {
+        $sanerequest['o_mount'] = $myts->addSlashes($_REQUEST['o_mount']);
+    }
+    if (Request::hasVar('codec', 'REQUEST')) {
+        $sanerequest['codec'] = $myts->addSlashes($_REQUEST['codec']);
+    }
+    if (Request::hasVar('description', 'REQUEST')) {
+        $sanerequest['description'] = $myts->addSlashes($_REQUEST['description']);
+    }
+    if (Request::hasVar('intronum', 'REQUEST')) {
+        $sanerequest['intronum'] = Request::getInt('intronum', 0, 'REQUEST');
+    }
 
-	// Administrative Fields
-	if ( isset($_REQUEST['sequence']) ) {
-		$sanerequest['sequence'] = intval($_REQUEST['sequence']);
-	}
-	if ( isset($_REQUEST['testua']) ) {
-		$sanerequest['testua'] = $myts->addSlashes($_REQUEST['testua']);
-	}
-	if ( isset($_REQUEST['useragent']) ) {
-		$sanerequest['useragent'] = $myts->addSlashes($_REQUEST['useragent']);
-	}
+    // Administrative Fields
+    if (Request::hasVar('sequence', 'REQUEST')) {
+        $sanerequest['sequence'] = Request::getInt('sequence', 0, 'REQUEST');
+    }
+    if (Request::hasVar('testua', 'REQUEST')) {
+        $sanerequest['testua'] = $myts->addSlashes($_REQUEST['testua']);
+    }
+    if (Request::hasVar('useragent', 'REQUEST')) {
+        $sanerequest['useragent'] = $myts->addSlashes($_REQUEST['useragent']);
+    }
 
-	return $sanerequest;
+    return $sanerequest;
 }

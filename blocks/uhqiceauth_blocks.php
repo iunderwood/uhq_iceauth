@@ -19,24 +19,31 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-require_once XOOPS_ROOT_PATH . "/modules/uhq_iceauth/includes/functions.php";
+use XoopsModules\Uhqiceauth\{
+    Helper
+};
+/** @var Admin $adminObject */
+/** @var Helper $helper */
+
+$helper      = Helper::getInstance();
+require_once $helper->path('includes/functions.php');
 
 function b_uhqiceauth_activemounts_show()
 {
-	$block = array();
+    $block = [];
 
-	// All we do is show what mountpoints are active.
+    // All we do is show what mountpoints are active.
 
-	global $xoopsDB;
+    global $xoopsDB;
 
-	$block = uhqiceauth_raw_activemounts();
+    $block = uhqiceauth_raw_activemounts();
 
-	if ($block == null) {
-		// DB error should be stored in the last DB call.
-		$block['error'] = _MB_UHQICEAUTH_ACTIVE_DBERR." [".$xoopsDB->error()."]";
-	}
+    if (null === $block) {
+        // DB error should be stored in the last DB call.
+        $block['error'] = _MB_UHQICEAUTH_ACTIVE_DBERR . ' [' . $xoopsDB->error() . ']';
+    }
 
-	return $block;
+    return $block;
 }
 
 function b_uhqiceauth_activemounts_edit()
@@ -45,52 +52,54 @@ function b_uhqiceauth_activemounts_edit()
 
 // Block which displays and sets a user's authenticated stream PW.
 
-function b_uhqiceauth_streampass_show() {
-	$block = array();
+function b_uhqiceauth_streampass_show()
+{
+    $block = [];
 
-	global $xoopsUser;
-	global $xoopsDB;
+    global $xoopsUser;
+    global $xoopsDB;
 
-	// Make sure we have a valid user
+    // Make sure we have a valid user
 
-	if (is_object($xoopsUser)) {
-		$block['username'] = $xoopsUser->getVar('uname');
+    if (is_object($xoopsUser)) {
+        $block['username'] = $xoopsUser->getVar('uname');
 
-		// Check DB for entry
+        // Check DB for entry
 
-		$query = "SELECT * FROM ".$xoopsDB->prefix("uhqiceauth_streampass");
-		$query .= " WHERE un = '".utf8_encode(strtolower($block['username']))."'";
+        $query = 'SELECT * FROM ' . $xoopsDB->prefix('uhqiceauth_streampass');
+        $query .= " WHERE un = '" . utf8_encode(mb_strtolower($block['username'])) . "'";
 
-		$result = $xoopsDB->queryF($query);
-		if ($result == false) {
-			$block['error'] = $xoopsDB->error();
-			return $block;
-		} else {
-			if ($row = $xoopsDB->fetchArray($result)) {
-				$block['password'] = $row['pw'];
-			} else {
-				$block['password'] = uhqiceauth_randompw(8);
+        $result = $xoopsDB->queryF($query);
+        if (false === $result) {
+            $block['error'] = $xoopsDB->error();
 
-				$query = "INSERT INTO ".$xoopsDB->prefix("uhqiceauth_streampass")." SET";
-				$query .= " pw = '".$block['password']."',";
-				$query .= " added = now(),";
-				$query .= " un = '".utf8_encode(strtolower($block['username']))."'";
+            return $block;
+        }
+        $row = $xoopsDB->fetchArray($result);
+        if ($row) {
+            $block['password'] = $row['pw'];
+        } else {
+            $block['password'] = uhqiceauth_randompw(8);
 
-				$result = $xoopsDB->queryF($query);
-				if ($result == false) {
-					$block['error'] = $xoopsDB->error();
-					return $block;
-				}
-			}
-		}
+            $query = 'INSERT INTO ' . $xoopsDB->prefix('uhqiceauth_streampass') . ' SET';
+            $query .= " pw = '" . $block['password'] . "',";
+            $query .= ' added = now(),';
+            $query .= " un = '" . utf8_encode(mb_strtolower($block['username'])) . "'";
 
-	} else {
-		return false;
-	}
+            $result = $xoopsDB->queryF($query);
+            if (false === $result) {
+                $block['error'] = $xoopsDB->error();
 
-	return $block;
+                return $block;
+            }
+        }
+    } else {
+        return false;
+    }
+
+    return $block;
 }
 
-function b_uhqiceauth_streampass_edit() {
-
+function b_uhqiceauth_streampass_edit()
+{
 }
